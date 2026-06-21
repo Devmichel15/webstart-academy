@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-200: #a7f3d0;
+  --color-brand-300: #6ee7b7;
+  --color-brand-400: #34d399;
+  --color-brand-500: #10b981;
+  --color-brand-600: #059669;
+  --color-brand-700: #047857;
+  --color-brand-800: #065f46;
+  --color-brand-900: #064e3b;
+  --font-display: "Segoe UI", system-ui, sans-serif;
+  --font-body: "Segoe UI", system-ui, sans-serif;
+  --shadow-brutal: 4px 4px 0 0 #064e3b;
+  --shadow-brutal-sm: 3px 3px 0 0 #064e3b;
+  --shadow-brutal-lg: 6px 6px 0 0 #064e3b;
+  --border-width-3: 3px;
+}
+
+.dark {
+  --shadow-brutal: 4px 4px 0 0 #34d399;
+  --shadow-brutal-sm: 3px 3px 0 0 #34d399;
+  --shadow-brutal-lg: 6px 6px 0 0 #34d399;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  background: #f8fffb;
+  color: #064e3b;
+}
+
+.dark body,
+body.dark {
+  background: #0a1410;
+  color: #d1fae5;
+}
+
+::selection {
+  background: #34d399;
+  color: #064e3b;
+}
+
+.brutal-card {
+  border: 3px solid #064e3b;
+  box-shadow: var(--shadow-brutal);
+  background: white;
+}
+
+.dark .brutal-card {
+  border-color: #34d399;
+  background: #111916;
+}
+
+.brutal-btn {
+  border: 3px solid #064e3b;
+  box-shadow: var(--shadow-brutal-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.brutal-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-brutal);
+}
+
+.brutal-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.dark .brutal-btn {
+  border-color: #34d399;
+}
