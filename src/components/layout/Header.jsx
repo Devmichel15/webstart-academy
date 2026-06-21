@@ -1,5 +1,5 @@
 import { ThemeToggle } from '../ui/ThemeToggle'
-import { useProgress } from '../../context/ProgressContext'
+import { useProgress } from '../../hooks/useProgress.js'
 import { Badge } from '../ui/Badge'
 
 export function Header({ title, subtitle }) {

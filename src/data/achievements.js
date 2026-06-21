@@ -49,18 +49,4 @@ export const achievements = [
   },
 ]
 
-export function getLevelFromXp(xp) {
-  return Math.floor(xp / 150) + 1
-}
-
-export function getXpForNextLevel(xp) {
-  const level = getLevelFromXp(xp)
-  const currentLevelXp = (level - 1) * 150
-  const nextLevelXp = level * 150
-  return {
-    level,
-    current: xp - currentLevelXp,
-    needed: nextLevelXp - currentLevelXp,
-    percent: Math.round(((xp - currentLevelXp) / (nextLevelXp - currentLevelXp)) * 100),
-  }
-}
+export { getLevelFromXp, getXpForNextLevel } from '../utils/xp.js'

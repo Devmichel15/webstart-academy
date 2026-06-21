@@ -5,8 +5,13 @@ import {
   BookOpen,
   GraduationCap,
   LayoutDashboard,
+  LogOut,
   Sparkles,
 } from 'lucide-react'
+import { useAuth } from '../../hooks/useAuth.js'
+import { useProgress } from '../../hooks/useProgress.js'
+import { logoutUser } from '../../services/authService.js'
+import { useToast } from '../../contexts/ToastContext.jsx'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -15,6 +20,49 @@ const navItems = [
   { to: '/materiais', label: 'Materiais', icon: GraduationCap },
   { to: '/perfil', label: 'Perfil', icon: Award },
 ]
+
+function UserBadge() {
+  const { user } = useAuth()
+  const { name, photoURL, level } = useProgress()
+  const { showSuccess, showError } = useToast()
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser()
+      showSuccess('Sessão encerrada.')
+    } catch (error) {
+      showError(error.message)
+    }
+  }
+
+  if (!user) return null
+
+  return (
+    <div className="mt-auto space-y-3 border-t-3 border-brand-200 pt-4 dark:border-brand-800">
+      <div className="flex items-center gap-3 px-2">
+        {photoURL ? (
+          <img src={photoURL} alt={name} className="h-10 w-10 rounded-full border-2 border-brand-800 object-cover dark:border-brand-400" />
+        ) : (
+          <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-brand-800 bg-brand-500 text-sm font-black text-white dark:border-brand-400">
+            {(name || user.email || '?').charAt(0).toUpperCase()}
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-black">{name || 'Aluno'}</p>
+          <p className="text-xs font-semibold text-brand-600">Nível {level || 1}</p>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="flex w-full items-center gap-2 rounded-lg border-3 border-transparent px-3 py-2 text-sm font-bold text-brand-700 transition hover:border-brand-800 hover:bg-brand-50 dark:text-brand-300 dark:hover:border-brand-400 dark:hover:bg-brand-900"
+      >
+        <LogOut size={16} />
+        Sair
+      </button>
+    </div>
+  )
+}
 
 export function Sidebar() {
   return (
@@ -48,6 +96,8 @@ export function Sidebar() {
           </NavLink>
         ))}
       </nav>
+
+      <UserBadge />
     </aside>
   )
 }

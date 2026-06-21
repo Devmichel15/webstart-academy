@@ -1,27 +1,57 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, CheckSquare } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CheckSquare, Loader2 } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { Badge } from '../components/ui/Badge'
+import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { LessonIllustration } from '../components/lesson/LessonIllustration'
 import { CodePreview } from '../components/lesson/CodePreview'
 import { ExerciseBlock } from '../components/lesson/ExerciseBlock'
-import { getLessonById, getNextLesson, getCourseById } from '../data/courses'
-import { useProgress } from '../context/ProgressContext'
+import { getCourseWithLessons } from '../services/courseService.js'
+import { getLessonById, getNextLesson } from '../services/lessonService.js'
+import { useProgress } from '../hooks/useProgress.js'
+import { XP_LESSON } from '../utils/xp.js'
 
 export default function Lesson() {
   const { lessonId } = useParams()
-  const lesson = getLessonById(lessonId)
-  const nextLesson = getNextLesson(lessonId)
-  const course = lesson ? getCourseById(lesson.courseId) : null
+  const [lesson, setLesson] = useState(null)
+  const [course, setCourse] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [completing, setCompleting] = useState(false)
   const { completeLesson, visitLesson, isLessonCompleted } = useProgress()
+
+  useEffect(() => {
+    async function loadLesson() {
+      setLoading(true)
+      const data = await getLessonById(lessonId)
+      setLesson(data)
+
+      if (data?.courseId) {
+        const courseData = await getCourseWithLessons(data.courseId)
+        setCourse(courseData)
+      }
+
+      setLoading(false)
+    }
+
+    loadLesson()
+  }, [lessonId])
 
   useEffect(() => {
     if (lesson) visitLesson(lesson.id)
   }, [lesson, visitLesson])
+
+  if (loading) {
+    return (
+      <div>
+        <Header title="Aula" subtitle="Carregando conteúdo..." />
+        <PageSkeleton />
+      </div>
+    )
+  }
 
   if (!lesson) {
     return (
@@ -34,10 +64,13 @@ export default function Lesson() {
     )
   }
 
+  const nextLesson = getNextLesson(lessonId, course?.lessons)
   const completed = isLessonCompleted(lesson.id)
 
-  const handleComplete = () => {
-    completeLesson(lesson.id)
+  const handleComplete = async () => {
+    setCompleting(true)
+    await completeLesson(lesson.id)
+    setCompleting(false)
   }
 
   return (
@@ -119,12 +152,12 @@ export default function Lesson() {
           ))}
         </ul>
         {!completed && (
-          <Button className="mt-4" onClick={handleComplete}>
-            Concluir aula (+{lesson.xp} XP)
+          <Button className="mt-4" onClick={handleComplete} disabled={completing}>
+            {completing ? <Loader2 className="animate-spin" size={18} /> : `Concluir aula (+${XP_LESSON} XP)`}
           </Button>
         )}
         {completed && (
-          <p className="mt-4 font-bold text-brand-600">Aula concluída! +{lesson.xp} XP ganhos.</p>
+          <p className="mt-4 font-bold text-brand-600">Aula concluída! Progresso salvo na nuvem.</p>
         )}
       </Card>
 

@@ -13,9 +13,13 @@ import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { ProgressBar } from '../components/ui/ProgressBar'
-import { useProgress } from '../context/ProgressContext'
-import { courses } from '../data/courses'
+import { PageSkeleton } from '../components/ui/Skeleton.jsx'
+import { useProgress } from '../hooks/useProgress.js'
+import { useCourses } from '../hooks/useCourses.js'
+import { getCourseWithLessons } from '../services/courseService.js'
+import { courses as staticCourses } from '../data/courses.js'
 import { useGsapReveal } from '../hooks/useGsapReveal'
+import { useEffect, useState } from 'react'
 
 const statIcons = {
   progress: Target,
@@ -26,33 +30,79 @@ const statIcons = {
 
 export default function Dashboard() {
   const {
+    name,
+    photoURL,
+    xp,
+    level,
     progressPercent,
     completedCount,
     totalLessons,
-    remainingMinutes,
-    lastLesson,
-    recommendedLesson,
+    studyHours,
+    completedCourses,
     streak,
     achievements,
     getCourseProgress,
+    recommendedLesson,
+    lastLesson,
+    loading,
   } = useProgress()
 
-  const heroRef = useGsapReveal([progressPercent])
+  const { courses } = useCourses()
+  const [courseDetails, setCourseDetails] = useState(staticCourses)
+  const heroRef = useGsapReveal([progressPercent, name])
+
+  useEffect(() => {
+    async function loadCourses() {
+      const details = await Promise.all(
+        courses.map(async (course) => getCourseWithLessons(course.id)),
+      )
+      setCourseDetails(details.filter(Boolean))
+    }
+
+    if (courses.length) loadCourses()
+  }, [courses])
+
+  if (loading) {
+    return (
+      <div>
+        <Header title="Dashboard" subtitle="Carregando seus dados..." />
+        <PageSkeleton />
+      </div>
+    )
+  }
+
   const unlockedAchievements = achievements.filter((item) => item.unlocked)
+  const displayCourses = courseDetails.length ? courseDetails : staticCourses
 
   const stats = [
     { label: 'Progresso geral', value: `${progressPercent}%`, icon: 'progress' },
     { label: 'Aulas concluídas', value: `${completedCount}/${totalLessons}`, icon: 'lessons' },
-    { label: 'Tempo restante', value: `~${remainingMinutes} min`, icon: 'time' },
+    { label: 'Horas estudadas', value: `${studyHours}h`, icon: 'time' },
     { label: 'Streak', value: `${streak} dias`, icon: 'streak' },
   ]
 
   return (
     <div>
       <Header
-        title="Dashboard"
-        subtitle="Acompanhe seu progresso na WebStart Academy."
+        title={`Olá, ${name || 'Aluno'}!`}
+        subtitle="Acompanhe seu progresso na WebStart Academy em tempo real."
       />
+
+      <Card className="mb-8 flex flex-wrap items-center gap-4">
+        {photoURL ? (
+          <img src={photoURL} alt={name} className="h-16 w-16 rounded-full border-3 border-brand-800 object-cover dark:border-brand-400" />
+        ) : (
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border-3 border-brand-800 bg-brand-500 text-2xl font-black text-white dark:border-brand-400">
+            {(name || 'A').charAt(0).toUpperCase()}
+          </div>
+        )}
+        <div>
+          <p className="text-xl font-black">{name || 'Aluno WebStart'}</p>
+          <p className="text-sm font-semibold text-brand-600">
+            Nível {level} · {xp} XP · {completedCourses.length} curso(s) concluído(s)
+          </p>
+        </div>
+      </Card>
 
       <div ref={heroRef} className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat, index) => {
@@ -121,7 +171,7 @@ export default function Dashboard() {
       <section className="mt-8">
         <h2 className="mb-4 text-lg font-black">Seus cursos</h2>
         <div className="grid gap-4 md:grid-cols-2">
-          {courses.map((course) => (
+          {displayCourses.map((course) => (
             <Card key={course.id} hover>
               <div className="mb-3 flex items-center justify-between">
                 <h3 className="text-xl font-black">{course.title}</h3>

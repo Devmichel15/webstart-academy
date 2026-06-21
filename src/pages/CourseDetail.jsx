@@ -1,15 +1,39 @@
 import { Link, useParams } from 'react-router-dom'
 import { CheckCircle2, Circle, Clock } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
-import { getCourseById } from '../data/courses'
-import { useProgress } from '../context/ProgressContext'
+import { PageSkeleton } from '../components/ui/Skeleton.jsx'
+import { getCourseWithLessons } from '../services/courseService.js'
+import { useProgress } from '../hooks/useProgress.js'
+import { XP_LESSON } from '../utils/xp.js'
 
 export default function CourseDetail() {
   const { courseId } = useParams()
-  const course = getCourseById(courseId)
+  const [course, setCourse] = useState(null)
+  const [loading, setLoading] = useState(true)
   const { isLessonCompleted, getCourseProgress } = useProgress()
+
+  useEffect(() => {
+    async function loadCourse() {
+      setLoading(true)
+      const data = await getCourseWithLessons(courseId)
+      setCourse(data)
+      setLoading(false)
+    }
+
+    loadCourse()
+  }, [courseId])
+
+  if (loading) {
+    return (
+      <div>
+        <Header title="Curso" subtitle="Carregando módulos..." />
+        <PageSkeleton />
+      </div>
+    )
+  }
 
   if (!course) {
     return (
@@ -21,6 +45,8 @@ export default function CourseDetail() {
       </div>
     )
   }
+
+  const lessons = course.lessons || []
 
   return (
     <div>
@@ -34,7 +60,7 @@ export default function CourseDetail() {
       </div>
 
       <div className="space-y-3">
-        {course.lessons.map((lesson, index) => {
+        {lessons.map((lesson, index) => {
           const completed = isLessonCompleted(lesson.id)
 
           return (
@@ -53,7 +79,7 @@ export default function CourseDetail() {
                         <Clock size={12} />
                         {lesson.duration} min
                       </span>
-                      <span className="text-xs font-semibold text-brand-600">+{lesson.xp} XP</span>
+                      <span className="text-xs font-semibold text-brand-600">+{XP_LESSON} XP</span>
                     </div>
                     <h3 className="font-black">{lesson.title}</h3>
                     <p className="text-sm text-brand-700 dark:text-brand-300">{lesson.description}</p>

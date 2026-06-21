@@ -5,8 +5,12 @@ import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { ProgressBar } from '../components/ui/ProgressBar'
 import { Button } from '../components/ui/Button'
-import { courses } from '../data/courses'
-import { useProgress } from '../context/ProgressContext'
+import { PageSkeleton } from '../components/ui/Skeleton.jsx'
+import { useProgress } from '../hooks/useProgress.js'
+import { useCourses } from '../hooks/useCourses.js'
+import { getCourseWithLessons } from '../services/courseService.js'
+import { courses as staticCourses } from '../data/courses.js'
+import { useEffect, useState } from 'react'
 
 const courseIcons = {
   html: Code2,
@@ -15,6 +19,29 @@ const courseIcons = {
 
 export default function Courses() {
   const { getCourseProgress, isLessonCompleted } = useProgress()
+  const { courses, loading } = useCourses()
+  const [courseDetails, setCourseDetails] = useState([])
+
+  useEffect(() => {
+    async function loadDetails() {
+      const source = courses.length ? courses : staticCourses
+      const details = await Promise.all(source.map((course) => getCourseWithLessons(course.id)))
+      setCourseDetails(details.filter(Boolean))
+    }
+
+    loadDetails()
+  }, [courses])
+
+  if (loading && !courseDetails.length) {
+    return (
+      <div>
+        <Header title="Cursos" subtitle="Carregando cursos..." />
+        <PageSkeleton />
+      </div>
+    )
+  }
+
+  const displayCourses = courseDetails.length ? courseDetails : staticCourses
 
   return (
     <div>
@@ -24,10 +51,11 @@ export default function Courses() {
       />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {courses.map((course, index) => {
+        {displayCourses.map((course, index) => {
           const Icon = courseIcons[course.id] || Code2
           const progress = getCourseProgress(course.id)
-          const completedInCourse = course.lessons.filter((lesson) => isLessonCompleted(lesson.id)).length
+          const lessons = course.lessons || []
+          const completedInCourse = lessons.filter((lesson) => isLessonCompleted(lesson.id)).length
 
           return (
             <motion.div
@@ -42,13 +70,13 @@ export default function Courses() {
                     <Icon size={28} />
                   </div>
                   <span className="rounded-lg border-2 border-brand-800 px-2 py-1 text-xs font-bold dark:border-brand-400">
-                    {course.lessons.length} módulos
+                    {lessons.length} módulos
                   </span>
                 </div>
 
                 <h2 className="mb-2 text-2xl font-black">{course.title}</h2>
                 <p className="mb-4 text-brand-700 dark:text-brand-300">{course.description}</p>
-                <ProgressBar value={progress} label={`${completedInCourse}/${course.lessons.length} aulas`} className="mb-4" />
+                <ProgressBar value={progress} label={`${completedInCourse}/${lessons.length} aulas`} className="mb-4" />
 
                 <Link to={`/cursos/${course.id}`}>
                   <Button>
