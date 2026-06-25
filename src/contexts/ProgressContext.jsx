@@ -53,12 +53,20 @@ export function ProgressProvider({ children }) {
     const unsubUser = subscribeToUser(
       user.uid,
       async (data) => {
-        if (data) {
-          setProfile(data)
-          const items = await getAchievementsWithStatus(user.uid, data)
-          setAchievements(items)
+        try {
+          setProfile(data || defaultProfile)
+          if (data) {
+            const items = await getAchievementsWithStatus(user.uid, data)
+            setAchievements(items)
+          } else {
+            setAchievements([])
+          }
+        } catch (err) {
+          setError(err.message)
+          setAchievements([])
+        } finally {
+          setLoading(false)
         }
-        setLoading(false)
       },
       (err) => {
         setError(err.message)

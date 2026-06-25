@@ -66,10 +66,10 @@ function UserBadge() {
 
 export function Sidebar() {
   return (
-    <aside className="hidden w-64 shrink-0 flex-col border-r-3 border-brand-800 bg-white p-4 dark:border-brand-400 dark:bg-brand-950 lg:flex">
+    <aside className="hidden w-64 shrink-0 flex-col border-r-3 border-brand-800 bg-white p-4 text-brand-900 dark:border-brand-400 dark:bg-brand-950 dark:text-brand-100 lg:flex">
       <div className="mb-8 flex items-center gap-3 px-2">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg border-3 border-brand-800 bg-brand-500 text-white shadow-[3px_3px_0_0_#064e3b] dark:border-brand-400">
-          <Sparkles size={20} />
+        <div className="flex h-10 w-10 items-center justify-center">
+          <img src="/logo.svg" alt="" />
         </div>
         <div>
           <p className="text-lg font-black leading-none">WebStart</p>

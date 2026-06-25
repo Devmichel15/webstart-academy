@@ -1,0 +1,107 @@
+Você é um arquiteto educacional e engenheiro frontend sênior.
+
+A plataforma WebStart está sendo transformada de uma plataforma de cursos para uma plataforma de Trilhas de Aprendizagem.
+
+Objetivos:
+
+1. Renomear toda a estrutura de "Cursos" para "Trilhas".
+2. Implementar uma nova seção chamada "Roadmap".
+3. Criar uma Trilha obrigatória chamada "Fundamentos da Internet".
+4. Criar a Trilha completa de HTML baseada na estrutura curricular fornecida abaixo.
+5. CSS deve aparecer como "Em construção".
+6. JavaScript deve aparecer como "Em breve".
+
+UX/UI:
+
+* Inspirar-se em javascript.info para organização de conteúdo.
+* Cada módulo deve possuir:
+
+  * título
+  * descrição
+  * duração estimada
+  * aulas
+  * laboratório
+  * progresso
+* Exibir a progressão visual da trilha.
+* Exibir pré-requisitos.
+* Exibir o que o aluno será capaz de fazer ao concluir a trilha.
+
+Onboarding:
+
+Antes da tela de login, criar um onboarding de 3 telas:
+
+Tela 1:
+"O caminho mais rápido para aprender programação web."
+
+Tela 2:
+"Aprenda com trilhas estruturadas, laboratórios práticos e roadmap guiado."
+
+Tela 3:
+"Saiba exatamente o que estudar e em que ordem estudar."
+
+Adicionar ilustrações placeholders.
+
+Tema:
+
+Dark Mode inspirado no VS Code:
+
+Background principal:
+#1E1E1E
+
+Background secundário:
+#252526
+
+Sidebar:
+#181818
+
+Texto principal:
+#D4D4D4
+
+Texto secundário:
+#9DA5B4
+
+HTML:
+#E34C26
+
+CSS:
+#1572B6
+
+JavaScript:
+#F7DF1E
+
+Links:
+#4FC1FF
+
+Sucesso:
+#4EC9B0
+
+Erro:
+#F14C4C
+
+Laboratório:
+
+Aplicar syntax highlighting semelhante ao VS Code.
+
+Utilizar tema próximo ao Dark+ do VS Code.
+
+Light Mode:
+
+Fundo claro.
+Cards claros.
+Texto escuro.
+Excelente contraste.
+
+Arquitetura:
+
+Criar componentes reutilizáveis para:
+
+* Roadmap
+* Trilhas
+* Módulos
+* Aulas
+* Progresso
+* Onboarding
+
+O resultado final deve parecer uma plataforma educacional premium focada em iniciantes que desejam se tornar desenvolvedores web profissionais.
+vamos trabalhar neste arquivo aqui: C:\Users\LENOVO\Desktop\webstart
+e aqui todo o conteúdo do curso:  

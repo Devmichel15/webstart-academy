@@ -33,7 +33,7 @@ export async function getUserAchievements(userId) {
     const q = query(collection(db, 'user_achievements'), where('userId', '==', userId))
     const snap = await getDocs(q)
     return snap.docs.map((item) => ({ id: item.id, ...item.data() }))
-  })
+  }).catch(() => [])
 }
 
 function evaluateAchievement(achievement, user) {
