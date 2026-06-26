@@ -56,7 +56,7 @@ export default function Profile() {
           <p className="text-2xl font-black">{name || 'Aluno WebStart'}</p>
           <p className="text-sm text-brand-600">{email}</p>
           <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">
-            {studyHours}h estudadas · {completedCourses.length} curso(s) concluído(s)
+            {studyHours}h estudadas · {completedCourses.length} trilha(s) concluída(s)
           </p>
         </div>
       </Card>

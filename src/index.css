@@ -13,8 +13,23 @@
   --color-brand-700: #047857;
   --color-brand-800: #065f46;
   --color-brand-900: #064e3b;
+
+  --color-vscode-bg: #1E1E1E;
+  --color-vscode-bg-secondary: #252526;
+  --color-vscode-sidebar: #181818;
+  --color-vscode-text: #D4D4D4;
+  --color-vscode-text-secondary: #9DA5B4;
+  --color-vscode-link: #4FC1FF;
+  --color-vscode-success: #4EC9B0;
+  --color-vscode-error: #F14C4C;
+  --color-vscode-html: #E34C26;
+  --color-vscode-css: #1572B6;
+  --color-vscode-js: #F7DF1E;
+
   --font-display: "Segoe UI", system-ui, sans-serif;
   --font-body: "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Cascadia Code", "Fira Code", "JetBrains Mono", "Consolas", monospace;
+
   --shadow-brutal: 4px 4px 0 0 #064e3b;
   --shadow-brutal-sm: 3px 3px 0 0 #064e3b;
   --shadow-brutal-lg: 6px 6px 0 0 #064e3b;
@@ -22,9 +37,9 @@
 }
 
 .dark {
-  --shadow-brutal: 4px 4px 0 0 #34d399;
-  --shadow-brutal-sm: 3px 3px 0 0 #34d399;
-  --shadow-brutal-lg: 6px 6px 0 0 #34d399;
+  --shadow-brutal: 4px 4px 0 0 #2d2d2d;
+  --shadow-brutal-sm: 3px 3px 0 0 #2d2d2d;
+  --shadow-brutal-lg: 6px 6px 0 0 #2d2d2d;
 }
 
 * {
@@ -45,15 +60,39 @@ body {
 
 .dark body,
 body.dark {
-  background: #0a1410;
-  color: #d1fae5;
+  background: var(--color-vscode-bg);
+  color: var(--color-vscode-text);
 }
 
 ::selection {
-  background: #34d399;
+  background: var(--color-brand-400);
   color: #064e3b;
 }
 
+.dark ::selection {
+  background: #264f78;
+  color: var(--color-vscode-text);
+}
+
+/* VS Code Dark+ Syntax Highlighting Theme */
+.dark pre,
+.dark code {
+  color: var(--color-vscode-text);
+}
+
+.dark .syntax-html { color: #E34C26; }
+.dark .syntax-css { color: #1572B6; }
+.dark .syntax-js { color: #F7DF1E; }
+.dark .syntax-string { color: #CE9178; }
+.dark .syntax-keyword { color: #569CD6; }
+.dark .syntax-function { color: #DCDCAA; }
+.dark .syntax-comment { color: #6A9955; font-style: italic; }
+.dark .syntax-number { color: #B5CEA8; }
+.dark .syntax-tag { color: #569CD6; }
+.dark .syntax-attr { color: #9CDCFE; }
+.dark .syntax-value { color: #CE9178; }
+
+/* Brutalist Cards */
 .brutal-card {
   border: 3px solid #064e3b;
   box-shadow: var(--shadow-brutal);
@@ -61,10 +100,11 @@ body.dark {
 }
 
 .dark .brutal-card {
-  border-color: #34d399;
-  background: #111916;
+  border-color: #3c3c3c;
+  background: var(--color-vscode-bg-secondary);
 }
 
+/* Brutalist Buttons */
 .brutal-btn {
   border: 3px solid #064e3b;
   box-shadow: var(--shadow-brutal-sm);
@@ -82,5 +122,45 @@ body.dark {
 }
 
 .dark .brutal-btn {
-  border-color: #34d399;
+  border-color: #3c3c3c;
+}
+
+/* Background helpers */
+.dark .bg-vscode { background: var(--color-vscode-bg); }
+.dark .bg-vscode-secondary { background: var(--color-vscode-bg-secondary); }
+.dark .bg-vscode-sidebar { background: var(--color-vscode-sidebar); }
+
+/* Dark scrollbar */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--color-vscode-bg);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #424242;
+  border-radius: 5px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4f4f4f;
+}
+
+/* Status badges for trails */
+.trail-status-available {
+  border-color: #4EC9B0;
+  color: #4EC9B0;
+}
+
+.trail-status-building {
+  border-color: #F7DF1E;
+  color: #F7DF1E;
+}
+
+.trail-status-soon {
+  border-color: #9DA5B4;
+  color: #9DA5B4;
 }

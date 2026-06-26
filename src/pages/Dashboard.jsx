@@ -5,6 +5,7 @@ import {
   BookOpen,
   Clock,
   Flame,
+  Map,
   Sparkles,
   Target,
   Trophy,
@@ -15,11 +16,9 @@ import { Button } from '../components/ui/Button'
 import { ProgressBar } from '../components/ui/ProgressBar'
 import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { useProgress } from '../hooks/useProgress.js'
-import { useCourses } from '../hooks/useCourses.js'
-import { getCourseWithLessons } from '../services/courseService.js'
-import { courses as staticCourses } from '../data/courses.js'
+import { roadmaps, courses as roadmapCourses, getModuleData } from '../data/roadmaps.js'
+import { allLessons } from '../data/lessons/index.js'
 import { useGsapReveal } from '../hooks/useGsapReveal'
-import { useEffect, useState } from 'react'
 
 const statIcons = {
   progress: Target,
@@ -42,25 +41,11 @@ export default function Dashboard() {
     streak,
     achievements,
     getCourseProgress,
-    recommendedLesson,
-    lastLesson,
+    isLessonCompleted,
     loading,
   } = useProgress()
 
-  const { courses } = useCourses()
-  const [courseDetails, setCourseDetails] = useState(staticCourses)
   const heroRef = useGsapReveal([progressPercent, name])
-
-  useEffect(() => {
-    async function loadCourses() {
-      const details = await Promise.all(
-        courses.map(async (course) => getCourseWithLessons(course.id)),
-      )
-      setCourseDetails(details.filter(Boolean))
-    }
-
-    if (courses.length) loadCourses()
-  }, [courses])
 
   if (loading) {
     return (
@@ -72,7 +57,6 @@ export default function Dashboard() {
   }
 
   const unlockedAchievements = achievements.filter((item) => item.unlocked)
-  const displayCourses = courseDetails.length ? courseDetails : staticCourses
 
   const stats = [
     { label: 'Progresso geral', value: `${progressPercent}%`, icon: 'progress' },
@@ -80,6 +64,17 @@ export default function Dashboard() {
     { label: 'Horas estudadas', value: `${studyHours}h`, icon: 'time' },
     { label: 'Streak', value: `${streak} dias`, icon: 'streak' },
   ]
+
+  const activeRoadmaps = roadmaps.filter((r) => r.courses.length > 0)
+  const displayCourses = roadmapCourses.filter((c) => {
+    const progress = getCourseProgress(c.id)
+    const modules = (c.modules || []).map((mId) => getModuleData(mId)).filter(Boolean)
+    const completed = modules.every((m) => (m.lessons || []).every((lId) => isLessonCompleted(lId)))
+    return progress > 0 || !completed
+  })
+
+  const recommendedLesson = allLessons.find((l) => !isLessonCompleted(l.id))
+
 
   return (
     <div>
@@ -99,7 +94,7 @@ export default function Dashboard() {
         <div>
           <p className="text-xl font-black">{name || 'Aluno WebStart'}</p>
           <p className="text-sm font-semibold text-brand-600">
-            Nível {level} · {xp} XP · {completedCourses.length} curso(s) concluído(s)
+            Nível {level} · {xp} XP · {completedCourses.length} trilha(s) concluída(s)
           </p>
         </div>
       </Card>
@@ -134,7 +129,7 @@ export default function Dashboard() {
         <Card>
           <div className="mb-4 flex items-center gap-2">
             <Sparkles className="text-brand-500" size={20} />
-            <h2 className="text-lg font-black">Sequência recomendada</h2>
+            <h2 className="text-lg font-black">Próxima aula</h2>
           </div>
           {recommendedLesson ? (
             <div>
@@ -153,23 +148,27 @@ export default function Dashboard() {
         </Card>
 
         <Card>
-          <h2 className="mb-4 text-lg font-black">Última aula acessada</h2>
-          {lastLesson ? (
-            <div>
-              <p className="font-bold">{lastLesson.title}</p>
-              <p className="mb-4 text-sm text-brand-700 dark:text-brand-300">{lastLesson.courseId.toUpperCase()}</p>
-              <Link to={`/aula/${lastLesson.id}`}>
-                <Button variant="secondary">Revisar aula</Button>
-              </Link>
+          <div className="mb-4 flex items-center gap-2">
+            <Map className="text-brand-500" size={20} />
+            <h2 className="text-lg font-black">Trilhas ativas</h2>
+          </div>
+          {activeRoadmaps.length > 0 ? (
+            <div className="space-y-2">
+              {activeRoadmaps.map((rm) => (
+                <Link key={rm.id} to="/trilhas" className="flex items-center gap-2 rounded-lg border-2 border-brand-200 p-2 text-sm font-semibold transition hover:border-brand-500 dark:border-brand-700">
+                  <span className="h-2 w-2 rounded-full bg-brand-500" />
+                  {rm.title}
+                </Link>
+              ))}
             </div>
           ) : (
-            <p className="text-brand-700 dark:text-brand-300">Nenhuma aula acessada ainda. Comece pelo curso HTML!</p>
+            <p className="text-brand-700 dark:text-brand-300">Nenhuma trilha ativa. Explore as trilhas!</p>
           )}
         </Card>
       </div>
 
       <section className="mt-8">
-        <h2 className="mb-4 text-lg font-black">Seus cursos</h2>
+        <h2 className="mb-4 text-lg font-black">Suas trilhas</h2>
         <div className="grid gap-4 md:grid-cols-2">
           {displayCourses.map((course) => (
             <Card key={course.id} hover>
@@ -179,7 +178,7 @@ export default function Dashboard() {
               </div>
               <p className="mb-4 text-sm text-brand-700 dark:text-brand-300">{course.description}</p>
               <ProgressBar value={getCourseProgress(course.id)} className="mb-4" />
-              <Link to={`/cursos/${course.id}`}>
+              <Link to={`/trilhas/${course.id}`}>
                 <Button variant="secondary" size="sm">Ver módulos</Button>
               </Link>
             </Card>

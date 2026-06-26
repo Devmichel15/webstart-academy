@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { allLessons } from '../data/courses.js'
+import { allLessons } from '../data/lessons/index.js'
 import { useAuthContext } from './AuthContext.jsx'
 import { getAchievementsWithStatus } from '../services/achievementService.js'
 import {

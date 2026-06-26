@@ -103,5 +103,4 @@ Criar componentes reutilizáveis para:
 * Onboarding
 
 O resultado final deve parecer uma plataforma educacional premium focada em iniciantes que desejam se tornar desenvolvedores web profissionais.
-vamos trabalhar neste arquivo aqui: C:\Users\LENOVO\Desktop\webstart
 e aqui todo o conteúdo do curso:  

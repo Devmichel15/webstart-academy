@@ -10,7 +10,8 @@ import {
   where,
 } from 'firebase/firestore'
 import { db } from '../firebase/firebase.js'
-import { allLessons, courses as staticCourses } from '../data/courses.js'
+import { allLessons } from '../data/lessons/index.js'
+import { courses as staticCourses, getModuleData } from '../data/roadmaps.js'
 import { withRetry } from '../utils/retry.js'
 import { XP_COURSE, XP_LESSON, XP_MODULE } from '../utils/xp.js'
 import {
@@ -52,19 +53,17 @@ export function subscribeToUserProgress(userId, callback, onError) {
   )
 }
 
-function getModuleLessons(courseId) {
-  return allLessons.filter((lesson) => lesson.courseId === courseId)
-}
-
-function isModuleComplete(completedLessons, courseId) {
-  const moduleLessons = getModuleLessons(courseId)
-  return moduleLessons.length > 0 && moduleLessons.every((lesson) => completedLessons.includes(lesson.id))
+function isModuleComplete(completedLessons, moduleId) {
+  const mod = getModuleData(moduleId)
+  if (!mod || !mod.lessons || !mod.lessons.length) return false
+  return mod.lessons.every((lessonId) => completedLessons.includes(lessonId))
 }
 
 function isCourseComplete(completedLessons, courseId) {
   const course = staticCourses.find((item) => item.id === courseId)
   if (!course) return false
-  return course.lessons.every((lesson) => completedLessons.includes(lesson.id))
+  const allCourseLessons = allLessons.filter((l) => l.courseId === courseId)
+  return allCourseLessons.every((lesson) => completedLessons.includes(lesson.id))
 }
 
 export async function visitLesson(userId, lesson) {
@@ -89,7 +88,7 @@ export async function completeLesson(userId, lessonId) {
     await setDoc(progressRef, {
       userId,
       courseId: lesson.courseId,
-      moduleId: `${lesson.courseId}-main`,
+      moduleId: lesson.moduleId || `${lesson.courseId}-main`,
       lessonId,
       completed: true,
       completedAt: serverTimestamp(),
@@ -105,10 +104,12 @@ export async function completeLesson(userId, lessonId) {
     const completedLessons = await addCompletedLesson(userId, lessonId)
     await visitLesson(userId, lesson)
 
-    const moduleComplete = isModuleComplete(completedLessons, lesson.courseId)
-    if (moduleComplete) {
-      xpEarned += XP_MODULE
-      await addXpToUser(userId, XP_MODULE)
+    if (lesson.moduleId) {
+      const moduleComplete = isModuleComplete(completedLessons, lesson.moduleId)
+      if (moduleComplete) {
+        xpEarned += XP_MODULE
+        await addXpToUser(userId, XP_MODULE)
+      }
     }
 
     const courseComplete = isCourseComplete(completedLessons, lesson.courseId)
@@ -124,18 +125,18 @@ export async function completeLesson(userId, lessonId) {
     return {
       alreadyCompleted: false,
       xpEarned,
-      moduleComplete,
+      moduleComplete: lesson.moduleId ? isModuleComplete(completedLessons, lesson.moduleId) : false,
       courseComplete,
     }
   })
 }
 
 export function getCourseProgressPercent(completedLessons, courseId) {
-  const course = staticCourses.find((item) => item.id === courseId)
-  if (!course || !course.lessons.length) return 0
+  const courseLessons = allLessons.filter((l) => l.courseId === courseId)
+  if (!courseLessons.length) return 0
 
-  const done = course.lessons.filter((lesson) => completedLessons.includes(lesson.id)).length
-  return Math.round((done / course.lessons.length) * 100)
+  const done = courseLessons.filter((lesson) => completedLessons.includes(lesson.id)).length
+  return Math.round((done / courseLessons.length) * 100)
 }
 
 export function isLessonCompleted(completedLessons, lessonId) {

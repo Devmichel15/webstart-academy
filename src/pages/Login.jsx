@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 import { AuthLayout } from '../components/auth/AuthLayout.jsx'
@@ -10,6 +10,12 @@ export default function Login() {
   const navigate = useNavigate()
   const location = useLocation()
   const { showError, showSuccess } = useToast()
+
+  useEffect(() => {
+    if (!localStorage.getItem('webstart_onboarding_done')) {
+      navigate('/onboarding', { replace: true })
+    }
+  }, [navigate])
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)

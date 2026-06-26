@@ -3,12 +3,12 @@ import {
   doc,
   getDoc,
   getDocs,
-  orderBy,
   query,
   where,
 } from 'firebase/firestore'
 import { db } from '../firebase/firebase.js'
-import { allLessons, getLessonById as getStaticLesson } from '../data/courses.js'
+import { allLessons, getLessonById as getStaticLesson } from '../data/lessons/index.js'
+import { getLessonsByModule as getStaticLessonsByModule } from '../data/lessons/index.js'
 import { withRetry } from '../utils/retry.js'
 
 export async function getLessonById(lessonId) {
@@ -42,12 +42,8 @@ export async function getLessonsByModule(moduleId) {
         .sort((a, b) => (a.order || 0) - (b.order || 0))
     }
 
-    const courseId = moduleId.replace('-main', '')
-    return allLessons.filter((lesson) => lesson.courseId === courseId)
-  }).catch(() => {
-    const courseId = moduleId.replace('-main', '')
-    return allLessons.filter((lesson) => lesson.courseId === courseId)
-  })
+    return getStaticLessonsByModule(moduleId)
+  }).catch(() => getStaticLessonsByModule(moduleId))
 }
 
 export async function getLessonsByCourse(courseId) {

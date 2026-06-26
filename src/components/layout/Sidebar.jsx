@@ -15,7 +15,7 @@ import { useToast } from '../../contexts/ToastContext.jsx'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/cursos', label: 'Cursos', icon: BookOpen },
+  { to: '/trilhas', label: 'Trilhas', icon: BookOpen },
   { to: '/laboratorio', label: 'Laboratório', icon: Beaker },
   { to: '/materiais', label: 'Materiais', icon: GraduationCap },
   { to: '/perfil', label: 'Perfil', icon: Award },

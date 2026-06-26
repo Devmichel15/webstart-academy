@@ -9,7 +9,8 @@ import {
   where,
 } from 'firebase/firestore'
 import { db } from '../firebase/firebase.js'
-import { courses as staticCourses } from '../data/courses.js'
+import { courses as staticCourses } from '../data/roadmaps.js'
+import { getLessonsByCourse } from '../data/lessons/index.js'
 import { getCache, setCache } from '../utils/cache.js'
 import { withRetry } from '../utils/retry.js'
 
@@ -22,12 +23,14 @@ function mapStaticCourses() {
     slug: course.id,
     description: course.description,
     thumbnail: '',
-    difficulty: 'beginner',
-    estimatedHours: Math.ceil(course.lessons.reduce((sum, l) => sum + l.duration, 0) / 60),
-    totalLessons: course.lessons.length,
+    difficulty: course.difficulty || 'beginner',
+    estimatedHours: course.estimatedHours || 0,
+    totalLessons: getLessonsByCourse(course.id).length,
+    modules: course.modules || [],
     icon: course.icon,
     color: course.color,
-    lessons: course.lessons,
+    completion: course.completion,
+    lessons: getLessonsByCourse(course.id),
   }))
 }
 
@@ -74,9 +77,20 @@ export async function getCourseById(courseId) {
     const snap = await getDoc(doc(db, 'courses', courseId))
     if (snap.exists()) return { id: snap.id, ...snap.data() }
 
-    const fallback = mapStaticCourses().find((course) => course.id === courseId)
-    return fallback || null
-  }).catch(() => mapStaticCourses().find((course) => course.id === courseId) || null)
+    const fallback = staticCourses.find((course) => course.id === courseId)
+    if (fallback) {
+      const lessons = getLessonsByCourse(courseId)
+      return { ...fallback, lessons, totalLessons: lessons.length }
+    }
+    return null
+  }).catch(() => {
+    const fallback = staticCourses.find((course) => course.id === courseId)
+    if (fallback) {
+      const lessons = getLessonsByCourse(courseId)
+      return { ...fallback, lessons, totalLessons: lessons.length }
+    }
+    return null
+  })
 }
 
 export async function getModulesByCourse(courseId) {
@@ -93,29 +107,21 @@ export async function getModulesByCourse(courseId) {
         .sort((a, b) => (a.order || 0) - (b.order || 0))
     }
 
-    return [{
-      id: `${courseId}-main`,
-      courseId,
-      title: 'Módulos do curso',
-      description: 'Conteúdo principal',
-      order: 1,
-    }]
-  }).catch(() => [{
-    id: `${courseId}-main`,
-    courseId,
-    title: 'Módulos do curso',
-    description: 'Conteúdo principal',
-    order: 1,
-  }])
+    const { getModulesByCourse } = await import('../data/modules/index.js')
+    return getModulesByCourse(courseId)
+  }).catch(async () => {
+    const { getModulesByCourse } = await import('../data/modules/index.js')
+    return getModulesByCourse(courseId)
+  })
 }
 
 export async function getCourseWithLessons(courseId) {
   const course = await getCourseById(courseId)
   if (!course) return null
 
-  const staticCourse = staticCourses.find((item) => item.id === courseId)
+  const lessons = getLessonsByCourse(courseId)
   return {
     ...course,
-    lessons: staticCourse?.lessons || course.lessons || [],
+    lessons,
   }
 }

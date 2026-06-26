@@ -9,6 +9,11 @@ import { AppLayout } from './components/layout/AppLayout'
 import Dashboard from './pages/Dashboard'
 import Courses from './pages/Courses'
 import CourseDetail from './pages/CourseDetail'
+import CourseCompletion from './pages/CourseCompletion'
+import ModuleDetail from './pages/ModuleDetail'
+import ModuleQuiz from './pages/ModuleQuiz'
+import ModuleLab from './pages/ModuleLab'
+import ModuleMiniProject from './pages/ModuleMiniProject'
 import Lesson from './pages/Lesson'
 import Lab from './pages/Lab'
 import Materials from './pages/Materials'
@@ -16,6 +21,7 @@ import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
+import Onboarding from './pages/Onboarding'
 
 export default function App() {
   return (
@@ -26,6 +32,7 @@ export default function App() {
             <BrowserRouter>
               <ToastContainer />
               <Routes>
+                <Route path="/onboarding" element={<Onboarding />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/registro" element={<Register />} />
                 <Route path="/recuperar-senha" element={<ForgotPassword />} />
@@ -38,8 +45,13 @@ export default function App() {
                   }
                 >
                   <Route index element={<Dashboard />} />
-                  <Route path="cursos" element={<Courses />} />
-                  <Route path="cursos/:courseId" element={<CourseDetail />} />
+                  <Route path="trilhas" element={<Courses />} />
+                  <Route path="trilhas/:courseId" element={<CourseDetail />} />
+                  <Route path="trilhas/:courseId/conclusao" element={<CourseCompletion />} />
+                  <Route path="trilhas/:courseId/modulo/:moduleId" element={<ModuleDetail />} />
+                  <Route path="trilhas/:courseId/modulo/:moduleId/quiz" element={<ModuleQuiz />} />
+                  <Route path="trilhas/:courseId/modulo/:moduleId/lab" element={<ModuleLab />} />
+                  <Route path="trilhas/:courseId/modulo/:moduleId/mini-projeto" element={<ModuleMiniProject />} />
                   <Route path="aula/:lessonId" element={<Lesson />} />
                   <Route path="laboratorio" element={<Lab />} />
                   <Route path="materiais" element={<Materials />} />
