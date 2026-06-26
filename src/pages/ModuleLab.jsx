@@ -1,10 +1,8 @@
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
-import { Header } from '../components/layout/Header'
-import { Card } from '../components/ui/Card'
-import { Badge } from '../components/ui/Badge'
-import { CodeLab } from '../components/lab/CodeLab'
+import { ArrowLeft, Clock, Award, Target } from 'lucide-react'
 import { getModuleData } from '../data/roadmaps.js'
+import { CodeLab } from '../components/lab/CodeLab'
+import { XP_LAB } from '../utils/xp.js'
 
 export default function ModuleLab() {
   const { courseId, moduleId } = useParams()
@@ -12,11 +10,13 @@ export default function ModuleLab() {
 
   if (!mod || !mod.lab) {
     return (
-      <div className="text-center">
-        <h1 className="text-2xl font-black">Laboratório não encontrado</h1>
-        <Link to={`/trilhas/${courseId}/modulo/${moduleId}`} className="mt-4 inline-block font-bold text-brand-600 underline">
-          Voltar ao módulo
-        </Link>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-black">Laboratório não encontrado</h1>
+          <Link to={`/trilhas/${courseId}/modulo/${moduleId}`} className="mt-4 inline-block font-bold text-brand-600 underline">
+            Voltar ao módulo
+          </Link>
+        </div>
       </div>
     )
   }
@@ -24,45 +24,41 @@ export default function ModuleLab() {
   const { lab } = mod
 
   return (
-    <div>
-      <Link to={`/trilhas/${courseId}/modulo/${moduleId}`} className="mb-4 inline-flex items-center gap-1 text-sm font-bold text-brand-600 hover:underline">
+    <div className="space-y-4">
+      {/* Back link */}
+      <Link to={`/trilhas/${courseId}/modulo/${moduleId}`} className="inline-flex items-center gap-1 text-sm font-bold text-brand-600 hover:underline">
         <ArrowLeft size={16} />
         Voltar para {mod.title}
       </Link>
 
-      <Header title={lab.title} subtitle={lab.description} />
-
-      <Card className="mb-6">
-        <div className="mb-4">
-          <Badge>Contexto</Badge>
-          <p className="mt-3 leading-relaxed text-brand-800 dark:text-brand-200">{lab.context}</p>
+      {/* Top bar with lab info */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-brand-800 bg-brand-950 px-5 py-3">
+        <div>
+          <h1 className="text-lg font-black text-white">{lab.title}</h1>
+          <p className="text-sm text-brand-300">{mod.title} • Laboratório</p>
         </div>
+        <div className="flex items-center gap-4 text-sm">
+          <span className="flex items-center gap-1.5 text-brand-300">
+            <Target size={14} />
+            {lab.description}
+          </span>
+          <span className="flex items-center gap-1.5 text-brand-300">
+            <Clock size={14} />
+            ~15 min
+          </span>
+          <span className="flex items-center gap-1.5 text-yellow-400 font-bold">
+            <Award size={14} />
+            +{XP_LAB || 50} XP
+          </span>
+        </div>
+      </div>
 
-        {lab.hint && (
-          <div className="mb-4 rounded-lg border-2 border-amber-500 bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-            <p className="font-bold">Dica:</p>
-            <p>{lab.hint}</p>
-          </div>
-        )}
-
-        {lab.checklist && lab.checklist.length > 0 && (
-          <div>
-            <h3 className="mb-2 font-bold">Checklist do Laboratório</h3>
-            <ul className="space-y-1">
-              {lab.checklist.map((item, i) => (
-                <li key={i} className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" className="h-4 w-4 accent-brand-500" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </Card>
-
-      <Card>
-        <CodeLab initialHtml={lab.starterHtml} initialCss={lab.starterCss} />
-      </Card>
+      {/* Lab Editor */}
+      <CodeLab
+        initialHtml={lab.starterHtml}
+        initialCss={lab.starterCss}
+        lab={lab}
+      />
     </div>
   )
 }

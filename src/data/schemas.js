@@ -10,6 +10,55 @@ export function createRoadmap({
   return { id, title, description, icon, color, order, courses }
 }
 
+export function createTrail({
+  id,
+  slug,
+  title,
+  description,
+  icon = 'code',
+  color = 'brand',
+  order = 1,
+  difficulty = 'beginner',
+  estimatedHours = 0,
+  modules = [],
+  completion,
+  status = 'available',
+  requiredTrail = null,
+  isPremium = false,
+  price = 0,
+  cover = null,
+  level = 1,
+  xp = 500,
+  certificate = null,
+}) {
+  return {
+    id,
+    slug: slug || id,
+    title,
+    description,
+    icon,
+    color,
+    order,
+    difficulty,
+    estimatedHours,
+    modules,
+    status,
+    requiredTrail,
+    isPremium,
+    price,
+    cover,
+    level,
+    xp,
+    certificate,
+    completion: completion || {
+      finalProject: null,
+      finalEvaluation: null,
+      certificate: null,
+      nextSteps: null,
+    },
+  }
+}
+
 export function createCourse({
   id,
   title,

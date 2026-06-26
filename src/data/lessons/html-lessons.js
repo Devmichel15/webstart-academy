@@ -574,4 +574,250 @@ export const htmlLessons = [
       'Formulário está acessível',
     ],
   }),
+
+  createLesson({
+    id: 'html-seo',
+    courseId: 'html',
+    moduleId: 'html-seo-module',
+    title: 'SEO para Iniciantes',
+    description: 'Meta tags, headings, indexação e otimização para motores de busca.',
+    duration: 15,
+    xp: 25,
+    order: 1,
+    illustration: 'search',
+    objectives: [
+      'Entender o que é SEO',
+      'Conhecer meta tags importantes',
+      'Saber usar headings para SEO',
+      'Compreender indexação',
+    ],
+    introduction:
+      'SEO (Search Engine Optimization) é o conjunto de práticas para melhorar o posicionamento do seu site nos resultados de busca. Nesta aula, você vai aprender os fundamentos para começar com o pé direito.',
+    history:
+      'Os primeiros mecanismos de busca (Archie 1990, Yahoo 1994) usavam índices manuais. O Google revolucionou em 1998 com o algoritmo PageRank, que avalia a relevância pelos links recebidos.',
+    concept:
+      'SEO envolve otimização on-page (conteúdo, meta tags, headings) e off-page (links externos, autoridade). Mecanismos de busca usam crawlers para indexar páginas e algoritmos para ranqueá-las.',
+    howItWorks:
+      'O crawler do Google (Googlebot) visita seu site, analisa o HTML, segue links e adiciona ao índice. Quando alguém pesquisa, o algoritmo busca no índice as páginas mais relevantes usando centenas de fatores.',
+    realWorldApplications: [
+      'Sites de e-commerce',
+      'Blogs',
+      'Landing pages',
+      'Portfólios',
+      'Sites institucionais',
+    ],
+    bestPractices: [
+      'Use title único por página',
+      'Meta description atraente',
+      'Headings com hierarquia (h1 único)',
+      'URL amigável e descritiva',
+    ],
+    commonMistakes: [
+      '- Conteúdo duplicado',
+      '- Título genérico (sem palavras-chave)',
+      '- Ignorar meta description',
+      '- Excesso de headings h1',
+    ],
+    deepDive:
+      'O Google avalia mais de 200 fatores de ranqueamento. Os mais importantes incluem: conteúdo relevante, velocidade de carregamento (Core Web Vitals), mobile-friendliness, backlinks de qualidade e segurança HTTPS.',
+    curiosities: [
+      'Google processa 8,5 bilhões de pesquisas por dia',
+      '15% das pesquisas são inéditas',
+      'PageRank foi nomeado em homenagem a Larry Page',
+    ],
+    example: {
+      html: '<!DOCTYPE html>\n<html lang="pt">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>WebStart Academy - Aprenda HTML</title>\n  <meta name="description" content="Curso completo de HTML para iniciantes. Aprenda tags, semântica e boas práticas.">\n  <meta name="keywords" content="HTML, curso, web, iniciante">\n</head>\n<body>\n  <h1>WebStart Academy</h1>\n  <p>O melhor lugar para aprender HTML.</p>\n</body>\n</html>',
+      css: 'body { font-family: system-ui, sans-serif; max-width: 640px; margin: 0 auto; padding: 2rem; }',
+    },
+    playground: {
+      html: '<h1>Título Principal</h1>\n<p>Descrição da página</p>',
+      css: 'body { font-family: system-ui; padding: 1rem; }',
+    },
+    challenge: {
+      prompt: 'Otimize o playground adicionando meta tags SEO no head.',
+      starterCode: '<!DOCTYPE html>\n<html>\n<head>\n  \n</head>\n<body>\n  <h1>Meu Site</h1>\n</body>\n</html>',
+      hint: 'Adicione meta description e um title descritivo.',
+    },
+    exercise: {
+      prompt: 'Crie uma página completa sobre HTML com title, meta description, h1 único e headings hierárquicos.',
+      starterCode: '<!DOCTYPE html>\n<html lang="pt">\n<head>\n  \n</head>\n<body>\n  \n</body>\n</html>',
+      hint: 'Use h1 para o título principal, h2 para seções, h3 para subseções.',
+    },
+    summary: [
+      'SEO melhora o posicionamento em buscadores',
+      'Meta tags e headings são fundamentais',
+      'Conteúdo relevante é o fator mais importante',
+      'Core Web Vitals impactam o ranqueamento',
+    ],
+    checklist: [
+      'Title e meta description configurados',
+      'Hierarquia de headings correta',
+      'URL amigável',
+      'Conteúdo relevante e original',
+    ],
+  }),
+
+  createLesson({
+    id: 'html-accessibility',
+    courseId: 'html',
+    moduleId: 'html-a11y-module',
+    title: 'Acessibilidade Web',
+    description: 'Leitores de tela, labels, ARIA e navegação inclusiva.',
+    duration: 20,
+    xp: 35,
+    order: 1,
+    illustration: 'accessibility',
+    objectives: [
+      'Entender o que é acessibilidade web',
+      'Usar tags semânticas para acessibilidade',
+      'Implementar atributos ARIA',
+      'Criar formulários acessíveis',
+    ],
+    introduction:
+      'A web é para todos. Pessoas com deficiência visual, auditiva, motora ou cognitiva devem conseguir acessar e interagir com seu site. Acessibilidade não é opcional - é direito.',
+    history:
+      'A WCAG (Web Content Accessibility Guidelines) foi criada pelo W3C em 1999. A versão 2.1 (2018) define os critérios atuais. No Brasil, a Lei Brasileira de Inclusão (2015) exige acessibilidade digital.',
+    concept:
+      'Acessibilidade web significa que pessoas com deficiência podem perceber, entender, navegar e interagir com a web. Envolve: leitores de tela (NVDA, VoiceOver), navegação por teclado, contraste de cores, texto alternativo.',
+    howItWorks:
+      'Leitores de tela interpretam o DOM e anunciam o conteúdo. Tags semânticas criam landmarks para navegação. ARIA (Accessible Rich Internet Applications) fornece informações adicionais quando HTML nativo não é suficiente.',
+    realWorldApplications: [
+      'Gov.br (governo)',
+      'Wikipedia',
+      'BBC',
+      'Apple',
+      'Microsoft',
+    ],
+    bestPractices: [
+      'Alt descritivo em todas as imagens',
+      'Labels associados a inputs',
+      'Contraste mínimo 4.5:1',
+      'Navegação por teclado funcional',
+    ],
+    commonMistakes: [
+      '- Imagens sem alt text',
+      '- Formulários sem label',
+      '- Baixo contraste de cores',
+      '- Dependência apenas de mouse',
+    ],
+    deepDive:
+      'ARIA adiciona atributos como role, aria-label, aria-labelledby, aria-hidden. Use ARIA apenas quando o HTML semântico não resolver - "No ARIA is better than bad ARIA."',
+    curiosities: [
+      '15% da população mundial tem alguma deficiência',
+      'O VoiceOver da Apple vem integrado em todo iPhone',
+      'Sites acessíveis tem melhor SEO',
+    ],
+    example: {
+      html: '<form>\n  <label for="nome">Nome</label>\n  <input type="text" id="nome" name="nome" required aria-required="true">\n  <label for="email">Email</label>\n  <input type="email" id="email" name="email" required>\n  <button type="submit">Enviar</button>\n</form>',
+      css: 'form { max-width: 400px; margin: 0 auto; display: grid; gap: 0.75rem; }\nlabel { font-weight: bold; }\ninput { padding: 0.5rem; border: 2px solid #064e3b; }',
+    },
+    playground: {
+      html: '<img src="https://via.placeholder.com/150" alt="">\n<p>Conteúdo da página</p>',
+      css: 'body { font-family: system-ui; padding: 1rem; }',
+    },
+    challenge: {
+      prompt: 'Adicione alt text descritivo à imagem e um label a um campo de input.',
+      starterCode: '<img src="foto.jpg" alt="">\n<input type="text">',
+      hint: 'O alt deve descrever o conteúdo da imagem. O label deve ter for ligado ao id do input.',
+    },
+    exercise: {
+      prompt: 'Crie um formulário de contato acessível com labels, fieldset e legend.',
+      starterCode: '<form>\n  <fieldset>\n    <legend>Seus dados</legend>\n    \n  </fieldset>\n</form>',
+      hint: 'Adicione label+input para nome e email, e um textarea para mensagem.',
+    },
+    summary: [
+      'Acessibilidade é direito de todos',
+      'Tags semânticas ajudam leitores de tela',
+      'ARIA complementa o HTML nativo',
+      'Contraste e navegação por teclado são essenciais',
+    ],
+    checklist: [
+      'Imagens com alt text',
+      'Labels associados',
+      'Navegação por teclado testada',
+      'Contraste verificado',
+    ],
+  }),
+
+  createLesson({
+    id: 'html-moderno',
+    courseId: 'html',
+    moduleId: 'html-moderno-module',
+    title: 'HTML Moderno',
+    description: 'audio, video, iframe, dialog, progress e meter.',
+    duration: 15,
+    xp: 25,
+    order: 1,
+    illustration: 'play',
+    objectives: [
+      'Incorporar audio e video nativamente',
+      'Usar iframe para conteúdo externo',
+      'Criar modais com dialog',
+      'Usar progress e meter para dados',
+    ],
+    introduction:
+      'HTML5 trouxe tags poderosas que antes só funcionavam com plugins (Flash). Hoje você pode adicionar vídeo, áudio, modais e barras de progresso sem nenhuma biblioteca externa.',
+    history:
+      'Antes do HTML5, vídeos na web dependiam do Flash Player (Adobe) ou Silverlight (Microsoft). O elemento <video> foi introduzido em 2010 e eliminou a necessidade de plugins.',
+    concept:
+      'Tags multimídia nativas: <video>, <audio>, <iframe> para incorporar conteúdo externo, <dialog> para modais nativos, <progress> para barras de progresso, <meter> para medições.',
+    howItWorks:
+      '<video> e <audio> usam o atributo src ou elementos <source> internos. <dialog> manipula o atributo open e métodos showModal(). <progress> reflete o progresso via value/max. <meter> mostra um valor dentro de um intervalo.',
+    realWorldApplications: [
+      'YouTube (<video>)',
+      'Spotify (<audio>)',
+      'Google Maps (<iframe>)',
+      'Modais de cookies (<dialog>)',
+      'Upload de arquivos (<progress>)',
+    ],
+    bestPractices: [
+      'Use vários formatos de vídeo (mp4, webm)',
+      'Adicione controls ao video/audio',
+      'Iframe com title para acessibilidade',
+      'Use showModal() para dialog',
+    ],
+    commonMistakes: [
+      '- Esquecer atributo controls',
+      '- Iframe sem title',
+      '- Dialog sem botão de fechar',
+      '- Apenas um formato de mídia',
+    ],
+    deepDive:
+      'O elemento <dialog> suporta display: modal (com backdrop nativo) e métodos show()/showModal()/close(). O backdrop pode ser estilizado com ::backdrop pseudo-elemento.',
+    curiosities: [
+      'O <dialog> só teve suporte total em 2022',
+      '<progress> não anima por padrão',
+      '<meter> pode ter atributos min, max, low, high, optimum',
+    ],
+    example: {
+      html: '<video controls width="400">\n  <source src="video.mp4" type="video/mp4">\n  <source src="video.webm" type="video/webm">\n  Seu navegador não suporta vídeo.\n</video>\n\n<dialog open>\n  <p>Bem-vindo ao site!</p>\n  <button onclick="this.closest(\'dialog\').close()">Fechar</button>\n</dialog>\n\n<progress value="70" max="100"></progress>',
+      css: 'body { font-family: system-ui; padding: 2rem; }\ndialog { border: 2px solid #064e3b; border-radius: 8px; padding: 2rem; }',
+    },
+    playground: {
+      html: '<video controls width="300">\n  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">\n</video>\n<progress value="50" max="100"></progress>',
+      css: 'body { font-family: system-ui; padding: 1rem; }',
+    },
+    challenge: {
+      prompt: 'Crie uma página com um player de vídeo e um botão que abre um dialog.',
+      starterCode: '<video controls>\n  <source src="video.mp4" type="video/mp4">\n</video>\n<dialog>\n  \n</dialog>',
+      hint: 'Use controls no video. No dialog, adicione um parágrafo e botão para fechar.',
+    },
+    exercise: {
+      prompt: 'Crie uma página com iframe incorporando um mapa, um player de áudio com controles e uma barra de progresso.',
+      starterCode: '<h1>Mídia na Web</h1>\n',
+      hint: 'Use <iframe> para o mapa, <audio controls> para o player, <progress> para a barra.',
+    },
+    summary: [
+      'HTML5 nativo substitui plugins como Flash',
+      '<video> e <audio> são suportados nativamente',
+      '<dialog> cria modais sem JavaScript',
+      '<progress> e <meter> exibem dados visuais',
+    ],
+    checklist: [
+      'Vídeo com controles e sources alternativos',
+      'Áudio funcional',
+      'Dialog com botão de fechar',
+      'Iframe com title',
+    ],
+  }),
 ]

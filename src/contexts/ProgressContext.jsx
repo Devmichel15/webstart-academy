@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { allLessons } from '../data/lessons/index.js'
+import { trails } from '../data/trails.js'
 import { useAuthContext } from './AuthContext.jsx'
 import { getAchievementsWithStatus } from '../services/achievementService.js'
 import {
@@ -10,6 +11,12 @@ import {
   visitLesson as visitLessonService,
 } from '../services/progressService.js'
 import { subscribeToUser } from '../services/userService.js'
+import {
+  computeTrailStatus,
+  getJourneyProgress,
+  getRecommendedTrail,
+  isTrailUnlocked,
+} from '../services/trailProgressService.js'
 import { getLevelFromXp, XP_LESSON } from '../utils/xp.js'
 import { useToast } from './ToastContext.jsx'
 

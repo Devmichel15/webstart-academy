@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, Code2, Palette, BookOpen, GraduationCap } from 'lucide-react'
+import { ArrowRight, Code2, Globe, Palette, FileJson, BookOpen, GraduationCap } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { ProgressBar } from '../components/ui/ProgressBar'
@@ -14,9 +14,12 @@ import { useEffect, useState } from 'react'
 const courseIcons = {
   html: Code2,
   css: Palette,
+  'fundamentos-web': Globe,
+  javascript: FileJson,
 }
 
 const roadmapIcons = {
+  fundamentos: Globe,
   frontend: Code2,
   backend: GraduationCap,
 }
@@ -99,12 +102,16 @@ export default function Courses() {
                                 Em breve
                               </span>
                             )}
-                            <span className="rounded-lg border-2 border-brand-800 px-2 py-1 text-xs font-bold dark:border-brand-400">
-                              {modules.length} módulos
-                            </span>
-                            <span className="rounded-lg border-2 border-brand-800 px-2 py-1 text-xs font-bold dark:border-brand-400">
-                              {totalLessons} aulas
-                            </span>
+                            {course.status === 'available' && modules.length > 0 && (
+                              <>
+                                <span className="rounded-lg border-2 border-brand-800 px-2 py-1 text-xs font-bold dark:border-brand-400">
+                                  {modules.length} módulos
+                                </span>
+                                <span className="rounded-lg border-2 border-brand-800 px-2 py-1 text-xs font-bold dark:border-brand-400">
+                                  {totalLessons} aulas
+                                </span>
+                              </>
+                            )}
                           </div>
                         </div>
 
@@ -116,14 +123,22 @@ export default function Courses() {
                           <Badge variant="success">{course.estimatedHours}h</Badge>
                         </div>
 
-                        <ProgressBar value={progress} label={`${completedInCourse}/${totalLessons} aulas`} className="mb-4" />
+                        {course.status === 'available' && modules.length > 0 && (
+                          <ProgressBar value={progress} label={`${completedInCourse}/${totalLessons} aulas`} className="mb-4" />
+                        )}
 
-                        <Link to={`/trilhas/${course.id}`}>
-                          <Button>
-                            Explorar trilha
-                            <ArrowRight size={16} />
+                        {course.status === 'soon' ? (
+                          <Button disabled className="w-full opacity-60">
+                            Em breve
                           </Button>
-                        </Link>
+                        ) : (
+                          <Link to={`/trilhas/${course.id}`}>
+                            <Button>
+                              {course.status === 'building' ? 'Ver detalhes' : 'Explorar trilha'}
+                              <ArrowRight size={16} />
+                            </Button>
+                          </Link>
+                        )}
                       </Card>
                     </motion.div>
                   )
