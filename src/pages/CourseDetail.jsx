@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { CheckCircle2, Circle, ArrowRight, FlaskConical, HelpCircle, Trophy, Award, Lock, Sparkles } from 'lucide-react'
+import { CheckCircle2, Circle, ArrowRight, FlaskConical, HelpCircle, Trophy, Award, Lock } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Header } from '../components/layout/Header'
@@ -42,7 +42,7 @@ export default function CourseDetail() {
     return (
       <div className="text-center">
         <h1 className="text-2xl font-black">Trilha não encontrada</h1>
-        <Link to="/trilhas" className="mt-4 inline-block font-bold text-brand-600 underline">Voltar às trilhas</Link>
+        <Link to="/trilhas" className="mt-4 inline-block font-bold text-secondary underline">Voltar às trilhas</Link>
       </div>
     )
   }
@@ -57,11 +57,11 @@ export default function CourseDetail() {
       <div>
         <Header title={trail.title} subtitle={trail.description} />
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-gray-300 bg-gray-100 text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-            <Clock size={48} />
+          <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-muted bg-surface text-muted">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
-          <h2 className="mb-2 text-2xl font-black text-gray-500">Em breve</h2>
-          <p className="mb-6 max-w-md text-gray-400">
+          <h2 className="mb-2 text-2xl font-black text-secondary">Em breve</h2>
+          <p className="mb-6 max-w-md text-muted">
             Esta trilha está sendo preparada com conteúdo exclusivo. Volte em breve!
           </p>
           <Link to="/trilhas">
@@ -80,11 +80,11 @@ export default function CourseDetail() {
       <div>
         <Header title={trail.title} subtitle={trail.description} />
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-gray-300 bg-gray-100 text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+          <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-muted bg-surface text-muted">
             <Lock size={48} />
           </div>
-          <h2 className="mb-2 text-2xl font-black text-gray-500">Trilha Bloqueada</h2>
-          <p className="mb-6 max-w-md text-gray-400">
+          <h2 className="mb-2 text-2xl font-black text-secondary">Trilha Bloqueada</h2>
+          <p className="mb-6 max-w-md text-muted">
             Complete <strong>{requiredTrailTitle}</strong> primeiro para desbloquear esta trilha.
           </p>
           <Link to={`/trilhas/${trail.requiredTrail}`}>
@@ -123,12 +123,12 @@ export default function CourseDetail() {
       )}
 
       {totalLessons > 0 && (
-        <div className="mb-6 rounded-xl border-3 border-brand-800 bg-brand-50 p-4 dark:border-brand-400 dark:bg-brand-950">
+        <div className="mb-6 rounded-xl border-3 border-strong bg-accent-soft p-4">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-sm font-bold">Progresso da trilha</p>
-            <span className="text-sm font-bold text-brand-600">{completedLessons}/{totalLessons} aulas</span>
+            <span className="text-sm font-bold text-secondary">{completedLessons}/{totalLessons} aulas</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full border-2 border-brand-800 bg-brand-100 dark:bg-brand-900">
+          <div className="h-2 overflow-hidden rounded-full border-2 border-strong bg-surface-hover">
             <div className="h-full bg-brand-500 transition-all" style={{ width: `${progress}%` }} />
           </div>
         </div>
@@ -143,7 +143,7 @@ export default function CourseDetail() {
             transition={{ delay: modIndex * 0.08 }}
           >
             <Card className="!p-0 overflow-hidden">
-              <div className="border-b-3 border-brand-800 bg-gradient-to-r from-brand-500 to-brand-600 p-4 text-white dark:border-brand-400">
+              <div className="border-b-3 border-strong bg-gradient-to-r from-brand-500 to-brand-600 p-4 text-white">
                 <Badge className="mb-2 !border-white/30 !bg-white/20 !text-white">Módulo {modIndex + 1}</Badge>
                 <h2 className="text-lg font-black">{mod.title}</h2>
                 <p className="text-sm text-brand-100">{mod.description}</p>
@@ -160,20 +160,20 @@ export default function CourseDetail() {
                     const lessonContent = (
                       <div className={`flex items-center justify-between rounded-lg border-2 p-3 transition ${
                         isBuilding
-                          ? 'border-gray-200 bg-gray-50 opacity-60 dark:border-gray-700 dark:bg-gray-900'
+                          ? 'border bg-surface opacity-60'
                           : completed
-                            ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950'
-                            : 'border-brand-200 dark:border-brand-700'
-                      } ${isBuilding ? '' : 'hover:border-brand-500'}`}>
+                            ? 'border-accent bg-accent-soft'
+                            : 'border hover:border-strong'
+                      } ${isBuilding ? '' : ''}`}>
                         <div className="flex items-center gap-3">
                           {completed ? (
                             <CheckCircle2 className="shrink-0 text-green-500" size={20} />
                           ) : (
-                            <Circle className="shrink-0 text-brand-300" size={20} />
+                            <Circle className="shrink-0 text-secondary" size={20} />
                           )}
                           <div>
-                            <p className={`text-sm font-bold ${isBuilding ? 'text-gray-400' : ''}`}>{lesson.title}</p>
-                            <span className="text-xs font-semibold text-brand-600">
+                            <p className={`text-sm font-bold ${isBuilding ? 'text-muted' : ''}`}>{lesson.title}</p>
+                            <span className="text-xs font-semibold text-secondary">
                               {lesson.duration} min · +{XP_LESSON} XP
                             </span>
                           </div>
@@ -202,7 +202,7 @@ export default function CourseDetail() {
 
                 <div className="mt-4 grid grid-cols-3 gap-2">
                   {mod.quiz && (trail.status === 'building' ? (
-                    <div className="flex cursor-not-allowed flex-col items-center gap-1 rounded-lg border-2 border-gray-200 bg-gray-50 p-2 text-center text-xs font-bold text-gray-400 opacity-60 dark:border-gray-700 dark:bg-gray-900">
+                    <div className="flex cursor-not-allowed flex-col items-center gap-1 rounded-lg border-2 border bg-surface p-2 text-center text-xs font-bold text-muted opacity-60">
                       <HelpCircle size={16} />
                       Quiz
                     </div>
@@ -215,7 +215,7 @@ export default function CourseDetail() {
                     </Link>
                   ))}
                   {mod.lab && (trail.status === 'building' ? (
-                    <div className="flex cursor-not-allowed flex-col items-center gap-1 rounded-lg border-2 border-gray-200 bg-gray-50 p-2 text-center text-xs font-bold text-gray-400 opacity-60 dark:border-gray-700 dark:bg-gray-900">
+                    <div className="flex cursor-not-allowed flex-col items-center gap-1 rounded-lg border-2 border bg-surface p-2 text-center text-xs font-bold text-muted opacity-60">
                       <FlaskConical size={16} />
                       Lab
                     </div>
@@ -228,7 +228,7 @@ export default function CourseDetail() {
                     </Link>
                   ))}
                   {mod.miniProject && (trail.status === 'building' ? (
-                    <div className="flex cursor-not-allowed flex-col items-center gap-1 rounded-lg border-2 border-gray-200 bg-gray-50 p-2 text-center text-xs font-bold text-gray-400 opacity-60 dark:border-gray-700 dark:bg-gray-900">
+                    <div className="flex cursor-not-allowed flex-col items-center gap-1 rounded-lg border-2 border bg-surface p-2 text-center text-xs font-bold text-muted opacity-60">
                       <Trophy size={16} />
                       Projeto
                     </div>

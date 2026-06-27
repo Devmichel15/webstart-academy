@@ -106,15 +106,15 @@ export default function Dashboard() {
 
       <Card className="mb-8 flex flex-wrap items-center gap-4">
         {photoURL ? (
-          <img src={photoURL} alt={name} className="h-16 w-16 rounded-full border-3 border-brand-800 object-cover dark:border-brand-400" />
+          <img src={photoURL} alt={name} className="h-16 w-16 rounded-full border-3 border-strong object-cover" />
         ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border-3 border-brand-800 bg-brand-500 text-2xl font-black text-white dark:border-brand-400">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border-3 border-strong bg-brand-500 text-2xl font-black text-white">
             {(name || 'A').charAt(0).toUpperCase()}
           </div>
         )}
         <div>
           <p className="text-xl font-black">{name || 'Aluno WebStart'}</p>
-          <p className="text-sm font-semibold text-brand-600">
+          <p className="text-sm font-semibold text-secondary">
             Nível {level} · {xp} XP · {completedCourses.length} trilha(s) concluída(s)
           </p>
         </div>
@@ -131,10 +131,10 @@ export default function Dashboard() {
               transition={{ delay: index * 0.08 }}
             >
               <Card hover className="h-full">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border-2 border-brand-800 bg-brand-100 dark:border-brand-400 dark:bg-brand-900">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border-2 border-strong bg-accent-soft">
                   <Icon size={20} />
                 </div>
-                <p className="text-sm font-semibold text-brand-600 dark:text-brand-400">{stat.label}</p>
+                <p className="text-sm font-semibold text-secondary">{stat.label}</p>
                 <p className="text-2xl font-black">{stat.value}</p>
               </Card>
             </motion.div>
@@ -152,12 +152,12 @@ export default function Dashboard() {
             <Map className="text-brand-500" size={20} />
             <h2 className="text-lg font-black">Sua Jornada</h2>
           </div>
-          <div className="mb-4 flex items-center justify-between rounded-lg border-2 border-brand-200 bg-brand-50 p-3 dark:border-brand-700 dark:bg-brand-900">
+          <div className="mb-4 flex items-center justify-between rounded-lg border-2 border bg-surface-hover p-3">
             <div>
-              <p className="text-xs font-semibold text-brand-600">Trilhas concluídas</p>
-              <p className="text-2xl font-black">{journeyProgress?.completedCount || 0}<span className="text-lg text-brand-600">/{journeyProgress?.totalCount || 0}</span></p>
+              <p className="text-xs font-semibold text-secondary">Trilhas concluídas</p>
+              <p className="text-2xl font-black">{journeyProgress?.completedCount || 0}<span className="text-lg text-secondary">/{journeyProgress?.totalCount || 0}</span></p>
             </div>
-            <div className="h-10 w-10 rounded-full border-2 border-brand-800 bg-brand-500 text-white flex items-center justify-center text-sm font-black">
+            <div className="h-10 w-10 rounded-full border-2 border-strong bg-brand-500 text-white flex items-center justify-center text-sm font-black">
               {journeyProgress?.percent || 0}%
             </div>
           </div>
@@ -175,24 +175,24 @@ export default function Dashboard() {
                   to={isLocked ? '#' : `/trilhas/${trail.id}`}
                   className={`flex items-center gap-3 rounded-lg border-2 p-2.5 text-sm font-semibold transition ${
                     isComplete
-                      ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950'
+                      ? 'border-accent bg-accent-soft'
                       : isLocked
-                        ? 'border-gray-200 opacity-50 dark:border-gray-700'
-                        : 'border-brand-200 hover:border-brand-500 dark:border-brand-700'
+                        ? 'border opacity-50'
+                        : 'border hover:border-strong'
                   }`}
                 >
                   {isComplete ? (
                     <CheckCircle2 size={18} className="shrink-0 text-green-500" />
                   ) : isLocked ? (
-                    <Lock size={18} className="shrink-0 text-gray-400" />
+                    <Lock size={18} className="shrink-0 text-muted" />
                   ) : (
                     <Icon size={18} className="shrink-0 text-brand-500" />
                   )}
-                  <span className={isLocked ? 'text-gray-400 dark:text-gray-500' : ''}>
+                  <span className={isLocked ? 'text-muted' : ''}>
                     {trail.title}
                   </span>
                   {!isLocked && !isComplete && getCourseProgress(trail.id) > 0 && (
-                    <span className="ml-auto text-xs font-bold text-brand-600">
+                    <span className="ml-auto text-xs font-bold text-secondary">
                       {getCourseProgress(trail.id)}%
                     </span>
                   )}
@@ -203,7 +203,7 @@ export default function Dashboard() {
               )
             })}
             {orderedTrails.length > 5 && (
-              <Link to="/trilhas" className="block text-center text-xs font-bold text-brand-600 hover:underline">
+              <Link to="/trilhas" className="block text-center text-xs font-bold text-secondary hover:underline">
                 Ver todas as {orderedTrails.length} trilhas
               </Link>
             )}
@@ -218,7 +218,7 @@ export default function Dashboard() {
           {firstIncompleteLesson ? (
             <div>
               <p className="mb-1 font-bold">{firstIncompleteLesson.title}</p>
-              <p className="mb-4 text-sm text-brand-700 dark:text-brand-300">{firstIncompleteLesson.description}</p>
+              <p className="mb-4 text-sm text-secondary">{firstIncompleteLesson.description}</p>
               <Link to={`/aula/${firstIncompleteLesson.id}`}>
                 <Button>
                   Continuar
@@ -227,7 +227,7 @@ export default function Dashboard() {
               </Link>
             </div>
           ) : (
-            <p className="font-bold text-brand-600">Parabéns! Você concluiu todos os módulos.</p>
+            <p className="font-bold text-secondary">Parabéns! Você concluiu todos os módulos.</p>
           )}
         </Card>
       </div>
@@ -242,7 +242,7 @@ export default function Dashboard() {
                   <h3 className="text-xl font-black">{trail.title}</h3>
                   <span className="text-sm font-bold">{getCourseProgress(trail.id)}%</span>
                 </div>
-                <p className="mb-4 text-sm text-brand-700 dark:text-brand-300">{trail.description}</p>
+                <p className="mb-4 text-sm text-secondary">{trail.description}</p>
                 <ProgressBar value={getCourseProgress(trail.id)} className="mb-4" />
                 <Link to={`/trilhas/${trail.id}`}>
                   <Button variant="secondary" size="sm">Ver módulos</Button>
@@ -264,16 +264,16 @@ export default function Dashboard() {
               key={achievement.id}
               className={`rounded-xl border-3 p-4 ${
                 achievement.unlocked
-                  ? 'border-brand-500 bg-brand-50 dark:bg-brand-900'
-                  : 'border-brand-200 opacity-50 dark:border-brand-800'
+                  ? 'border-strong bg-accent-soft'
+                  : 'border opacity-50'
               }`}
             >
               <p className="font-bold">{achievement.title}</p>
-              <p className="text-sm text-brand-700 dark:text-brand-300">{achievement.description}</p>
+              <p className="text-sm text-secondary">{achievement.description}</p>
             </div>
           ))}
         </div>
-        <p className="mt-3 text-sm font-semibold text-brand-600">
+        <p className="mt-3 text-sm font-semibold text-secondary">
           {unlockedAchievements.length}/{achievements.length} desbloqueadas
         </p>
       </section>

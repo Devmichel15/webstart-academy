@@ -2,7 +2,68 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ══════════════════════════════════════════════
+   Design Tokens — Light Mode
+   ══════════════════════════════════════════════ */
+:root {
+  --bg-canvas: #f8fffb;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #ecfdf5;
+  --bg-elevated: #ffffff;
+
+  --text-primary: #064e3b;
+  --text-secondary: #047857;
+  --text-muted: #059669;
+
+  --border: #a7f3d0;
+  --border-strong: #065f46;
+
+  --accent: #10b981;
+  --accent-hover: #059669;
+  --accent-soft: #ecfdf5;
+}
+
+/* ══════════════════════════════════════════════
+   Design Tokens — Dark Mode
+   ══════════════════════════════════════════════ */
+.dark {
+  --bg-canvas: #16161e;
+  --bg-surface: #1e1e24;
+  --bg-surface-hover: #26262e;
+  --bg-elevated: #2a2a32;
+
+  --text-primary: #e8e8e8;
+  --text-secondary: #a0a0b0;
+  --text-muted: #707080;
+
+  --border: #3c3c44;
+  --border-strong: #5a5a6a;
+
+  --accent: #34d399;
+  --accent-hover: #6ee7b7;
+  --accent-soft: #1a2e26;
+}
+
+/* ══════════════════════════════════════════════
+   Tailwind Theme Configuration
+   ══════════════════════════════════════════════ */
 @theme {
+  --color-canvas: var(--bg-canvas);
+  --color-surface: var(--bg-surface);
+  --color-surface-hover: var(--bg-surface-hover);
+  --color-elevated: var(--bg-elevated);
+
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-muted: var(--text-muted);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+
   --color-brand-50: #ecfdf5;
   --color-brand-100: #d1fae5;
   --color-brand-200: #a7f3d0;
@@ -37,9 +98,9 @@
 }
 
 .dark {
-  --shadow-brutal: 4px 4px 0 0 #2d2d2d;
-  --shadow-brutal-sm: 3px 3px 0 0 #2d2d2d;
-  --shadow-brutal-lg: 6px 6px 0 0 #2d2d2d;
+  --shadow-brutal: 4px 4px 0 0 #3c3c44;
+  --shadow-brutal-sm: 3px 3px 0 0 #3c3c44;
+  --shadow-brutal-lg: 6px 6px 0 0 #3c3c44;
 }
 
 * {
@@ -54,14 +115,10 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--font-body);
-  background: #f8fffb;
-  color: #064e3b;
-}
-
-.dark body,
-body.dark {
-  background: var(--color-vscode-bg);
-  color: var(--color-vscode-text);
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
@@ -94,19 +151,14 @@ body.dark {
 
 /* Brutalist Cards */
 .brutal-card {
-  border: 3px solid #064e3b;
+  border: 3px solid var(--border-strong);
   box-shadow: var(--shadow-brutal);
-  background: white;
-}
-
-.dark .brutal-card {
-  border-color: #3c3c3c;
-  background: var(--color-vscode-bg-secondary);
+  background: var(--bg-surface);
 }
 
 /* Brutalist Buttons */
 .brutal-btn {
-  border: 3px solid #064e3b;
+  border: 3px solid var(--border-strong);
   box-shadow: var(--shadow-brutal-sm);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -121,10 +173,6 @@ body.dark {
   box-shadow: none;
 }
 
-.dark .brutal-btn {
-  border-color: #3c3c3c;
-}
-
 /* Background helpers */
 .dark .bg-vscode { background: var(--color-vscode-bg); }
 .dark .bg-vscode-secondary { background: var(--color-vscode-bg-secondary); }
@@ -137,7 +185,7 @@ body.dark {
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: var(--color-vscode-bg);
+  background: var(--bg-canvas);
 }
 
 .dark ::-webkit-scrollbar-thumb {
@@ -168,8 +216,6 @@ body.dark {
 /* ══════════════════════════════════════════════
    VS Code Dark+ Lab Environment
    ══════════════════════════════════════════════ */
-
-/* ─── Syntax Highlighting (Synced with SyntaxHighlighter.js) ─── */
 
 .lab-container .syn-comment { color: #6A9955; font-style: italic; }
 .lab-container .syn-tag { color: #569CD6; }
@@ -1007,12 +1053,6 @@ body.dark {
   color: inherit;
 }
 
-/* ─── Active Line Highlight ─── */
-
-.lab-editor-textarea:focus + .lab-editor-highlight .lab-editor-pre {
-  /* Active line highlight is handled via gutter */
-}
-
 /* ─── Responsive ─── */
 
 @media (max-width: 480px) {
@@ -1033,4 +1073,80 @@ body.dark {
   .lab-preview-chrome {
     padding: 6px 8px;
   }
+}
+
+/* ══════════════════════════════════════════════
+   Reading Experience — Lesson Content
+   ══════════════════════════════════════════════ */
+
+.reading-level-1 {
+  max-width: 720px;
+  margin-bottom: 2.5rem;
+}
+
+.reading-level-2 {
+  max-width: 640px;
+  margin-bottom: 2rem;
+}
+
+.reading-content {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--text-primary);
+}
+
+.reading-content p {
+  margin-bottom: 1.25em;
+}
+
+.reading-content-compact {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.reading-content code,
+.reading-content-compact code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+}
+
+.reading-level-1 + .reading-level-2 {
+  margin-top: -0.5rem;
+}
+
+.reading-level-2 + .reading-level-1 {
+  margin-top: 1rem;
+}
+
+section[id^="section-"] {
+  scroll-margin-top: 80px;
+}
+
+.card-soft {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-surface);
+  padding: 1.25rem;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+.hover-lift {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.dark .hover-lift:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }

@@ -25,10 +25,10 @@ const trailIcons = {
 }
 
 const statusConfig = {
-  locked: { label: 'Bloqueado', color: 'border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-400', icon: Lock },
-  available: { label: 'Disponível', color: 'border-brand-500 bg-brand-50 dark:bg-brand-900 text-brand-600', icon: Sparkles },
-  in_progress: { label: 'Em andamento', color: 'border-blue-500 bg-blue-50 dark:bg-blue-900 text-blue-600', icon: Clock },
-  completed: { label: 'Concluído', color: 'border-green-500 bg-green-50 dark:bg-green-900 text-green-600', icon: CheckCircle2 },
+  locked: { label: 'Bloqueado', color: 'border-muted bg-surface text-muted', icon: Lock },
+  available: { label: 'Disponível', color: 'border-strong bg-accent-soft text-secondary', icon: Sparkles },
+  in_progress: { label: 'Em andamento', color: 'border-blue-400 bg-blue-50 text-blue-600 dark:border-blue-500 dark:bg-blue-950 dark:text-blue-300', icon: Clock },
+  completed: { label: 'Concluído', color: 'border-accent bg-accent-soft text-green-600', icon: CheckCircle2 },
 }
 
 export default function Journey() {
@@ -62,7 +62,7 @@ export default function Journey() {
       />
 
       <div className="relative">
-        <div className="absolute left-8 top-0 bottom-0 w-1 bg-brand-200 dark:bg-brand-800 hidden md:block" />
+        <div className="absolute left-8 top-0 bottom-0 w-1 bg-border hidden md:block" />
 
         <div className="space-y-6">
           {orderedTrails.map((trail, tIndex) => {
@@ -70,7 +70,7 @@ export default function Journey() {
             const status = getTrailStatus(trail.id)
             const displayStatus = trail.status === 'soon' ? 'soon' : status
             const cfg = displayStatus === 'soon'
-              ? { label: 'Em breve', color: 'border-gray-400 bg-gray-100 text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400', icon: Clock }
+              ? { label: 'Em breve', color: 'border-muted bg-surface text-muted', icon: Clock }
               : statusConfig[status] || statusConfig.locked
             const StatusIcon = cfg.icon
             const progress = getCourseProgress(trail.id)
@@ -93,8 +93,8 @@ export default function Journey() {
                       : status === 'in_progress'
                         ? 'border-blue-500 bg-blue-500 text-white'
                         : status === 'locked'
-                          ? 'border-gray-300 bg-gray-100 text-gray-400 dark:border-gray-600 dark:bg-gray-800'
-                          : 'border-brand-500 bg-brand-500 text-white'
+                          ? 'border-muted bg-surface text-muted'
+                          : 'border-strong bg-brand-500 text-white'
                   }`}>
                     {status === 'completed' ? (
                       <CheckCircle2 size={14} />
@@ -120,10 +120,10 @@ export default function Journey() {
                             status === 'completed'
                               ? 'border-green-500 bg-green-500 text-white'
                               : trail.status === 'soon'
-                                ? 'border-gray-300 bg-gray-100 text-gray-400 dark:border-gray-600 dark:bg-gray-800'
+                                ? 'border-muted bg-surface text-muted'
                                 : status === 'locked'
-                                  ? 'border-gray-300 bg-gray-100 text-gray-400 dark:border-gray-600 dark:bg-gray-800'
-                                  : 'border-brand-800 bg-brand-500 text-white shadow-[4px_4px_0_0_#064e3b] dark:border-brand-400'
+                                  ? 'border-muted bg-surface text-muted'
+                                  : 'border-strong bg-brand-500 text-white shadow-[4px_4px_0_0_#064e3b]'
                           }`}>
                             {trail.status === 'soon' ? <Clock size={28} /> : status === 'locked' ? <Lock size={28} /> : <Icon size={28} />}
                           </div>
@@ -131,7 +131,7 @@ export default function Journey() {
                           <div>
                             <div className="mb-1 flex flex-wrap items-center gap-2">
                               <h2 className={`text-xl font-black ${
-                                status === 'locked' ? 'text-gray-400 dark:text-gray-500' : ''
+                                status === 'locked' ? 'text-muted' : ''
                               }`}>
                                 {trail.title}
                               </h2>
@@ -145,7 +145,7 @@ export default function Journey() {
                                 </span>
                               )}
                               {trail.status === 'soon' && (
-                                <span className="rounded-lg border-2 border-gray-400 px-2 py-0.5 text-xs font-bold text-gray-500 dark:border-gray-500 dark:text-gray-400">
+                                <span className="rounded-lg border-2 border-muted px-2 py-0.5 text-xs font-bold text-muted">
                                   Em breve
                                 </span>
                               )}
@@ -153,8 +153,8 @@ export default function Journey() {
 
                             <p className={`text-sm ${
                               status === 'locked'
-                                ? 'text-gray-400 dark:text-gray-500'
-                                : 'text-brand-700 dark:text-brand-300'
+                                ? 'text-muted'
+                                : 'text-secondary'
                             }`}>
                               {trail.description}
                             </p>
@@ -175,12 +175,12 @@ export default function Journey() {
 
                         <div className="sm:text-right shrink-0">
                           {trail.status === 'soon' && (
-                            <p className="text-xs font-semibold text-gray-400 dark:text-gray-500">
+                            <p className="text-xs font-semibold text-muted">
                               Em desenvolvimento
                             </p>
                           )}
                           {status === 'locked' && trail.status !== 'soon' && trail.requiredTrail && (
-                            <p className="text-xs font-semibold text-gray-400 dark:text-gray-500">
+                            <p className="text-xs font-semibold text-muted">
                               Complete {getTrailTitle(trail.requiredTrail)} para desbloquear
                             </p>
                           )}
@@ -226,5 +226,3 @@ export default function Journey() {
     </div>
   )
 }
-
-

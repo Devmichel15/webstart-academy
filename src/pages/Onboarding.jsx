@@ -65,8 +65,8 @@ export default function Onboarding() {
         </div>
 
         {/* Content */}
-        <h2 className="mb-3 text-2xl font-black text-white">{slide.title}</h2>
-        <p className="mx-auto mb-8 max-w-sm text-brand-200">{slide.description}</p>
+        <h2 className="mb-3 text-2xl font-black text-primary">{slide.title}</h2>
+        <p className="mx-auto mb-8 max-w-sm text-secondary">{slide.description}</p>
 
         {/* Actions */}
         <div className="flex flex-col gap-3">
@@ -83,7 +83,7 @@ export default function Onboarding() {
           </Button>
           <button
             onClick={handleSkip}
-            className="text-sm font-bold text-brand-400 hover:text-brand-300 hover:underline"
+            className="text-sm font-bold text-muted hover:text-secondary hover:underline"
           >
             Pular introdução
           </button>

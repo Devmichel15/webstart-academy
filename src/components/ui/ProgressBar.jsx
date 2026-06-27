@@ -9,9 +9,9 @@ export function ProgressBar({ value = 0, label, className = '' }) {
           <span>{safeValue}%</span>
         </div>
       )}
-      <div className="h-4 overflow-hidden rounded-full border-2 border-brand-800 bg-white dark:border-brand-400 dark:bg-brand-950">
+      <div className="h-4 overflow-hidden rounded-full border-2 border-strong bg-surface">
         <div
-          className="h-full rounded-full bg-brand-500 transition-all duration-500"
+          className="h-full rounded-full bg-accent transition-all duration-500"
           style={{ width: `${safeValue}%` }}
         />
       </div>

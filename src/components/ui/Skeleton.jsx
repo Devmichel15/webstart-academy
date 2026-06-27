@@ -1,7 +1,7 @@
 export function Skeleton({ className = '' }) {
   return (
     <div
-      className={`animate-pulse rounded-lg bg-brand-200 dark:bg-brand-800 ${className}`}
+      className={`animate-pulse rounded-lg bg-surface-hover ${className}`}
       aria-hidden="true"
     />
   )
@@ -9,7 +9,7 @@ export function Skeleton({ className = '' }) {
 
 export function CardSkeleton() {
   return (
-    <div className="rounded-2xl border-3 border-brand-200 p-6 dark:border-brand-800">
+    <div className="rounded-2xl border-2 border p-6">
       <Skeleton className="mb-4 h-10 w-10" />
       <Skeleton className="mb-2 h-4 w-24" />
       <Skeleton className="h-8 w-16" />
@@ -41,8 +41,11 @@ export function ProfileSkeleton() {
         <CardSkeleton />
         <CardSkeleton />
       </div>
-      <Skeleton className="h-24 w-full" />
-      <Skeleton className="h-48 w-full" />
+      <div className="space-y-3">
+        <Skeleton className="h-4 w-48" />
+        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-20 w-full" />
+      </div>
     </div>
   )
 }
