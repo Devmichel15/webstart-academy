@@ -54,6 +54,28 @@ export async function downloadShareCardImage(canvas) {
   link.click()
 }
 
+// SVG logo paths from public/logo.svg — fills adjusted for dark bg
+const LOGO_PATHS = [
+  { d: 'M25.0542 126.645L0 33.4458L11.4544 33.495L30.5829 109.396L31.492 109.4L51.6359 33.6677L64.363 33.7224L83.8552 109.625L84.7643 109.629L104.545 33.8951L115.999 33.9443L90.1445 126.925L78.5083 126.875L58.2818 52.6055L57.5546 52.6024L36.6905 126.695L25.0542 126.645Z', fill: '#e8e8e8' },
+  { d: 'M34.1709 123.347L7.41801 30.6209L18.8714 30.4609L39.3835 106L40.2925 105.987L59.0493 29.8994L71.7753 29.7215L92.651 105.255L93.56 105.243L111.953 29.1601L123.407 29L99.2554 122.438L87.6202 122.6L66.0402 48.7126L65.313 48.7228L45.8061 123.185L34.1709 123.347Z', fill: '#10b981' },
+  { d: 'M79.7054 28.174C79.1797 23.5656 76.983 19.9804 73.1152 17.4183C69.2474 14.8562 64.4953 13.563 58.859 13.5388C54.7378 13.5211 51.1289 14.1723 48.0323 15.4923C44.966 16.8125 42.5642 18.6355 40.8269 20.9614C39.1199 23.2874 38.2601 25.9352 38.2473 28.9049C38.2366 31.3897 38.8184 33.5286 39.9925 35.3216C41.197 37.0843 42.7362 38.5607 44.6098 39.7505C46.4837 40.9101 48.4492 41.8731 50.5066 42.6395C52.564 43.3757 54.4554 43.9747 56.1807 44.4367L65.6242 47.0227C68.0457 47.6695 70.7389 48.5599 73.7037 49.6939C76.6989 50.828 79.5559 52.3705 82.2748 54.3216C85.0242 56.2426 87.2863 58.7069 89.0613 61.7145C90.8363 64.7222 91.7144 68.4078 91.6956 72.7714C91.674 77.8017 90.3363 82.3414 87.6825 86.3906C85.059 90.44 81.227 93.6508 76.1865 96.0231C71.1762 98.3956 65.0954 99.5665 57.9439 99.5357C51.2773 99.507 45.5093 98.4065 40.6398 96.234C35.8006 94.0617 31.9954 91.0453 29.2241 87.1849C26.483 83.3246 24.9417 78.8482 24.5999 73.7558L36.2361 73.8058C36.5241 77.3222 37.6934 80.2363 39.744 82.5482C41.8252 84.8299 44.4542 86.5382 47.6312 87.6731C50.8386 88.7778 54.2908 89.3381 57.9877 89.354C62.2907 89.3724 66.1573 88.6922 69.5875 87.313C73.0178 85.9035 75.7384 83.9453 77.7492 81.4388C79.7601 78.902 80.7728 75.9366 80.7874 72.5427C80.8007 69.4518 79.9479 66.933 78.229 64.9862C76.5101 63.0394 74.2441 61.4539 71.4312 60.2296C68.6182 59.0054 65.5774 57.9317 62.3086 57.0086L50.8682 53.6867C43.6045 51.5645 37.8598 48.5549 33.6341 44.658C29.4084 40.761 27.309 35.6761 27.336 29.4035C27.3584 24.1914 28.787 19.652 31.6219 15.7854C34.4871 11.8886 38.3182 8.87478 43.1153 6.74386C47.9428 4.58277 53.3263 3.51499 59.2656 3.54052C65.2656 3.5663 70.5942 4.66497 75.2516 6.83652C79.9091 8.97777 83.5935 11.9027 86.3049 15.6113C89.0466 19.3201 90.483 23.5233 90.6144 28.2209L79.7054 28.174Z', fill: '#e8e8e8' },
+  { d: 'M87.5434 24.2608C86.9336 19.6628 84.6717 16.1183 80.7577 13.6273C76.8438 11.1363 72.0689 9.93025 66.4331 10.0089C62.3123 10.0665 58.7159 10.7835 55.6439 12.1599C52.6022 13.5359 50.2341 15.4025 48.5396 17.7597C46.8754 20.1165 46.0641 22.7796 46.1056 25.749C46.1403 28.2336 46.761 30.3615 47.9677 32.1327C49.2042 33.8732 50.7701 35.3212 52.6652 36.4766C54.5599 37.6018 56.5427 38.5287 58.6137 39.2574C60.6843 39.9558 62.5863 40.5202 64.3198 40.9506L73.809 43.3637C76.2419 43.9661 78.9508 44.8071 81.9359 45.8867C84.9513 46.9659 87.836 48.456 90.5901 50.3571C93.3741 52.2275 95.6809 54.65 97.5106 57.6248C99.3402 60.5995 100.286 64.2684 100.347 68.6317C100.417 73.6615 99.1622 78.2249 96.5828 82.3219C94.0338 86.4186 90.2611 89.6989 85.2647 92.1629C80.2986 94.6265 74.2402 95.9082 67.0894 96.0081C60.4234 96.1013 54.6362 95.1063 49.7278 93.0232C44.8497 90.9396 40.99 87.9933 38.1486 84.1841C35.3375 80.3745 33.7146 75.9271 33.2799 70.8418L44.9151 70.6792C45.2672 74.1897 46.4896 77.082 48.5822 79.356C50.7046 81.5993 53.3644 83.2593 56.5616 84.3359C59.7887 85.3818 63.2505 85.879 66.9471 85.8273C71.2497 85.7672 75.1032 85.0163 78.5077 83.5746C81.9117 82.1027 84.596 80.0953 86.5607 77.5524C88.5249 74.9793 89.4833 71.9959 89.4359 68.6023C89.3927 65.5117 88.494 63.0089 86.7398 61.0938C84.9856 59.1787 82.6911 57.6349 79.8562 56.4622C77.0214 55.2896 73.9614 54.2717 70.6763 53.4084L59.1771 50.2961C51.8759 48.307 46.0772 45.4029 41.781 41.5838C37.4847 37.7646 35.2928 32.719 35.2052 26.4469C35.1323 21.2353 36.4778 16.6706 39.2415 12.7528C42.0351 8.80432 45.8105 5.72096 50.5679 3.50275C55.3551 1.25382 60.7181 0.0878532 66.6569 0.00485921C72.6563 -0.0789828 78.0042 0.922147 82.7005 3.00824C87.3963 5.06404 91.1336 7.92118 93.9122 11.5796C96.7212 15.2377 98.2343 19.4139 98.4514 24.1083L87.5434 24.2608Z', fill: '#10b981' },
+]
+
+function drawLogo(ctx, x, y, size) {
+  // Logo viewBox is 124x127, scale to desired size
+  const scale = size / 124
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.scale(scale, scale)
+  for (const p of LOGO_PATHS) {
+    const path = new Path2D(p.d)
+    ctx.fillStyle = p.fill
+    ctx.fill(path)
+  }
+  ctx.restore()
+}
+
 export function renderShareCardToCanvas(data, width = 1080, height = 1920) {
   const canvas = document.createElement('canvas')
   canvas.width = width
@@ -66,69 +88,65 @@ export function renderShareCardToCanvas(data, width = 1080, height = 1920) {
   const BG = '#0a0a0a'
   const TEXT = '#e8e8e8'
   const MUTED = '#a0a0b0'
-  const PAD = width * 0.075
+  const PAD = Math.round(width * 0.075)
 
   // ── Background ──
   ctx.fillStyle = BG
   ctx.fillRect(0, 0, width, height)
 
   // ── Border ──
-  const borderW = Math.round(width * 0.008)
+  const borderW = Math.max(3, Math.round(width * 0.008))
   ctx.strokeStyle = BRAND
-  ctx.lineWidth = Math.max(3, borderW)
+  ctx.lineWidth = borderW
   const b = Math.max(6, Math.round(width * 0.012))
   ctx.strokeRect(b, b, width - b * 2, height - b * 2)
 
   // ── Watermark ──
   ctx.save()
   ctx.fillStyle = 'rgba(16, 185, 129, 0.035)'
-  ctx.font = `900 ${width * 0.12}px ${sans}`
+  ctx.font = `900 ${Math.round(width * 0.12)}px ${sans}`
   ctx.textAlign = 'right'
   ctx.textBaseline = 'bottom'
   ctx.fillText('WebStart', width - PAD * 0.5, height - PAD * 0.5)
   ctx.restore()
 
-  // ── Header: Logo mark ──
-  const logoSize = Math.round(width * 0.035)
+  // ── Header: Logo ──
+  const logoSize = Math.round(width * 0.04)
   const logoX = PAD
-  const logoY = PAD * 0.8
-  ctx.fillStyle = BRAND
-  const lr = Math.round(logoSize * 0.15)
-  roundRect(ctx, logoX, logoY, logoSize, logoSize, lr)
-  ctx.fill()
+  const logoY = Math.round(PAD * 0.7)
+  drawLogo(ctx, logoX, logoY, logoSize)
 
-  ctx.fillStyle = BG
-  ctx.font = `900 ${Math.round(logoSize * 0.45)}px ${sans}`
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillText('WS', logoX + logoSize / 2, logoY + logoSize / 2)
+  const logoRight = logoX + logoSize
+  const headerCenterY = logoY + logoSize / 2
 
   // ── Header: @username ──
   ctx.fillStyle = MUTED
   ctx.font = `600 ${Math.round(width * 0.022)}px ${mono}`
   ctx.textAlign = 'left'
   ctx.textBaseline = 'middle'
-  ctx.fillText(`@${data.name || 'aluno'}`, logoX + logoSize + PAD * 0.3, logoY + logoSize / 2)
+  const userX = logoRight + Math.round(PAD * 0.3)
+  ctx.fillText(`@${data.name || 'aluno'}`, userX, headerCenterY)
 
   // ── Header: Level badge ──
-  const lvlX = width - PAD
   const lvlText = `LVL ${data.level || 1}`
   ctx.font = `700 ${Math.round(width * 0.02)}px ${mono}`
-  const lvlW = ctx.measureText(lvlText).width + PAD * 0.4
-  const lvlH = Math.round(width * 0.045)
-  const lvlY2 = logoY + (logoSize - lvlH) / 2
+  const lvlW = ctx.measureText(lvlText).width + Math.round(PAD * 0.4)
+  const lvlH = Math.round(logoSize * 0.8)
+  const lvlY2 = logoY + Math.round((logoSize - lvlH) / 2)
+  const lvlX = width - PAD - lvlW
+
   ctx.strokeStyle = BRAND
   ctx.lineWidth = 2
-  roundRect(ctx, lvlX - lvlW, lvlY2, lvlW, lvlH, 4)
+  roundRect(ctx, lvlX, lvlY2, lvlW, lvlH, 4)
   ctx.stroke()
 
   ctx.fillStyle = BRAND
-  ctx.textAlign = 'right'
+  ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText(lvlText, lvlX - PAD * 0.15, lvlY2 + lvlH / 2)
+  ctx.fillText(lvlText, lvlX + lvlW / 2, lvlY2 + lvlH / 2)
 
   // ── Divider ──
-  const divY = logoY + logoSize + PAD * 0.5
+  const divY = logoY + logoSize + Math.round(PAD * 0.5)
   ctx.strokeStyle = BRAND
   ctx.globalAlpha = 0.4
   ctx.lineWidth = 2
@@ -139,23 +157,23 @@ export function renderShareCardToCanvas(data, width = 1080, height = 1920) {
   ctx.globalAlpha = 1
 
   // ── Title ──
-  let contentY = divY + PAD * 0.6
+  let contentY = divY + Math.round(PAD * 0.6)
   const titleSize = Math.round(width * 0.045)
   ctx.fillStyle = '#ffffff'
   ctx.font = `800 ${titleSize}px ${mono}`
   const maxW = width - PAD * 2
-  contentY = wrapText(ctx, data.title || 'Conquista!', PAD, contentY, maxW, titleSize * 1.5)
+  contentY = wrapTextCentered(ctx, data.title || 'Conquista!', PAD, contentY, maxW, titleSize * 1.6)
 
   // ── Tagline ──
   if (data.tagline) {
-    contentY += PAD * 0.2
+    contentY += Math.round(PAD * 0.25)
     ctx.fillStyle = MUTED
     ctx.font = `${Math.round(width * 0.024)}px ${mono}`
-    contentY = wrapText(ctx, data.tagline, PAD, contentY, maxW, width * 0.038)
+    contentY = wrapTextCentered(ctx, data.tagline, PAD, contentY, maxW, Math.round(width * 0.038))
   }
 
   // ── Stats divider ──
-  contentY += PAD * 0.3
+  contentY += Math.round(PAD * 0.35)
   ctx.strokeStyle = BRAND
   ctx.globalAlpha = 0.25
   ctx.setLineDash([Math.round(width * 0.008), Math.round(width * 0.008)])
@@ -166,7 +184,7 @@ export function renderShareCardToCanvas(data, width = 1080, height = 1920) {
   ctx.setLineDash([])
   ctx.globalAlpha = 1
 
-  contentY += PAD * 0.5
+  contentY += Math.round(PAD * 0.5)
 
   // ── Stats ──
   const stats = [
@@ -175,25 +193,24 @@ export function renderShareCardToCanvas(data, width = 1080, height = 1920) {
     data.badge ? { icon: '🏆', label: `Badge: ${data.badge}` } : null,
   ].filter(Boolean)
 
-  ctx.font = `700 ${Math.round(width * 0.028)}px ${mono}`
-  const statH = width * 0.055
-  const iconW = width * 0.045
+  const statH = Math.round(width * 0.07)
+  const iconW = Math.round(width * 0.05)
+  const statFontSize = Math.round(width * 0.028)
 
   for (const stat of stats) {
-    ctx.fillStyle = TEXT
-
+    ctx.font = `${Math.round(width * 0.038)}px ${sans}`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
-    ctx.font = `${Math.round(width * 0.032)}px ${sans}`
+    ctx.fillStyle = TEXT
     ctx.fillText(stat.icon, PAD + iconW / 2, contentY + statH / 2)
 
+    ctx.font = `700 ${statFontSize}px ${mono}`
     ctx.textAlign = 'left'
-    ctx.font = `700 ${Math.round(width * 0.028)}px ${mono}`
-    ctx.fillText(stat.label, PAD + iconW + PAD * 0.15, contentY + statH / 2)
+    ctx.fillText(stat.label, PAD + iconW + Math.round(PAD * 0.15), contentY + statH / 2)
 
+    const lineY = contentY + statH
     ctx.strokeStyle = 'rgba(16, 185, 129, 0.06)'
     ctx.lineWidth = 1
-    const lineY = contentY + statH
     ctx.beginPath()
     ctx.moveTo(PAD, lineY)
     ctx.lineTo(width - PAD, lineY)
@@ -240,6 +257,27 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     }
   }
   if (line) ctx.fillText(line, x, y)
+  return y + lineHeight * 0.5
+}
+
+function wrapTextCentered(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ')
+  let line = ''
+  for (const word of words) {
+    const test = line ? `${line} ${word}` : word
+    if (ctx.measureText(test).width > maxWidth && line) {
+      const lineW = ctx.measureText(line).width
+      ctx.fillText(line, x + (maxWidth - lineW) / 2, y)
+      line = word
+      y += lineHeight
+    } else {
+      line = test
+    }
+  }
+  if (line) {
+    const lineW = ctx.measureText(line).width
+    ctx.fillText(line, x + (maxWidth - lineW) / 2, y)
+  }
   return y + lineHeight * 0.5
 }
 

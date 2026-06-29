@@ -55,7 +55,7 @@ const styles = {
     color: '#a0a0b0',
     fontSize: 13,
     fontWeight: 600,
-    whiteSpace: 'nowrap' as any,
+    whiteSpace: 'nowrap',
   },
   levelBadge: {
     background: 'transparent',
@@ -66,7 +66,7 @@ const styles = {
     fontWeight: 700,
     color: '#10b981',
     letterSpacing: '0.05em',
-    whiteSpace: 'nowrap' as any,
+    whiteSpace: 'nowrap',
   },
   divider: {
     border: 'none',
@@ -76,19 +76,31 @@ const styles = {
     flexShrink: 0,
   },
   title: {
+    margin: '0 auto',
+    padding: 0,
+    width: '100%',
     fontSize: 22,
     fontWeight: 800,
     color: '#ffffff',
     marginBottom: 6,
     lineHeight: 1.3,
-    wordBreak: 'break-word' as any,
+    textAlign: 'center',
+    overflowWrap: 'break-word',
+    wordBreak: 'break-word',
+    boxSizing: 'border-box',
   },
   description: {
+    margin: '0 auto',
+    padding: 0,
+    width: '100%',
     fontSize: 14,
     color: '#a0a0b0',
     marginBottom: 16,
     lineHeight: 1.5,
-    wordBreak: 'break-word' as any,
+    textAlign: 'center',
+    overflowWrap: 'break-word',
+    wordBreak: 'break-word',
+    boxSizing: 'border-box',
   },
   statsDivider: {
     border: 'none',
@@ -171,13 +183,15 @@ export function ShareCard({ name, title, xpEarned, streak, level, badge, tagline
       <div style={styles.header}>
         <WebStartLogo size={28} />
         <span style={styles.username}>@{name}</span>
-        <span style={styles.levelBadge}>LVL {level}</span>
+        <div style={styles.headerRight}>
+          <span style={styles.levelBadge}>LVL {level}</span>
+        </div>
       </div>
 
       <hr style={styles.divider} />
 
-      <p style={styles.title}>{title}</p>
-      {tagline && <p style={styles.description}>{tagline}</p>}
+      <div style={styles.title}>{title}</div>
+      {tagline && <div style={styles.description}>{tagline}</div>}
 
       <hr style={styles.statsDivider} />
 
