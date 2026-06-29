@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-const BASE_URL = 'https://webstart.academy'
+const BASE_URL = 'https://webstart-academy.onrender.com'
 const DEFAULT_DESCRIPTION = 'WebStart Academy - A plataforma interativa para aprender desenvolvimento web do zero. Cursos de HTML, CSS, JavaScript e muito mais com laboratório de código ao vivo.'
 const DEFAULT_IMAGE = '/logo.svg'
 const SITE_NAME = 'WebStart Academy'
