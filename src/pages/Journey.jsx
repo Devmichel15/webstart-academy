@@ -149,6 +149,11 @@ export default function Journey() {
                                       Em construção
                                     </span>
                                   )}
+                                  {trail.isPremium && (
+                                    <span className="rounded-lg border-2 border-amber-500 px-2 py-0.5 text-xs font-bold text-amber-600 dark:border-amber-400 dark:text-amber-300">
+                                      Premium
+                                    </span>
+                                  )}
                                   {trail.status === 'soon' && (
                                     <span className="rounded-lg border-2 border-muted px-2 py-0.5 text-xs font-bold text-muted">
                                       Em breve

@@ -59,8 +59,8 @@ export const trails = [
     xp: 1000,
     level: 2,
     cover: null,
-    isPremium: false,
-    price: 0,
+    isPremium: true,
+    price: 499,
     completion: {
       finalProject: createFinalProject({
         title: 'Landing Page WebStart',

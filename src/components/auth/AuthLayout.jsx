@@ -3,7 +3,7 @@ import { Sparkles } from 'lucide-react'
 
 export function AuthLayout({ title, subtitle, children }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-brand-50 p-4 dark:bg-brand-950">
+    <div className="flex min-h-screen items-center justify-center bg-brand-950 p-4 dark:bg-brand-950">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <div className='flex w-full items-center justify-center'>

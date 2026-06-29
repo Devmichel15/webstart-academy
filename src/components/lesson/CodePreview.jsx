@@ -27,7 +27,7 @@ ${html}
       <iframe
         title={title}
         srcDoc={srcDoc}
-        sandbox="allow-same-origin"
+        sandbox="allow-scripts allow-same-origin"
         className="h-64 w-full bg-white"
       />
     </div>

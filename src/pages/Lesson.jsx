@@ -13,6 +13,9 @@ import { getCourseById } from '../services/courseService.js'
 import { getLessonById, getNextLesson } from '../services/lessonService.js'
 import { useProgress } from '../hooks/useProgress.js'
 import { XP_LESSON } from '../utils/xp.js'
+import { getTrailById } from '../data/trails.js'
+import { PremiumPage } from '../components/premium/PremiumPage.jsx'
+import { hasPremiumAccess } from '../utils/premium.js'
 
 export default function Lesson() {
   const { lessonId } = useParams()
@@ -20,7 +23,7 @@ export default function Lesson() {
   const [course, setCourse] = useState(null)
   const [loading, setLoading] = useState(true)
   const [completing, setCompleting] = useState(false)
-  const { completeLesson, visitLesson, isLessonCompleted, name, level, streak, achievements } = useProgress()
+  const { completeLesson, visitLesson, isLessonCompleted, name, level, streak, achievements, isPremium, purchasedCourses } = useProgress()
 
   useEffect(() => {
     async function loadLesson() {
@@ -61,6 +64,18 @@ export default function Lesson() {
         </Link>
       </div>
     )
+  }
+
+  if (lesson?.courseId) {
+    const trail = getTrailById(lesson.courseId)
+    if (trail?.isPremium && !hasPremiumAccess(lesson.courseId, { isPremium, purchasedCourses })) {
+      return (
+        <div>
+          <Header title={trail.title} subtitle="Conteúdo exclusivo" />
+          <PremiumPage trail={trail} />
+        </div>
+      )
+    }
   }
 
   const nextLesson = getNextLesson(lessonId, course?.lessons)

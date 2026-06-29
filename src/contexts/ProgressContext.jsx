@@ -38,6 +38,8 @@ const defaultProfile = {
   name: '',
   photoURL: '',
   email: '',
+  isPremium: false,
+  purchasedCourses: [],
 }
 
 export function ProgressProvider({ children }) {
@@ -138,6 +140,7 @@ export function ProgressProvider({ children }) {
       if (result.shareData) setCelebration(result.shareData)
       return result
     } catch (err) {
+      console.error('[completeLesson error]', err.code, err.message, err)
       showError(err.message || 'Erro ao salvar progresso.')
       return null
     }

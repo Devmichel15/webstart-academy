@@ -83,8 +83,10 @@ export async function completeLesson(userId, lessonId) {
     if (!lesson) throw new Error('Aula não encontrada.')
 
     const user = await getUserProfile(userId)
+    console.log('[completeLesson] getUserProfile OK')
 
     const existing = await getLessonProgress(userId, lessonId)
+    console.log('[completeLesson] getLessonProgress OK', existing)
     if (existing?.completed) {
       await visitLesson(userId, lesson)
       return { alreadyCompleted: true, xpEarned: 0 }
@@ -101,15 +103,21 @@ export async function completeLesson(userId, lessonId) {
       progressPercentage: 100,
       timeSpent: lesson.duration || 15,
     })
+    console.log('[completeLesson] setDoc user_progress OK')
 
     let xpEarned = XP_LESSON
     await addXpToUser(userId, XP_LESSON)
+    console.log('[completeLesson] addXpToUser OK')
     await addStudyTime(userId, lesson.duration || 15)
+    console.log('[completeLesson] addStudyTime OK')
     const streakResult = await updateUserStreak(userId)
+    console.log('[completeLesson] updateUserStreak OK')
     if (streakResult?.bonusXp) xpEarned += streakResult.bonusXp
 
     const completedLessons = await addCompletedLesson(userId, lessonId)
+    console.log('[completeLesson] addCompletedLesson OK, completedCount:', completedLessons?.length)
     await visitLesson(userId, lesson)
+    console.log('[completeLesson] visitLesson OK')
 
     let moduleComplete = false
     if (lesson.moduleId) {
@@ -117,6 +125,7 @@ export async function completeLesson(userId, lessonId) {
       if (moduleComplete) {
         xpEarned += XP_MODULE
         await addXpToUser(userId, XP_MODULE)
+        console.log('[completeLesson] module bonus XP OK')
       }
     }
 
@@ -126,10 +135,13 @@ export async function completeLesson(userId, lessonId) {
       await addXpToUser(userId, XP_COURSE)
       const course = staticCourses.find((item) => item.id === lesson.courseId)
       await addCompletedCourse(userId, lesson.courseId, course?.title || lesson.courseId)
+      console.log('[completeLesson] course bonus XP OK')
     }
 
     const newlyUnlocked = await checkAndUnlockAchievements(userId)
+    console.log('[completeLesson] checkAndUnlockAchievements OK', newlyUnlocked.length, 'unlocked')
     const updatedUser = await getUserProfile(userId)
+    console.log('[completeLesson] final getUserProfile OK')
 
     return {
       alreadyCompleted: false,

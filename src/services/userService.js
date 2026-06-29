@@ -42,6 +42,7 @@ function buildDefaultUser(user, extra = {}) {
     totalStudyTime: 0,
     certificates: [],
     isPremium: false,
+    purchasedCourses: [],
     isPublic: true,
     ...cleanExtra,
   };

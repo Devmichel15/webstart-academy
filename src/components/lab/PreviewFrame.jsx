@@ -47,7 +47,7 @@ ${html}
         <iframe
           title="Preview do Laboratório"
           srcDoc={srcDoc}
-          sandbox="allow-same-origin"
+          sandbox="allow-scripts allow-same-origin"
           className="lab-preview-iframe"
         />
       </div>

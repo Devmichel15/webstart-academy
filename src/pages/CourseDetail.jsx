@@ -11,12 +11,14 @@ import { getTrailById, getModuleData } from '../data/trails.js'
 import { getLessonById } from '../data/lessons/index.js'
 import { useProgress } from '../hooks/useProgress.js'
 import { XP_LESSON } from '../utils/xp.js'
+import { PremiumPage } from '../components/premium/PremiumPage.jsx'
+import { hasPremiumAccess } from '../utils/premium.js'
 
 export default function CourseDetail() {
   const { courseId } = useParams()
   const [trail, setTrail] = useState(null)
   const [loading, setLoading] = useState(true)
-  const { isLessonCompleted, getCourseProgress, getTrailStatus, trails: allTrails } = useProgress()
+  const { isLessonCompleted, getCourseProgress, getTrailStatus, trails: allTrails, isPremium, purchasedCourses } = useProgress()
   const status = getTrailStatus(courseId)
 
   useEffect(() => {
@@ -94,6 +96,17 @@ export default function CourseDetail() {
             </Button>
           </Link>
         </div>
+      </div>
+    )
+  }
+
+  const isPremiumLocked = trail.isPremium && !hasPremiumAccess(courseId, { isPremium, purchasedCourses })
+
+  if (isPremiumLocked) {
+    return (
+      <div>
+        <Header title={trail.title} subtitle={trail.description} />
+        <PremiumPage trail={trail} />
       </div>
     )
   }
