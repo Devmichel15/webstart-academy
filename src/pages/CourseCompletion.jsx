@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Award, CheckCircle2, GraduationCap, ListChecks, Target, Trophy } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { SEO } from '../components/seo/SEO'
 import { Card } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
 import { ShareButtons } from '../components/share/ShareButtons'
@@ -38,6 +39,8 @@ export default function CourseCompletion() {
   } : null
 
   return (
+    <>
+    <SEO title="Curso Concluído" description="Parabéns! Você concluiu um curso na WebStart Academy. Veja suas conquistas e compartilhe seu progresso." />
     <div>
       <Link to={`/trilhas/${courseId}`} className="mb-4 inline-flex items-center gap-1 text-sm font-bold text-brand-600 hover:underline">
         <ArrowLeft size={16} />
@@ -174,5 +177,6 @@ export default function CourseCompletion() {
         </section>
       )}
     </div>
+    </>
   )
 }

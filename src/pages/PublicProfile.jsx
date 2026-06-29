@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Loader2 } from 'lucide-react'
+import { SEO } from '../components/seo/SEO'
 import { PlayerCard } from '../components/gamification/PlayerCard'
 import { ShareButtons } from '../components/share/ShareButtons'
 import { Card } from '../components/ui/Card'
@@ -64,6 +65,8 @@ export default function PublicProfile() {
   const rankPercentile = rank ? getUserRankPercentile(rank, 100) : null
 
   return (
+    <>
+    <SEO title={`Perfil de ${profile.name || username}`} description={`Perfil público de ${profile.name || username} na WebStart Academy. Veja conquistas, XP e progresso.`} url={`/u/${username}`} type="profile" />
     <div className="min-h-screen bg-canvas px-4 py-8">
       <div className="mx-auto max-w-lg">
         <Link to="/login" className="mb-6 inline-flex items-center gap-1 text-sm font-bold text-brand-600 hover:underline">
@@ -101,5 +104,6 @@ export default function PublicProfile() {
         </div>
       </div>
     </div>
+    </>
   )
 }

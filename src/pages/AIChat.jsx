@@ -1,9 +1,12 @@
 import { Sparkles } from 'lucide-react'
+import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { AIChat } from '../components/ai/AIChat'
 
 export default function AIChatPage() {
   return (
+    <>
+    <SEO title="Tutor IA" description="Tutor pessoal de inteligência artificial para tirar dúvidas, corrigir código e explicar conceitos de HTML, CSS e JavaScript." url="/chat" keywords="tutor, ia, inteligência artificial, dúvidas, código, programação" />
     <div>
       <Header
         title="Tutor IA"
@@ -27,5 +30,6 @@ export default function AIChatPage() {
         <AIChat />
       </div>
     </div>
+    </>
   )
 }

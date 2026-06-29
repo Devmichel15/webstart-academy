@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { SEO } from '../components/seo/SEO'
 import { ArrowRight, Code2, Globe, Palette, FileJson, BookOpen, GraduationCap, Lock, CheckCircle2, GitBranch, Atom, Terminal, Database, Link2, Cloud, Clock, Sparkles } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
@@ -55,6 +56,8 @@ export default function Journey() {
   const getTrailTitle = (id) => trailsList.find((t) => t.id === id)?.title || id
 
   return (
+    <>
+    <SEO title="Trilhas" description="Escolha sua trilha de aprendizado: HTML, CSS, JavaScript e muito mais. Aprenda desenvolvimento web passo a passo." url="/trilhas" keywords="trilhas, cursos, html, css, javascript, desenvolvimento web" />
     <div>
       <Header
         title="Sua Jornada"
@@ -236,5 +239,6 @@ export default function Journey() {
         </div>
       </div>
     </div>
+    </>
   )
 }

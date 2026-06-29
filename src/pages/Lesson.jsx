@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react'
+import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Button } from '../components/ui/Button'
 import { Badge } from '../components/ui/Badge'
@@ -99,6 +100,8 @@ export default function Lesson() {
   }
 
   return (
+    <>
+    <SEO title={lesson.hero?.title || lesson.title} description={lesson.hero?.subtitle || lesson.description} url={`/aula/${lessonId}`} />
     <div>
       <Link to={`/trilhas/${lesson.courseId}`} className="mb-4 inline-flex items-center gap-1 text-sm font-bold text-secondary hover:underline">
         <ArrowLeft size={16} />
@@ -155,6 +158,7 @@ export default function Lesson() {
         </div>
       )}
     </div>
+    </>
   )
 }
 

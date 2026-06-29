@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { CheckCircle2, Circle, ArrowRight, FlaskConical, HelpCircle, Trophy, Award, Lock } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
@@ -117,6 +118,8 @@ export default function CourseDetail() {
   const completedLessons = modules.reduce((sum, m) => sum + (m.lessons?.filter((lId) => isLessonCompleted(lId)).length || 0), 0)
 
   return (
+    <>
+    <SEO title={trail.title} description={trail.description} url={`/trilhas/${courseId}`} />
     <div>
       <Header
         title={trail.title}
@@ -272,6 +275,7 @@ export default function CourseDetail() {
         </div>
       )}
     </div>
+    </>
   )
 }
 

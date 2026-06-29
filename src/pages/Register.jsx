@@ -5,6 +5,7 @@ import { AuthLayout } from '../components/auth/AuthLayout.jsx'
 import { Button } from '../components/ui/Button.jsx'
 import { loginWithGoogle, registerWithEmail } from '../services/authService.js'
 import { useToast } from '../contexts/ToastContext.jsx'
+import { SEO } from '../components/seo/SEO'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -45,6 +46,8 @@ export default function Register() {
   }
 
   return (
+    <>
+    <SEO title="Criar Conta" description="Crie sua conta na WebStart Academy e comece a aprender desenvolvimento web com HTML, CSS e JavaScript." url="/registro" keywords="cadastro, criar conta, registro, webstart" />
     <AuthLayout
       title="Criar conta"
       subtitle="Comece sua jornada na WebStart Academy."
@@ -129,5 +132,6 @@ export default function Register() {
         </Link>
       </p>
     </AuthLayout>
+    </>
   );
 }

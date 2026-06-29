@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Clock, Award, Target } from 'lucide-react'
+import { SEO } from '../components/seo/SEO'
 import { getModuleData } from '../data/trails.js'
 import { CodeLab } from '../components/lab/CodeLab'
 import { XP_LAB } from '../utils/xp.js'
@@ -24,6 +25,8 @@ export default function ModuleLab() {
   const { lab } = mod
 
   return (
+    <>
+    <SEO title={mod ? `Laboratório: ${mod.title}` : 'Laboratório'} description={`Pratique ${mod ? mod.title : 'desenvolvimento web'} com exercícios interativos de código.`} url={`/trilhas/${courseId}/modulo/${moduleId}/lab`} />
     <div className="space-y-4">
       {/* Back link */}
       <Link to={`/trilhas/${courseId}/modulo/${moduleId}`} className="inline-flex items-center gap-1 text-sm font-bold text-brand-600 hover:underline">
@@ -60,5 +63,6 @@ export default function ModuleLab() {
         lab={lab}
       />
     </div>
+    </>
   )
 }

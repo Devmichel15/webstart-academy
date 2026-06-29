@@ -1,5 +1,6 @@
 import { Award, Copy, ExternalLink } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { ProgressBar } from '../components/ui/ProgressBar'
@@ -55,6 +56,8 @@ export default function Profile() {
   }
 
   return (
+    <>
+    <SEO title="Meu Perfil" description="Seu perfil na WebStart Academy: XP, badges, conquistas e estatísticas de aprendizado." url="/perfil" keywords="perfil, jogador, xp, badges, conquistas" />
     <div>
       <Header
         title="Perfil do Jogador"
@@ -172,5 +175,6 @@ export default function Profile() {
         </Card>
       )}
     </div>
+    </>
   )
 }

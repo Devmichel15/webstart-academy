@@ -5,6 +5,7 @@ import { AuthLayout } from '../components/auth/AuthLayout.jsx'
 import { Button } from '../components/ui/Button.jsx'
 import { loginWithEmail, loginWithGoogle } from '../services/authService.js'
 import { useToast } from '../contexts/ToastContext.jsx'
+import { SEO } from '../components/seo/SEO'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -53,6 +54,8 @@ export default function Login() {
   }
 
   return (
+    <>
+    <SEO title="Entrar" description="Acesse sua conta na WebStart Academy e continue sua jornada de aprendizado em desenvolvimento web." url="/login" keywords="login, entrar, webstart, desenvolvimento web" />
     <AuthLayout title="Entrar" subtitle="Acesse sua conta WebStart Academy.">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -128,5 +131,6 @@ export default function Login() {
         </Link>
       </p>
     </AuthLayout>
+    </>
   );
 }

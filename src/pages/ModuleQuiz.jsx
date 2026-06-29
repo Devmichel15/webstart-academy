@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { QuizBlock } from '../components/lesson/sections/QuizBlock.jsx'
 import { getModuleData } from '../data/trails.js'
@@ -20,6 +21,8 @@ export default function ModuleQuiz() {
   }
 
   return (
+    <>
+    <SEO title={mod ? `Quiz: ${mod.title}` : 'Quiz'} description={`Teste seus conhecimentos em ${mod ? mod.title : 'desenvolvimento web'} com este quiz interativo.`} url={`/trilhas/${courseId}/modulo/${moduleId}/quiz`} />
     <div>
       <Link to={`/trilhas/${courseId}/modulo/${moduleId}`} className="mb-4 inline-flex items-center gap-1 text-sm font-bold text-brand-600 hover:underline">
         <ArrowLeft size={16} />
@@ -30,5 +33,6 @@ export default function ModuleQuiz() {
 
       <QuizBlock quiz={mod.quiz} />
     </div>
+    </>
   )
 }

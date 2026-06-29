@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { CodeLab } from '../components/lab/CodeLab'
 import { labChallenges } from '../data/materials'
@@ -8,6 +9,8 @@ export default function Lab() {
   const [activeChallenge, setActiveChallenge] = useState(labChallenges[0])
 
   return (
+    <>
+    <SEO title="Laboratório de Código" description="Laboratório interativo de HTML e CSS com preview em tempo real. Pratique e experimente código ao vivo." url="/laboratorio" keywords="laboratório, código, html, css, editor, prática" />
     <div>
       <Header
         title="Laboratório"
@@ -41,5 +44,6 @@ export default function Lab() {
         initialCss={activeChallenge.starterCss}
       />
     </div>
+    </>
   )
 }

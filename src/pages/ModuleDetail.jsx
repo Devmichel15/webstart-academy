@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, CheckCircle2, Circle, Clock, FlaskConical, HelpCircle, Trophy } from 'lucide-react'
+import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
@@ -66,6 +67,8 @@ export default function ModuleDetail() {
   const progress = lessons.length ? Math.round((completedLessons.length / lessons.length) * 100) : 0
 
   return (
+    <>
+    <SEO title={module.title} description={`Módulo ${module.title} do curso ${course.title}. Aprenda ${module.title} na WebStart Academy.`} url={`/trilhas/${courseId}/modulo/${moduleId}`} />
     <div>
       <Link to={`/trilhas/${courseId}`} className="mb-4 inline-flex items-center gap-1 text-sm font-bold text-brand-600 hover:underline">
         <ArrowLeft size={16} />
@@ -180,5 +183,6 @@ export default function ModuleDetail() {
         )}
       </div>
     </div>
+    </>
   )
 }

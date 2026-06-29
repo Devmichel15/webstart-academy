@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { SEO } from '../components/seo/SEO'
 import {
   ArrowRight,
   BookOpen,
@@ -97,6 +98,8 @@ export default function Dashboard() {
   const firstIncompleteLesson = allLessons.find((l) => !isLessonCompleted(l.id))
 
   return (
+    <>
+    <SEO title="Dashboard" description="Acompanhe seu progresso, XP, streak e continue seus estudos na WebStart Academy." url="/" keywords="dashboard, progresso, webstart, estudos" />
     <div>
       <Header
         title={`Olá, ${name || 'Aluno'}!`}
@@ -277,5 +280,6 @@ export default function Dashboard() {
         </p>
       </section>
     </div>
+    </>
   )
 }

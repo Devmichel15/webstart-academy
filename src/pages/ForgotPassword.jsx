@@ -5,6 +5,7 @@ import { AuthLayout } from '../components/auth/AuthLayout.jsx'
 import { Button } from '../components/ui/Button.jsx'
 import { resetPassword } from '../services/authService.js'
 import { useToast } from '../contexts/ToastContext.jsx'
+import { SEO } from '../components/seo/SEO'
 
 export default function ForgotPassword() {
   const { showError, showSuccess } = useToast()
@@ -28,6 +29,8 @@ export default function ForgotPassword() {
   }
 
   return (
+    <>
+    <SEO title="Recuperar Senha" description="Recupere o acesso à sua conta WebStart Academy." url="/recuperar-senha" />
     <AuthLayout title="Recuperar senha" subtitle="Enviaremos um link para redefinir sua senha.">
       {sent ? (
         <div className="text-center">
@@ -64,5 +67,6 @@ export default function ForgotPassword() {
         </form>
       )}
     </AuthLayout>
+    </>
   )
 }

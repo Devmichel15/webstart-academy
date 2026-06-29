@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, Check, Code2, Map, Target } from 'lucide-react'
 import { Button } from '../components/ui/Button.jsx'
+import { SEO } from '../components/seo/SEO'
 
 const slides = [
   {
@@ -45,6 +46,8 @@ export default function Onboarding() {
   }
 
   return (
+    <>
+    <SEO title="Boas-Vindas" description="Primeiros passos na WebStart Academy - descubra roadmaps, laboratório de código e tutor IA." url="/onboarding" />
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-brand-950 p-4">
       <div className="brutal-card w-full max-w-md rounded-2xl p-8 text-center">
         {/* Dots */}
@@ -90,5 +93,6 @@ export default function Onboarding() {
         </div>
       </div>
     </div>
+    </>
   )
 }

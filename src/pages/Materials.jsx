@@ -1,10 +1,13 @@
 import { ExternalLink } from 'lucide-react'
+import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { supportMaterials, vscodeGuide, learningRoadmap } from '../data/materials'
 
 export default function Materials() {
   return (
+    <>
+    <SEO title="Materiais de Apoio" description="Materiais complementares para seus estudos: vídeos, livros, ferramentas e guias de desenvolvimento web." url="/materiais" keywords="materiais, estudos, livros, vídeos, ferramentas, desenvolvimento web" />
     <div>
       <Header
         title="Materiais de Apoio"
@@ -127,5 +130,6 @@ export default function Materials() {
         </div>
       </section>
     </div>
+    </>
   )
 }

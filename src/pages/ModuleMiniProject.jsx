@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
@@ -37,6 +38,8 @@ export default function ModuleMiniProject() {
   }
 
   return (
+    <>
+    <SEO title={mod ? `Mini Projeto: ${mod.title}` : 'Mini Projeto'} description={`Desenvolva um mini projeto prático de ${mod ? mod.title : 'desenvolvimento web'} para consolidar seus conhecimentos.`} url={`/trilhas/${courseId}/modulo/${moduleId}/mini-projeto`} />
     <div>
       <Link to={`/trilhas/${courseId}/modulo/${moduleId}`} className="mb-4 inline-flex items-center gap-1 text-sm font-bold text-brand-600 hover:underline">
         <ArrowLeft size={16} />
@@ -108,5 +111,6 @@ export default function ModuleMiniProject() {
         <CodeLab initialHtml={project.starterHtml} initialCss={project.starterCss} />
       </Card>
     </div>
+    </>
   )
 }
