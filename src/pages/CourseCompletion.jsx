@@ -3,6 +3,7 @@ import { ArrowLeft, Award, CheckCircle2, GraduationCap, ListChecks, Target, Trop
 import { motion } from 'framer-motion'
 import { Card } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
+import { ShareButtons } from '../components/share/ShareButtons'
 import { getTrailById } from '../data/trails.js'
 import { useProgress } from '../hooks/useProgress.js'
 
@@ -10,7 +11,7 @@ export default function CourseCompletion() {
   const { courseId } = useParams()
   const trail = getTrailById(courseId)
   const course = trail
-  const { getCourseProgress } = useProgress()
+  const { getCourseProgress, name, level, streak, achievements } = useProgress()
 
   if (!course) {
     return (
@@ -24,6 +25,17 @@ export default function CourseCompletion() {
   const progress = getCourseProgress(courseId)
   const modules = course.modules || []
   const completion = course.completion
+  const latestBadge = achievements.filter((a) => a.unlocked).pop()?.title
+
+  const shareData = progress >= 100 ? {
+    name: name || 'Aluno',
+    title: `Trilha concluída: ${course.title}`,
+    xpEarned: 1000,
+    streak,
+    level,
+    badge: latestBadge || 'WebStart Graduate',
+    tagline: 'Dev em construção — trilha completa!',
+  } : null
 
   return (
     <div>
@@ -46,6 +58,14 @@ export default function CourseCompletion() {
         <div className="h-full bg-brand-500 transition-all" style={{ width: `${progress}%` }} />
       </div>
       <p className="mb-6 text-sm font-bold text-brand-600">{progress}% completo</p>
+
+      {shareData && (
+        <Card className="mb-6">
+          <h2 className="mb-2 text-lg font-black">Partilhar conclusão da trilha</h2>
+          <p className="mb-4 text-sm text-secondary">Mostra ao mundo que completaste esta trilha!</p>
+          <ShareButtons shareData={shareData} />
+        </Card>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         {completion?.finalProject && (

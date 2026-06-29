@@ -5,12 +5,14 @@ import { useAuthContext } from './AuthContext.jsx'
 import { getAchievementsWithStatus } from '../services/achievementService.js'
 import {
   completeLesson as completeLessonService,
+  completeExercise as completeExerciseService,
+  completeProject as completeProjectService,
   getCourseProgressPercent,
   isLessonCompleted as isLessonCompletedService,
   subscribeToUserProgress,
   visitLesson as visitLessonService,
 } from '../services/progressService.js'
-import { subscribeToUser } from '../services/userService.js'
+import { subscribeToUser, ensureUsername } from '../services/userService.js'
 import {
   computeTrailStatus,
   getJourneyProgress,
@@ -19,6 +21,7 @@ import {
 } from '../services/trailProgressService.js'
 import { getLevelFromXp, XP_LESSON } from '../utils/xp.js'
 import { useToast } from './ToastContext.jsx'
+import { AchievementCelebration } from '../components/gamification/AchievementCelebration.jsx'
 
 const ProgressContext = createContext(null)
 
@@ -45,6 +48,7 @@ export function ProgressProvider({ children }) {
   const [achievements, setAchievements] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [celebration, setCelebration] = useState(null)
 
   useEffect(() => {
     if (!user) {
@@ -61,6 +65,10 @@ export function ProgressProvider({ children }) {
       user.uid,
       async (data) => {
         try {
+          if (data && !data.username) {
+            await ensureUsername(user.uid)
+            return
+          }
           setProfile(data || defaultProfile)
           if (data) {
             const items = await getAchievementsWithStatus(user.uid, data)
@@ -111,20 +119,57 @@ export function ProgressProvider({ children }) {
     : null
 
   const completeLesson = useCallback(async (lessonId) => {
-    if (!user) return
+    if (!user) return null
 
     try {
       const result = await completeLessonService(user.uid, lessonId)
-      if (result.alreadyCompleted) return
+      if (result.alreadyCompleted) return result
 
       showSuccess(`Aula concluída! +${result.xpEarned || XP_LESSON} XP`)
+      if (result.streakResult?.bonusXp) {
+        showSuccess(`Bónus de streak! +${result.streakResult.bonusXp} XP`)
+      }
+      if (result.streakResult?.broke) {
+        showError(`Streak reiniciado. -${result.streakResult.penaltyXp} XP`)
+      }
       if (result.courseComplete) {
         showSuccess('Curso concluído! +1000 XP e certificado desbloqueado!')
       }
+      if (result.shareData) setCelebration(result.shareData)
+      return result
     } catch (err) {
       showError(err.message || 'Erro ao salvar progresso.')
+      return null
     }
   }, [user, showSuccess, showError])
+
+  const completeExercise = useCallback(async (exerciseTitle) => {
+    if (!user) return null
+    try {
+      const result = await completeExerciseService(user.uid, exerciseTitle)
+      showSuccess(`Exercício concluído! +${result.xpEarned} XP`)
+      if (result.shareData) setCelebration(result.shareData)
+      return result
+    } catch (err) {
+      showError(err.message || 'Erro ao salvar exercício.')
+      return null
+    }
+  }, [user, showSuccess, showError])
+
+  const completeProject = useCallback(async (projectTitle) => {
+    if (!user) return null
+    try {
+      const result = await completeProjectService(user.uid, projectTitle)
+      showSuccess(`Projeto concluído! +${result.xpEarned} XP`)
+      if (result.shareData) setCelebration(result.shareData)
+      return result
+    } catch (err) {
+      showError(err.message || 'Erro ao salvar projeto.')
+      return null
+    }
+  }, [user, showSuccess, showError])
+
+  const dismissCelebration = useCallback(() => setCelebration(null), [])
 
   const visitLesson = useCallback(async (lessonId) => {
     if (!user) return
@@ -151,8 +196,8 @@ export function ProgressProvider({ children }) {
   const studyHours = Math.round(((profile.totalStudyTime || 0) / 60) * 10) / 10
 
   const journeyProgress = useMemo(
-    () => getJourneyProgress(completedCourses),
-    [completedCourses],
+    () => getJourneyProgress(completedCourses, completedLessons),
+    [completedCourses, completedLessons],
   )
 
   const trailStatuses = useMemo(() => {
@@ -192,6 +237,10 @@ export function ProgressProvider({ children }) {
       loading,
       error,
       completeLesson,
+      completeExercise,
+      completeProject,
+      dismissCelebration,
+      celebration,
       visitLesson,
       isLessonCompleted,
       getCourseProgress,
@@ -216,6 +265,10 @@ export function ProgressProvider({ children }) {
       loading,
       error,
       completeLesson,
+      completeExercise,
+      completeProject,
+      dismissCelebration,
+      celebration,
       visitLesson,
       isLessonCompleted,
       getCourseProgress,
@@ -226,7 +279,16 @@ export function ProgressProvider({ children }) {
     ],
   )
 
-  return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>
+  return (
+    <ProgressContext.Provider value={value}>
+      {children}
+      <AchievementCelebration
+        open={Boolean(celebration)}
+        onClose={dismissCelebration}
+        shareData={celebration}
+      />
+    </ProgressContext.Provider>
+  )
 }
 
 export function useProgressContext() {

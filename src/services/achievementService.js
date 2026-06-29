@@ -51,6 +51,14 @@ function evaluateAchievement(achievement, user) {
     return (user.streak || 0) >= achievement.target
   }
 
+  if (achievement.type === 'exercises') {
+    return (user.completedExercises || 0) >= achievement.target
+  }
+
+  if (achievement.type === 'projects') {
+    return (user.completedProjects || 0) >= achievement.target
+  }
+
   if (achievement.type === 'course') {
     const course = staticCourses.find((item) => item.id === achievement.courseId)
     if (!course) return false

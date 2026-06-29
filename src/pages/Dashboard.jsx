@@ -56,7 +56,6 @@ export default function Dashboard() {
     completedCount,
     totalLessons,
     studyHours,
-    completedCourses,
     streak,
     achievements,
     getCourseProgress,
@@ -115,7 +114,7 @@ export default function Dashboard() {
         <div>
           <p className="text-xl font-black">{name || 'Aluno WebStart'}</p>
           <p className="text-sm font-semibold text-secondary">
-            Nível {level} · {xp} XP · {completedCourses.length} trilha(s) concluída(s)
+            Nível {level} · {xp} XP · {journeyProgress?.completedCount || 0} trilha(s) concluída(s)
           </p>
         </div>
       </Card>

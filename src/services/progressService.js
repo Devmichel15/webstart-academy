@@ -14,12 +14,15 @@ import { allLessons } from '../data/lessons/index.js'
 import { trails as staticCourses } from '../data/trails.js'
 import { getModuleData } from '../data/trails.js'
 import { withRetry } from '../utils/retry.js'
-import { XP_COURSE, XP_LESSON, XP_MODULE } from '../utils/xp.js'
+import { XP_COURSE, XP_EXERCISE, XP_LESSON, XP_MODULE, XP_PROJECT } from '../utils/xp.js'
 import {
   addCompletedCourse,
   addCompletedLesson,
   addStudyTime,
   addXpToUser,
+  getUserProfile,
+  incrementCompletedExercises,
+  incrementCompletedProjects,
   updateCurrentLesson,
   updateUserStreak,
 } from './userService.js'
@@ -79,6 +82,8 @@ export async function completeLesson(userId, lessonId) {
     const lesson = allLessons.find((item) => item.id === lessonId)
     if (!lesson) throw new Error('Aula não encontrada.')
 
+    const user = await getUserProfile(userId)
+
     const existing = await getLessonProgress(userId, lessonId)
     if (existing?.completed) {
       await visitLesson(userId, lesson)
@@ -100,13 +105,15 @@ export async function completeLesson(userId, lessonId) {
     let xpEarned = XP_LESSON
     await addXpToUser(userId, XP_LESSON)
     await addStudyTime(userId, lesson.duration || 15)
-    await updateUserStreak(userId)
+    const streakResult = await updateUserStreak(userId)
+    if (streakResult?.bonusXp) xpEarned += streakResult.bonusXp
 
     const completedLessons = await addCompletedLesson(userId, lessonId)
     await visitLesson(userId, lesson)
 
+    let moduleComplete = false
     if (lesson.moduleId) {
-      const moduleComplete = isModuleComplete(completedLessons, lesson.moduleId)
+      moduleComplete = isModuleComplete(completedLessons, lesson.moduleId)
       if (moduleComplete) {
         xpEarned += XP_MODULE
         await addXpToUser(userId, XP_MODULE)
@@ -121,13 +128,79 @@ export async function completeLesson(userId, lessonId) {
       await addCompletedCourse(userId, lesson.courseId, course?.title || lesson.courseId)
     }
 
-    await checkAndUnlockAchievements(userId)
+    const newlyUnlocked = await checkAndUnlockAchievements(userId)
+    const updatedUser = await getUserProfile(userId)
 
     return {
       alreadyCompleted: false,
       xpEarned,
-      moduleComplete: lesson.moduleId ? isModuleComplete(completedLessons, lesson.moduleId) : false,
+      moduleComplete,
       courseComplete,
+      streakResult,
+      newlyUnlocked,
+      shareData: {
+        name: updatedUser?.name || user?.name || 'Aluno',
+        title: `Aula: ${lesson.title}`,
+        xpEarned,
+        streak: updatedUser?.streak || streakResult?.streak || 0,
+        level: updatedUser?.level || 1,
+        badge: newlyUnlocked[0]?.title || null,
+        tagline: 'Aprendendo a estruturar a Web como um dev real',
+      },
+    }
+  })
+}
+
+export async function completeExercise(userId, exerciseTitle) {
+  return withRetry(async () => {
+    const user = await getUserProfile(userId)
+    let xpEarned = XP_EXERCISE
+    await addXpToUser(userId, XP_EXERCISE)
+    const streakResult = await updateUserStreak(userId)
+    if (streakResult?.bonusXp) xpEarned += streakResult.bonusXp
+    await incrementCompletedExercises(userId)
+    const newlyUnlocked = await checkAndUnlockAchievements(userId)
+    const updatedUser = await getUserProfile(userId)
+
+    return {
+      xpEarned,
+      newlyUnlocked,
+      shareData: {
+        name: updatedUser?.name || user?.name || 'Aluno',
+        title: `Exercício: ${exerciseTitle}`,
+        xpEarned,
+        streak: updatedUser?.streak || 0,
+        level: updatedUser?.level || 1,
+        badge: newlyUnlocked[0]?.title || 'Estruturador de Conteúdo',
+        tagline: 'Aprendendo a estruturar a Web como um dev real',
+      },
+    }
+  })
+}
+
+export async function completeProject(userId, projectTitle) {
+  return withRetry(async () => {
+    const user = await getUserProfile(userId)
+    let xpEarned = XP_PROJECT
+    await addXpToUser(userId, XP_PROJECT)
+    const streakResult = await updateUserStreak(userId)
+    if (streakResult?.bonusXp) xpEarned += streakResult.bonusXp
+    await incrementCompletedProjects(userId)
+    const newlyUnlocked = await checkAndUnlockAchievements(userId)
+    const updatedUser = await getUserProfile(userId)
+
+    return {
+      xpEarned,
+      newlyUnlocked,
+      shareData: {
+        name: updatedUser?.name || user?.name || 'Aluno',
+        title: `Projeto: ${projectTitle}`,
+        xpEarned,
+        streak: updatedUser?.streak || 0,
+        level: updatedUser?.level || 1,
+        badge: newlyUnlocked[0]?.title || 'Construtor de Projetos',
+        tagline: 'Construindo projetos reais na WebStart',
+      },
     }
   })
 }

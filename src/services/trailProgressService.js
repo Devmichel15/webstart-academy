@@ -31,7 +31,7 @@ export function isTrailUnlocked(trailId, completedCourses) {
   return completedCourses.includes(trail.requiredTrail)
 }
 
-export function getJourneyProgress(completedCourses) {
+export function getJourneyProgress(completedCourses, completedLessons = []) {
   let firstLocked = null
   let currentTrail = null
   let nextTrail = null
@@ -42,17 +42,21 @@ export function getJourneyProgress(completedCourses) {
     .map((trail) => {
       const isUnlocked = isTrailUnlocked(trail.id, completedCourses)
       const isCompleted = completedCourses.includes(trail.id)
+      const lessons = allLessons.filter((l) => l.courseId === trail.id)
+      const completedInTrail = lessons.filter((l) => completedLessons.includes(l.id))
+      const allDone = lessons.length > 0 && completedInTrail.length === lessons.length
+      const trailCompleted = isCompleted || allDone
 
-      if (isCompleted) completedCount++
+      if (trailCompleted) completedCount++
 
-      if (!isCompleted && !isUnlocked && firstLocked === null) {
+      if (!trailCompleted && !isUnlocked && firstLocked === null) {
         firstLocked = trail.id
       }
 
       return {
         ...trail,
         unlocked: isUnlocked,
-        completed: isCompleted,
+        completed: trailCompleted,
       }
     })
 

@@ -16,7 +16,7 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if isOwner(userId);
+      allow read: if isOwner(userId) || resource.data.isPublic != false;
       allow create: if isOwner(userId)
         && request.resource.data.uid == userId
         && request.resource.data.role == 'student';

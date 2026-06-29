@@ -7,6 +7,7 @@ import { Button } from '../components/ui/Button'
 import { Badge } from '../components/ui/Badge'
 import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { LessonRenderer } from '../components/lesson/LessonRenderer.jsx'
+import { ShareButtons } from '../components/share/ShareButtons'
 import { getCourseById } from '../services/courseService.js'
 import { getLessonById, getNextLesson } from '../services/lessonService.js'
 import { useProgress } from '../hooks/useProgress.js'
@@ -18,7 +19,7 @@ export default function Lesson() {
   const [course, setCourse] = useState(null)
   const [loading, setLoading] = useState(true)
   const [completing, setCompleting] = useState(false)
-  const { completeLesson, visitLesson, isLessonCompleted } = useProgress()
+  const { completeLesson, visitLesson, isLessonCompleted, name, level, streak, achievements } = useProgress()
 
   useEffect(() => {
     async function loadLesson() {
@@ -63,6 +64,17 @@ export default function Lesson() {
 
   const nextLesson = getNextLesson(lessonId, course?.lessons)
   const completed = isLessonCompleted(lesson.id)
+  const latestBadge = achievements.filter((a) => a.unlocked).pop()?.title
+
+  const shareData = completed ? {
+    name: name || 'Aluno',
+    title: `Aula: ${lesson.title}`,
+    xpEarned: XP_LESSON,
+    streak,
+    level,
+    badge: latestBadge,
+    tagline: 'Aprendendo a estruturar a Web como um dev real',
+  } : null
 
   const handleComplete = async () => {
     setCompleting(true)
@@ -97,7 +109,15 @@ export default function Lesson() {
               {completing ? <Loader2 className="animate-spin" size={18} /> : `Concluir aula (+${XP_LESSON} XP)`}
             </Button>
           ) : (
-            <p className="font-bold text-secondary">Aula concluída! Progresso salvo na nuvem.</p>
+            <div>
+              <p className="mb-4 font-bold text-secondary">Aula concluída! Progresso salvo na nuvem.</p>
+              {shareData && (
+                <div className="border-t-2 border pt-4">
+                  <p className="mb-2 text-sm font-bold text-secondary">Partilhar conquista</p>
+                  <ShareButtons shareData={shareData} />
+                </div>
+              )}
+            </div>
           )}
         </Card>
       </div>

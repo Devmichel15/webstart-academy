@@ -1,25 +1,34 @@
-import { Award, Flame, Sparkles, Trophy } from 'lucide-react'
+import { Award, Copy, ExternalLink } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { ProgressBar } from '../components/ui/ProgressBar'
 import { Badge } from '../components/ui/Badge'
 import { ProfileSkeleton } from '../components/ui/Skeleton.jsx'
+import { PlayerCard } from '../components/gamification/PlayerCard'
+import { ShareButtons } from '../components/share/ShareButtons'
 import { useProgress } from '../hooks/useProgress.js'
-import { getXpForNextLevel } from '../utils/xp.js'
+import { getPublicProfileUrl } from '../utils/username.js'
+import { copyToClipboard } from '../utils/shareUtils.js'
+import { useToast } from '../contexts/ToastContext.jsx'
 
 export default function Profile() {
+  const { showSuccess } = useToast()
   const {
     name,
+    username,
     photoURL,
     email,
     xp,
     level,
     streak,
     completedCount,
+    completedExercises,
+    completedProjects,
     totalLessons,
     progressPercent,
     studyHours,
-    completedCourses,
+    journeyProgress,
     certificates,
     achievements,
     loading,
@@ -34,56 +43,83 @@ export default function Profile() {
     )
   }
 
-  const xpInfo = getXpForNextLevel(xp)
   const allComplete = completedCount === totalLessons
+  const unlockedBadges = achievements.filter((a) => a.unlocked)
+  const latestBadge = unlockedBadges[unlockedBadges.length - 1]?.title
+  const profileUrl = username ? getPublicProfileUrl(username) : null
+
+  const handleCopyProfileLink = async () => {
+    if (!profileUrl) return
+    await copyToClipboard(profileUrl)
+    showSuccess('Link do perfil copiado!')
+  }
 
   return (
     <div>
       <Header
-        title="Perfil do Aluno"
-        subtitle="XP, níveis, medalhas e certificados sincronizados na nuvem."
+        title="Perfil do Jogador"
+        subtitle="XP, níveis, badges e perfil público compartilhável."
       />
+
+      <PlayerCard
+        user={{
+          name,
+          level,
+          xp,
+          streak,
+          completedCount,
+          completedExercises: completedExercises || 0,
+          completedProjects: completedProjects || 0,
+          achievements: unlockedBadges,
+          latestBadge,
+          username,
+        }}
+        compact={false}
+        showLink={Boolean(profileUrl)}
+      />
+
+      {profileUrl && (
+        <Card className="mb-8 mt-6">
+          <h2 className="mb-2 text-lg font-black">Perfil público</h2>
+          <p className="mb-3 text-sm text-secondary">
+            Partilha o teu player card e convida amigos para a WebStart.
+          </p>
+          <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border-2 border bg-surface-hover p-3 text-sm font-semibold">
+            <span className="flex-1 truncate">{profileUrl.replace(/^https?:\/\//, '')}</span>
+            <button type="button" onClick={handleCopyProfileLink} className="rounded-lg p-2 hover:bg-surface">
+              <Copy size={16} />
+            </button>
+            <Link to={`/u/${username}`} target="_blank" className="rounded-lg p-2 hover:bg-surface">
+              <ExternalLink size={16} />
+            </Link>
+          </div>
+          <ShareButtons
+            shareData={{
+              name: name || 'Aluno',
+              title: `Perfil WebStart — Nível ${level}`,
+              streak,
+              level,
+              badge: latestBadge,
+              tagline: 'Dev em construção na WebStart Academy',
+            }}
+          />
+        </Card>
+      )}
 
       <Card className="mb-8 flex flex-wrap items-center gap-4">
         {photoURL ? (
-          <img src={photoURL} alt={name} className="h-20 w-20 rounded-full border-3 border-brand-800 object-cover dark:border-brand-400" />
+          <img src={photoURL} alt={name} className="h-16 w-16 rounded-full border-3 border-brand-800 object-cover dark:border-brand-400" />
         ) : (
-          <div className="flex h-20 w-20 items-center justify-center rounded-full border-3 border-brand-800 bg-brand-500 text-3xl font-black text-white dark:border-brand-400">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border-3 border-brand-800 bg-brand-500 text-2xl font-black text-white dark:border-brand-400">
             {(name || 'A').charAt(0).toUpperCase()}
           </div>
         )}
         <div>
-          <p className="text-2xl font-black">{name || 'Aluno WebStart'}</p>
-          <p className="text-sm text-brand-600">{email}</p>
+          <p className="text-lg font-black">{email}</p>
           <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">
-            {studyHours}h estudadas · {completedCourses.length} trilha(s) concluída(s)
+            {studyHours}h estudadas · {journeyProgress?.completedCount || 0} trilha(s) concluída(s)
           </p>
         </div>
-      </Card>
-
-      <div className="mb-8 grid gap-4 md:grid-cols-3">
-        <Card className="text-center">
-          <Sparkles className="mx-auto mb-2 text-brand-500" size={28} />
-          <p className="text-sm font-semibold text-brand-600">Nível</p>
-          <p className="text-4xl font-black">{level}</p>
-        </Card>
-        <Card className="text-center">
-          <Trophy className="mx-auto mb-2 text-brand-500" size={28} />
-          <p className="text-sm font-semibold text-brand-600">XP Total</p>
-          <p className="text-4xl font-black">{xp}</p>
-        </Card>
-        <Card className="text-center">
-          <Flame className="mx-auto mb-2 text-amber-500" size={28} />
-          <p className="text-sm font-semibold text-brand-600">Streak</p>
-          <p className="text-4xl font-black">{streak} dias</p>
-        </Card>
-      </div>
-
-      <Card className="mb-8">
-        <ProgressBar
-          value={xpInfo.percent}
-          label={`Progresso para nível ${level + 1} (${xpInfo.current}/${xpInfo.needed} XP)`}
-        />
       </Card>
 
       <Card className="mb-8">
