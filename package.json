@@ -19,6 +19,7 @@
     "react-dom": "^19.2.6",
     "react-helmet-async": "^3.0.0",
     "react-router-dom": "^7.9.1",
+    "recharts": "^3.9.2",
     "tailwindcss": "^4.3.1"
   },
   "devDependencies": {

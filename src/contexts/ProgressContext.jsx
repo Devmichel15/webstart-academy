@@ -38,8 +38,6 @@ const defaultProfile = {
   name: '',
   photoURL: '',
   email: '',
-  isPremium: false,
-  purchasedCourses: [],
 }
 
 export function ProgressProvider({ children }) {

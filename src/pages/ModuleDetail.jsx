@@ -11,8 +11,7 @@ import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { getModuleData, getTrailById, getModuleLessons } from '../data/trails.js'
 import { useProgress } from '../hooks/useProgress.js'
 import { XP_LESSON } from '../utils/xp.js'
-import { PremiumPage } from '../components/premium/PremiumPage.jsx'
-import { hasPremiumAccess } from '../utils/premium.js'
+
 
 export default function ModuleDetail() {
   const { courseId, moduleId } = useParams()
@@ -20,7 +19,7 @@ export default function ModuleDetail() {
   const [course, setCourse] = useState(null)
   const [lessons, setLessons] = useState([])
   const [loading, setLoading] = useState(true)
-  const { isLessonCompleted, isPremium, purchasedCourses } = useProgress()
+  const { isLessonCompleted } = useProgress()
 
   useEffect(() => {
     async function load() {
@@ -50,15 +49,6 @@ export default function ModuleDetail() {
       <div className="text-center">
         <h1 className="text-2xl font-black">Módulo não encontrado</h1>
         <Link to="/trilhas" className="mt-4 inline-block font-bold text-brand-600 underline">Voltar às trilhas</Link>
-      </div>
-    )
-  }
-
-  if (course.isPremium && !hasPremiumAccess(courseId, { isPremium, purchasedCourses })) {
-    return (
-      <div>
-        <Header title={course.title} subtitle="Conteúdo exclusivo" />
-        <PremiumPage trail={course} />
       </div>
     )
   }

@@ -24,8 +24,7 @@ export function createTrail({
   completion,
   status = 'available',
   requiredTrail = null,
-  isPremium = false,
-  price = 0,
+
   cover = null,
   level = 1,
   xp = 500,
@@ -44,8 +43,6 @@ export function createTrail({
     modules,
     status,
     requiredTrail,
-    isPremium,
-    price,
     cover,
     level,
     xp,

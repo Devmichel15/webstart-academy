@@ -264,7 +264,7 @@ const htmlFinalMiniProject = createMiniProject({
     'Header com logo e navegação',
     'Hero section com título, subtítulo e CTA',
     'Seção de features com grid de cards',
-    'Seção de planos ou módulos',
+    'Seção de módulos',
     'Formulário de contato',
     'Footer completo',
     'Meta tags SEO (description, keywords)',

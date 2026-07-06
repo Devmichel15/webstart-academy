@@ -67,7 +67,7 @@ export const vscodeGuide = {
     },
     {
       title: '6. GitHub Copilot (opcional)',
-      content: 'Assistente de IA para autocompletar código. Requer assinatura.',
+      content: 'Assistente de IA para autocompletar código.',
       extension: 'GitHub Copilot',
     },
   ],

@@ -25,7 +25,10 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import Onboarding from './pages/Onboarding'
-import PaymentVerifier from './pages/admin/PaymentVerifier'
+import AdminLayout from './pages/admin/AdminLayout'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminUsers from './pages/admin/AdminUsers'
+import AdminAnalytics from './pages/admin/AdminAnalytics'
 
 export default function App() {
   return (
@@ -62,14 +65,18 @@ export default function App() {
                   <Route path="materiais" element={<Materials />} />
                   <Route path="perfil" element={<Profile />} />
                   <Route path="chat" element={<AIChat />} />
-                  <Route
-                    path="admin/payment-verifier"
-                    element={
-                      <AdminRoute>
-                        <PaymentVerifier />
-                      </AdminRoute>
-                    }
-                  />
+                </Route>
+
+                <Route
+                  element={
+                    <AdminRoute>
+                      <AdminLayout />
+                    </AdminRoute>
+                  }
+                >
+                  <Route path="admin" element={<AdminDashboard />} />
+                  <Route path="admin/users" element={<AdminUsers />} />
+                  <Route path="admin/analytics" element={<AdminAnalytics />} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace />} />

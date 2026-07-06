@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   Award,
+  BarChart3,
   Beaker,
   BookOpen,
   Bot,
@@ -8,12 +9,15 @@ import {
   LayoutDashboard,
   LogOut,
   Shield,
+  Users,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth.js'
 import { useProgress } from '../../hooks/useProgress.js'
 import { useUser } from '../../hooks/useUser.js'
 import { logoutUser } from '../../services/authService.js'
 import { useToast } from '../../contexts/ToastContext.jsx'
+
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
 
 function UserBadge() {
   const { user } = useAuth()
@@ -58,15 +62,6 @@ function UserBadge() {
   )
 }
 
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
-
-function getAdminItem(profile, fbUser) {
-  const isAdmin = profile?.role === 'admin' || fbUser?.email === ADMIN_EMAIL
-  return isAdmin
-    ? [{ to: '/admin/payment-verifier', label: 'Admin', icon: Shield }]
-    : []
-}
-
 const baseNavItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/trilhas', label: 'Trilhas', icon: BookOpen },
@@ -76,10 +71,21 @@ const baseNavItems = [
   { to: '/perfil', label: 'Perfil', icon: Award },
 ]
 
+function getAdminItems(profile, fbUser) {
+  const isAdmin = profile?.role === 'admin' || fbUser?.email === ADMIN_EMAIL
+  if (!isAdmin) return []
+  return [
+    { to: '/admin', label: 'Admin', icon: Shield },
+    { to: '/admin/users', label: 'Utilizadores', icon: Users },
+    { to: '/admin/analytics', label: 'Análises', icon: BarChart3 },
+  ]
+}
+
 export function Sidebar() {
-  const { user: profile } = useUser()
   const { user: fbUser } = useAuth()
-  const navItems = [...getAdminItem(profile, fbUser), ...baseNavItems]
+  const { user: profile } = useUser()
+  const adminItems = getAdminItems(profile, fbUser)
+  const navItems = [...adminItems, ...baseNavItems]
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-strong bg-surface text-primary lg:flex">
@@ -121,9 +127,10 @@ export function Sidebar() {
 }
 
 export function MobileNav() {
-  const { user: profile } = useUser()
   const { user: fbUser } = useAuth()
-  const navItems = [...getAdminItem(profile, fbUser), ...baseNavItems]
+  const { user: profile } = useUser()
+  const adminItems = getAdminItems(profile, fbUser)
+  const navItems = [...adminItems, ...baseNavItems]
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 flex border-t-3 border-strong bg-surface lg:hidden">

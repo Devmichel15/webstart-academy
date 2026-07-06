@@ -36,8 +36,6 @@ export const trails = [
     xp: 500,
     level: 1,
     cover: null,
-    isPremium: false,
-    price: 0,
     certificate: createCertificate({
       title: 'Certificado WebStart - Fundamentos da Web',
       description: 'Certifica que o aluno concluiu a trilha de Fundamentos da Web com domínio dos conceitos fundamentais de internet.',
@@ -59,8 +57,6 @@ export const trails = [
     xp: 1000,
     level: 2,
     cover: null,
-    isPremium: true,
-    price: 499,
     completion: {
       finalProject: createFinalProject({
         title: 'Landing Page WebStart',
@@ -128,8 +124,6 @@ export const trails = [
     xp: 1000,
     level: 2,
     cover: null,
-    isPremium: false,
-    price: 0,
     completion: {
       finalProject: createFinalProject({
         title: 'Landing Page Estilizada',
@@ -197,8 +191,6 @@ export const trails = [
     xp: 1500,
     level: 3,
     cover: null,
-    isPremium: false,
-    price: 0,
   }),
   createTrail({
     id: 'git-github',
@@ -216,8 +208,6 @@ export const trails = [
     xp: 800,
     level: 2,
     cover: null,
-    isPremium: false,
-    price: 0,
   }),
   createTrail({
     id: 'react',
@@ -235,8 +225,6 @@ export const trails = [
     xp: 2000,
     level: 4,
     cover: null,
-    isPremium: false,
-    price: 0,
   }),
   createTrail({
     id: 'backend',
@@ -254,8 +242,6 @@ export const trails = [
     xp: 1500,
     level: 3,
     cover: null,
-    isPremium: false,
-    price: 0,
   }),
   createTrail({
     id: 'database',
@@ -273,8 +259,6 @@ export const trails = [
     xp: 1200,
     level: 3,
     cover: null,
-    isPremium: false,
-    price: 0,
   }),
   createTrail({
     id: 'apis',
@@ -292,8 +276,6 @@ export const trails = [
     xp: 1500,
     level: 4,
     cover: null,
-    isPremium: false,
-    price: 0,
   }),
   createTrail({
     id: 'deploy',
@@ -311,8 +293,6 @@ export const trails = [
     xp: 1000,
     level: 4,
     cover: null,
-    isPremium: false,
-    price: 0,
   }),
 ]
 
