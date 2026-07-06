@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import { LayoutDashboard, Users, BarChart3, ArrowLeft } from 'lucide-react'
 
 const navItems = [
@@ -18,13 +18,13 @@ export default function AdminLayout() {
             </h1>
             <p className="mt-1 text-sm text-secondary">WebStart Academy</p>
           </div>
-          <a
-            href="/"
+          <Link
+            to="/"
             className="flex items-center gap-2 rounded-lg border-3 border-strong bg-surface px-4 py-2 text-sm font-bold text-primary transition hover:bg-surface-hover"
           >
             <ArrowLeft size={16} />
             Voltar
-          </a>
+          </Link>
         </div>
 
         <nav className="mb-8 flex gap-2 overflow-x-auto border-b-3 border-strong pb-1">

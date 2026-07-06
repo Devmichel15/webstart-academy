@@ -1,4 +1,4 @@
-const HF_API_URL = '/api/hf/v1/chat/completions'
+const HF_API_URL = 'https://router.huggingface.co/v1/chat/completions'
 
 const SYSTEM_PROMPT = `You are an expert web development tutor (HTML/CSS/JS) at WebStart Academy.
 Your teaching style combines Khan Academy (educational, progressive), StackOverflow (precise, technical), and a senior mentor (explains the "why").
@@ -105,26 +105,38 @@ Explique de forma progressiva: o que é, como usar, por que é importante, boas 
       userPrompt = `Consulte: ${exercisePrompt || ''}\nDúvida: ${userAnswer || ''}`
   }
 
-  const response = await fetch(HF_API_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'openai/gpt-oss-120b:groq',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userPrompt },
-      ],
-      max_tokens: 1024,
-      temperature: 0.3,
-      top_p: 0.9,
-    }),
-  })
+  let response
+  try {
+    response = await fetch(HF_API_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-oss-120b:groq',
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: userPrompt },
+        ],
+        max_tokens: 1024,
+        temperature: 0.3,
+        top_p: 0.9,
+      }),
+    })
+  } catch (fetchErr) {
+    throw new Error('Erro de rede ao contactar a IA. Verifica a tua ligação à internet.')
+  }
 
   if (!response.ok) {
-    const errBody = await response.text()
+    let errBody = ''
+    try {
+      errBody = await response.text()
+    } catch {
+      // ignore text read error
+    }
+    console.error(`[AI] HTTP ${response.status}:`, errBody)
+
     if (response.status === 503 || response.status === 502) {
       return {
         feedback: 'O modelo está a carregar. Aguarda uns segundos e tenta de novo.',
@@ -134,10 +146,23 @@ Explique de forma progressiva: o que é, como usar, por que é importante, boas 
         explanation: 'Modelo em loading no Hugging Face.',
       }
     }
-    throw new Error(`Erro ${response.status}: ${errBody}`)
+    throw new Error(`Erro ${response.status} ao contactar a IA. Tenta novamente.`)
   }
 
-  const data = await response.json()
+  const contentType = response.headers.get('content-type') || ''
+  if (!contentType.includes('application/json')) {
+    const text = await response.text()
+    console.error('[AI] Resposta não-JSON:', text.slice(0, 500))
+    throw new Error('A IA retornou uma resposta inesperada. Tenta novamente.')
+  }
+
+  let data
+  try {
+    data = await response.json()
+  } catch {
+    throw new Error('Resposta da IA inválida. Tenta novamente.')
+  }
+
   let text = ''
   if (data.choices?.[0]?.message?.content) {
     text = data.choices[0].message.content

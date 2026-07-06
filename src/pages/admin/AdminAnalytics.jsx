@@ -19,14 +19,12 @@ import {
   PieChart,
   Pie,
   Cell,
-  Legend,
   AreaChart,
   Area,
 } from 'recharts'
 import { Card } from '../../components/ui/Card'
-import { subscribeToAllUsers, subscribeToAllProgress, computeChartData } from '../../services/adminService.js'
+import { subscribeToAllUsersMerged, subscribeToAllProgress, computeChartData } from '../../services/adminService.js'
 import { allLessons } from '../../data/lessons/index.js'
-import { trails } from '../../data/trails.js'
 
 const TRAIL_COLORS = [
   '#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6',
@@ -47,9 +45,10 @@ export default function AdminAnalytics() {
 
   useEffect(() => {
     setLoading(true)
-    const unsubUsers = subscribeToAllUsers(
-      (data) => {
-        setUsers(data)
+    const unsubUsers = subscribeToAllUsersMerged(
+      () => {},
+      (merged) => {
+        setUsers(merged)
         setLoading(false)
       },
       () => setLoading(false),

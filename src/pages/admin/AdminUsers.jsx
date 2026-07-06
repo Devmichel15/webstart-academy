@@ -1,22 +1,15 @@
 import { useEffect, useMemo, useState, useCallback } from 'react'
-import { motion } from 'framer-motion'
 import {
   Search,
   Filter,
   ChevronDown,
   ChevronUp,
-  Mail,
-  Calendar,
-  BookOpen,
-  Award,
-  Clock,
-  ArrowUpDown,
   X,
 } from 'lucide-react'
 import { Card } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { Button } from '../../components/ui/Button'
-import { subscribeToAllUsers, subscribeToAllProgress } from '../../services/adminService.js'
+import { subscribeToAllUsersMerged, subscribeToAllProgress } from '../../services/adminService.js'
 import { allLessons } from '../../data/lessons/index.js'
 import { trails } from '../../data/trails.js'
 
@@ -36,7 +29,7 @@ function toDate(ts) {
   return new Date(ts)
 }
 
-function UserRow({ user, progressCount, expanded, onToggle }) {
+function UserRow({ user, expanded, onToggle }) {
   const completedCount = (user.completedLessons || []).length
   const totalLessons = allLessons.length
   const progressPct = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0
@@ -169,9 +162,10 @@ export default function AdminUsers() {
 
   useEffect(() => {
     setLoading(true)
-    const unsubUsers = subscribeToAllUsers(
-      (data) => {
-        setUsers(data)
+    const unsubUsers = subscribeToAllUsersMerged(
+      () => {},
+      (merged) => {
+        setUsers(merged)
         setLoading(false)
       },
       () => setLoading(false),

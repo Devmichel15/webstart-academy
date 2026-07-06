@@ -6,15 +6,34 @@ import {
   orderBy,
   limit as firestoreLimit,
   startAfter,
-  where,
-  Timestamp,
 } from 'firebase/firestore'
-import { db } from '../firebase/firebase.js'
+import { getFunctions, httpsCallable } from 'firebase/functions'
+import { db, app } from '../firebase/firebase.js'
 import { trails } from '../data/trails.js'
 import { allLessons } from '../data/lessons/index.js'
 import { allModules } from '../data/modules/index.js'
 
 const USERS_PER_PAGE = 50
+
+let functionsInstance = null
+function getFunctionsInstance() {
+  if (!functionsInstance) {
+    functionsInstance = getFunctions(app)
+  }
+  return functionsInstance
+}
+
+export async function fetchAllUsersFromCloudFunction() {
+  try {
+    const fn = getFunctionsInstance()
+    const callListAllUsers = httpsCallable(fn, 'listAllUsers')
+    const result = await callListAllUsers()
+    return result.data.users || []
+  } catch (err) {
+    console.error('[adminService] Failed to call listAllUsers function:', err)
+    return null
+  }
+}
 
 export function subscribeToAllUsers(callback, onError) {
   const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
@@ -50,6 +69,60 @@ export async function getUsersPage(lastDoc = null) {
     lastDoc: snap.docs[snap.docs.length - 1] || null,
     hasMore: snap.docs.length === USERS_PER_PAGE,
   }
+}
+
+export function mergeCloudData(firestoreUsers, cloudUsers) {
+  if (!cloudUsers || cloudUsers.length === 0) return firestoreUsers
+
+  const merged = new Map()
+  const seenFromAuth = new Set()
+
+  const cloudUids = new Map()
+  for (const cu of cloudUsers) {
+    if (cu._fromAuth) {
+      seenFromAuth.add(cu.uid || cu.id)
+    }
+    cloudUids.set(cu.uid || cu.id, cu)
+  }
+
+  for (const fu of firestoreUsers) {
+    const uid = fu.uid || fu.id
+    merged.set(uid, fu)
+  }
+
+  for (const [uid, cu] of cloudUids) {
+    if (!merged.has(uid)) {
+      merged.set(uid, cu)
+    }
+  }
+
+  return Array.from(merged.values())
+}
+
+export function subscribeToAllUsersMerged(firestoreCallback, mergeCallback, onError) {
+  let firestoreUsers = []
+  let cloudUsers = null
+
+  const callMerge = () => {
+    if (cloudUsers === null) return
+    const merged = mergeCloudData(firestoreUsers, cloudUsers)
+    mergeCallback(merged)
+  }
+
+  fetchAllUsersFromCloudFunction().then((data) => {
+    cloudUsers = data || []
+    callMerge()
+  }).catch((err) => {
+    console.error('[adminService] Cloud function error:', err)
+    cloudUsers = []
+    callMerge()
+  })
+
+  const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
+  return onSnapshot(q, (snap) => {
+    firestoreUsers = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+    callMerge()
+  }, onError)
 }
 
 export async function getAllProgressRecords() {
@@ -109,7 +182,6 @@ export function computeDashboardMetrics(users, progressRecords) {
   let newThisWeek = 0
   let newThisMonth = 0
   let totalCompletedLessons = 0
-  let usersWithProgress = 0
   const userLessonCounts = {}
   const userCourseCompletions = {}
 
@@ -128,7 +200,6 @@ export function computeDashboardMetrics(users, progressRecords) {
       userLessonCounts[r.userId] = (userLessonCounts[r.userId] || 0) + 1
     }
   }
-  usersWithProgress = uniqueUsersWithProgress.size
 
   for (const u of users) {
     const courses = u.completedCourses || []
@@ -175,13 +246,7 @@ export function computeDashboardMetrics(users, progressRecords) {
   }
 }
 
-export function computeRankings(users, progressRecords, userLessonCounts) {
-  const courseLessonCount = {}
-  for (const trail of trails) {
-    const trailLessons = allLessons.filter((l) => l.courseId === trail.id)
-    courseLessonCount[trail.id] = trailLessons.length
-  }
-
+export function computeRankings(users) {
   const userRanking = users.map((u) => {
     const completed = u.completedLessons || []
     const completedCount = completed.length
@@ -211,8 +276,6 @@ export function computeRankings(users, progressRecords, userLessonCounts) {
 }
 
 export function computeChartData(users, progressRecords) {
-  const now = new Date()
-
   const lessonsPerDay = []
   for (let i = 29; i >= 0; i--) {
     const day = daysAgo(i)
@@ -247,14 +310,6 @@ export function computeChartData(users, progressRecords) {
   const trailStats = trails.map((trail) => {
     const trailLessons = allLessons.filter((l) => l.courseId === trail.id)
     const totalTrailLessons = trailLessons.length
-    let started = 0
-    let completed = 0
-    for (const r of progressRecords) {
-      if (trailLessons.some((l) => l.id === r.lessonId)) {
-        started++
-        if (r.completed) completed++
-      }
-    }
     const uniqueStarted = new Set()
     const uniqueCompleted = new Set()
     for (const r of progressRecords) {

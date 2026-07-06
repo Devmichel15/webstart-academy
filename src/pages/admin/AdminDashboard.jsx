@@ -24,26 +24,17 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  Cell,
 } from 'recharts'
 import { Card } from '../../components/ui/Card'
-import { Badge } from '../../components/ui/Badge'
 import { Button } from '../../components/ui/Button'
 import {
-  subscribeToAllUsers,
+  subscribeToAllUsersMerged,
   subscribeToAllProgress,
   computeDashboardMetrics,
   computeRankings,
   computeChartData,
   computeInsights,
 } from '../../services/adminService.js'
-import { allLessons } from '../../data/lessons/index.js'
-import { trails } from '../../data/trails.js'
-
-const TRAIL_COLORS = [
-  '#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6',
-  '#06b6d4', '#f97316', '#ec4899', '#14b8a6', '#6366f1',
-]
 
 function StatCard({ icon: Icon, label, value, delay = 0, color = 'text-brand-500', onClick }) {
   return (
@@ -143,9 +134,10 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     setLoading(true)
-    const unsubUsers = subscribeToAllUsers(
-      (data) => {
-        setUsers(data)
+    const unsubUsers = subscribeToAllUsersMerged(
+      () => {},
+      (merged) => {
+        setUsers(merged)
         setLoading(false)
         setLastRefresh(new Date())
       },
@@ -165,7 +157,7 @@ export default function AdminDashboard() {
   )
 
   const rankings = useMemo(
-    () => computeRankings(users, progressRecords, metrics.userLessonCounts),
+    () => computeRankings(users),
     [users, progressRecords, metrics],
   )
 
