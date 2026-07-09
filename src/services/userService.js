@@ -13,12 +13,15 @@ import { getLevelFromXp } from "../utils/xp.js";
 import { computeStreakUpdate, getTodayKey } from "../utils/streak.js";
 import { generateUniqueUsername } from "../utils/username.js";
 
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
+
 function buildDefaultUser(user, extra = {}) {
   const cleanExtra = Object.fromEntries(
     Object.entries(extra).filter(([, value]) => value !== undefined && value !== null),
   );
 
   const name = cleanExtra.name || user.displayName || "Aluno WebStart";
+  const isAdmin = ADMIN_EMAIL && user.email === ADMIN_EMAIL;
 
   return {
     uid: user.uid,
@@ -26,7 +29,7 @@ function buildDefaultUser(user, extra = {}) {
     username: cleanExtra.username || generateUniqueUsername(name, user.uid),
     email: user.email || "",
     provider: cleanExtra.provider || "email",
-    role: "student",
+    role: isAdmin ? "admin" : "student",
     createdAt: serverTimestamp(),
     lastLogin: serverTimestamp(),
     xp: 0,
@@ -52,7 +55,12 @@ export async function createUserProfile(user, extra = {}) {
     const existing = await getDoc(userRef);
     if (existing.exists()) {
       await updateLastLogin(user.uid);
-      return existing.data();
+      const data = existing.data();
+      const isAdmin = ADMIN_EMAIL && user.email === ADMIN_EMAIL;
+      if (isAdmin && data.role !== "admin") {
+        await updateDoc(userRef, { role: "admin" });
+      }
+      return data;
     }
     const profile = buildDefaultUser(user, extra);
     await setDoc(userRef, profile);

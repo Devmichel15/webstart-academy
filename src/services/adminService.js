@@ -104,8 +104,7 @@ export function subscribeToAllUsersMerged(firestoreCallback, mergeCallback, onEr
   let cloudUsers = null
 
   const callMerge = () => {
-    if (cloudUsers === null) return
-    const merged = mergeCloudData(firestoreUsers, cloudUsers)
+    const merged = mergeCloudData(firestoreUsers, cloudUsers || [])
     mergeCallback(merged)
   }
 
@@ -122,7 +121,11 @@ export function subscribeToAllUsersMerged(firestoreCallback, mergeCallback, onEr
   return onSnapshot(q, (snap) => {
     firestoreUsers = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
     callMerge()
-  }, onError)
+  }, (err) => {
+    console.error('[adminService] Firestore subscription error:', err)
+    callMerge()
+    if (onError) onError(err)
+  })
 }
 
 export async function getAllProgressRecords() {

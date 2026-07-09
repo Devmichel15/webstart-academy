@@ -65,56 +65,64 @@ function userRecordToProfile(userRecord) {
   }
 }
 
-exports.listAllUsers = onCall(async (request) => {
-  if (!request.auth) {
-    throw new HttpsError('unauthenticated', 'You must be logged in.')
-  }
-
-  const callerDoc = await db.collection('users').doc(request.auth.uid).get()
-  const callerData = callerDoc.data()
-  const isAdmin = callerData?.role === 'admin'
-  if (!isAdmin) {
-    throw new HttpsError('permission-denied', 'Only admins can list all users.')
-  }
-
-  const firestoreProfiles = {}
-  const firestoreSnap = await db.collection('users').get()
-  firestoreSnap.forEach((doc) => {
-    firestoreProfiles[doc.id] = { id: doc.id, ...doc.data() }
-  })
-
-  const allAuthUsers = []
-  let nextPageToken
-  do {
-    const result = await auth.listUsers(1000, nextPageToken)
-    allAuthUsers.push(...result.users)
-    nextPageToken = result.pageToken
-  } while (nextPageToken)
-
-  const mergedUsers = []
-  const seenUids = new Set()
-
-  for (const userRecord of allAuthUsers) {
-    const uid = userRecord.uid
-    seenUids.add(uid)
-    if (firestoreProfiles[uid]) {
-      mergedUsers.push(firestoreProfiles[uid])
-    } else {
-      const profile = userRecordToProfile(userRecord)
-      mergedUsers.push(profile)
+exports.listAllUsers = onCall({ cors: true }, async (request) => {
+  try {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'You must be logged in.')
     }
-  }
 
-  for (const [uid, profile] of Object.entries(firestoreProfiles)) {
-    if (!seenUids.has(uid)) {
-      mergedUsers.push(profile)
+    const callerDoc = await db.collection('users').doc(request.auth.uid).get()
+    const callerData = callerDoc.data()
+    const isAdmin = callerData?.role === 'admin'
+    if (!isAdmin) {
+      throw new HttpsError('permission-denied', 'Only admins can list all users.')
+    }
+
+    const firestoreProfiles = {}
+    const firestoreSnap = await db.collection('users').get()
+    firestoreSnap.forEach((doc) => {
+      firestoreProfiles[doc.id] = { id: doc.id, ...doc.data() }
+    })
+
+    const allAuthUsers = []
+    let nextPageToken
+    do {
+      const result = await auth.listUsers(1000, nextPageToken)
+      allAuthUsers.push(...result.users)
+      nextPageToken = result.pageToken
+    } while (nextPageToken)
+
+    const mergedUsers = []
+    const seenUids = new Set()
+
+    for (const userRecord of allAuthUsers) {
+      const uid = userRecord.uid
       seenUids.add(uid)
+      if (firestoreProfiles[uid]) {
+        mergedUsers.push(firestoreProfiles[uid])
+      } else {
+        const profile = userRecordToProfile(userRecord)
+        mergedUsers.push(profile)
+      }
     }
+
+    for (const [uid, profile] of Object.entries(firestoreProfiles)) {
+      if (!seenUids.has(uid)) {
+        mergedUsers.push(profile)
+        seenUids.add(uid)
+      }
+    }
+
+    logger.info(`listAllUsers: returned ${mergedUsers.length} users (${allAuthUsers.length} auth, ${Object.keys(firestoreProfiles).length} firestore)`)
+
+    return { users: mergedUsers }
+  } catch (error) {
+    logger.error('listAllUsers error:', error)
+    if (error instanceof HttpsError) {
+      throw error
+    }
+    throw new HttpsError('internal', error.message || 'An unexpected error occurred.')
   }
-
-  logger.info(`listAllUsers: returned ${mergedUsers.length} users (${allAuthUsers.length} auth, ${Object.keys(firestoreProfiles).length} firestore)`)
-
-  return { users: mergedUsers }
 })
 
 exports.syncAuthUser = onDocumentCreated('users/{userId}', async (event) => {
