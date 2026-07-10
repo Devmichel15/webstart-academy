@@ -1,5 +1,5 @@
 import { trails, getTrailById, getNextTrailId } from '../data/trails.js'
-import { allLessons } from '../data/lessons/index.js'
+import { allLessons, allVideoLessons } from '../data/lessons/index.js'
 
 const STATUS_LOCKED = 'locked'
 const STATUS_AVAILABLE = 'available'
@@ -11,7 +11,7 @@ export function computeTrailStatus(trailId, completedLessons, completedCourses) 
   if (!trail) return STATUS_LOCKED
   if (trail.status === 'soon') return STATUS_LOCKED
 
-  const lessons = allLessons.filter((l) => l.courseId === trailId)
+  const lessons = [...allLessons, ...allVideoLessons].filter((l) => l.courseId === trailId)
   const completedInTrail = lessons.filter((l) => completedLessons.includes(l.id))
 
   const isCompleted = completedCourses.includes(trailId)
@@ -42,7 +42,7 @@ export function getJourneyProgress(completedCourses, completedLessons = []) {
     .map((trail) => {
       const isUnlocked = isTrailUnlocked(trail.id, completedCourses)
       const isCompleted = completedCourses.includes(trail.id)
-      const lessons = allLessons.filter((l) => l.courseId === trail.id)
+      const lessons = [...allLessons, ...allVideoLessons].filter((l) => l.courseId === trail.id)
       const completedInTrail = lessons.filter((l) => completedLessons.includes(l.id))
       const allDone = lessons.length > 0 && completedInTrail.length === lessons.length
       const trailCompleted = isCompleted || allDone
@@ -86,7 +86,7 @@ export function getAvailableTrails(completedCourses) {
 export function getRecommendedTrail(completedCourses, completedLessons) {
   const available = getAvailableTrails(completedCourses)
   for (const trail of available) {
-    const lessons = allLessons.filter((l) => l.courseId === trail.id)
+    const lessons = [...allLessons, ...allVideoLessons].filter((l) => l.courseId === trail.id)
     const incomplete = lessons.find((l) => !completedLessons.includes(l.id))
     if (incomplete) return trail
     if (!completedCourses.includes(trail.id)) return trail

@@ -439,4 +439,15 @@ export const htmlModules = [
     lab: null,
     miniProject: htmlFinalMiniProject,
   }),
+  createModule({
+    id: 'html-video-exercises-module',
+    courseId: 'html-exercises',
+    title: 'Exercícios em Vídeo',
+    description: 'Coloque em prática todos os conceitos aprendidos através de exercícios guiados em vídeo.',
+    order: 15,
+    lessons: ['html-video-ex-1'],
+    quiz: null,
+    lab: null,
+    miniProject: null,
+  }),
 ]

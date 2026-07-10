@@ -24,7 +24,7 @@ import { Button } from '../components/ui/Button'
 import { ProgressBar } from '../components/ui/ProgressBar'
 import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { useProgress } from '../hooks/useProgress.js'
-import { allLessons } from '../data/lessons/index.js'
+import { allLessons, allVideoLessons } from '../data/lessons/index.js'
 import { useGsapReveal } from '../hooks/useGsapReveal'
 
 const statIcons = {
@@ -37,6 +37,7 @@ const statIcons = {
 const trailIcons = {
   'fundamentos-web': Globe,
   html: Code2,
+  'html-exercises': Code2,
   css: Palette,
   javascript: FileJson,
   'git-github': GraduationCap,
@@ -95,7 +96,14 @@ export default function Dashboard() {
     return trailStatus !== 'locked'
   })
 
-  const firstIncompleteLesson = allLessons.find((l) => !isLessonCompleted(l.id))
+  const allCombinedLessons = [...allLessons, ...allVideoLessons].sort((a, b) => {
+    const trailOrderA = orderedTrails.findIndex((t) => t.id === a.courseId)
+    const trailOrderB = orderedTrails.findIndex((t) => t.id === b.courseId)
+    if (trailOrderA !== trailOrderB) return trailOrderA - trailOrderB
+    return a.order - b.order
+  })
+
+  const firstIncompleteLesson = allCombinedLessons.find((l) => !isLessonCompleted(l.id))
 
   return (
     <>
@@ -221,7 +229,7 @@ export default function Dashboard() {
             <div>
               <p className="mb-1 font-bold">{firstIncompleteLesson.title}</p>
               <p className="mb-4 text-sm text-secondary">{firstIncompleteLesson.description}</p>
-              <Link to={`/aula/${firstIncompleteLesson.id}`}>
+              <Link to={firstIncompleteLesson.type === 'videoLesson' ? `/video-aula/${firstIncompleteLesson.id}` : `/aula/${firstIncompleteLesson.id}`}>
                 <Button>
                   Continuar
                   <ArrowRight size={16} />

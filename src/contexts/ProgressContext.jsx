@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { allLessons } from '../data/lessons/index.js'
+import { allLessons, allVideoLessons } from '../data/lessons/index.js'
 import { trails } from '../data/trails.js'
 import { useAuthContext } from './AuthContext.jsx'
 import { getAchievementsWithStatus } from '../services/achievementService.js'
@@ -103,19 +103,20 @@ export function ProgressProvider({ children }) {
 
   const completedLessons = profile.completedLessons || []
   const completedCourses = profile.completedCourses || []
-  const totalLessons = allLessons.length
+  const allCombinedLessons = [...allLessons, ...allVideoLessons]
+  const totalLessons = allCombinedLessons.length
   const completedCount = completedLessons.length
   const progressPercent = totalLessons ? Math.round((completedCount / totalLessons) * 100) : 0
   const level = profile.level || getLevelFromXp(profile.xp || 0)
 
-  const remainingMinutes = allLessons
+  const remainingMinutes = allCombinedLessons
     .filter((lesson) => !completedLessons.includes(lesson.id))
-    .reduce((sum, lesson) => sum + lesson.duration, 0)
+    .reduce((sum, lesson) => sum + (lesson.duration || 0), 0)
 
-  const recommendedLesson = allLessons.find((lesson) => !completedLessons.includes(lesson.id))
+  const recommendedLesson = allCombinedLessons.find((lesson) => !completedLessons.includes(lesson.id))
 
   const lastLesson = profile.currentLesson
-    ? allLessons.find((lesson) => lesson.id === profile.currentLesson)
+    ? allCombinedLessons.find((lesson) => lesson.id === profile.currentLesson)
     : null
 
   const completeLesson = useCallback(async (lessonId) => {
@@ -174,7 +175,7 @@ export function ProgressProvider({ children }) {
 
   const visitLesson = useCallback(async (lessonId) => {
     if (!user) return
-    const lesson = allLessons.find((item) => item.id === lessonId)
+    const lesson = allCombinedLessons.find((item) => item.id === lessonId)
     if (!lesson) return
 
     try {

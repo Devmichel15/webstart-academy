@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, CheckCircle2, Circle, Clock, FlaskConical, HelpCircle, Trophy } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Circle, Clock, FlaskConical, HelpCircle, PlayCircle, Trophy } from 'lucide-react'
 import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
@@ -91,7 +91,7 @@ export default function ModuleDetail() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Link to={`/aula/${lesson.id}`} className="block">
+              <Link to={lesson.type === 'videoLesson' ? `/video-aula/${lesson.id}` : `/aula/${lesson.id}`} className="block">
                 <Card hover className="!p-4">
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-start gap-3">
@@ -102,10 +102,17 @@ export default function ModuleDetail() {
                       )}
                       <div>
                         <div className="mb-1 flex flex-wrap items-center gap-2">
-                          <span className="flex items-center gap-1 text-xs font-semibold text-brand-600">
-                            <Clock size={12} />
-                            {lesson.duration} min
-                          </span>
+                          {lesson.type === 'videoLesson' ? (
+                            <span className="flex items-center gap-1 text-xs font-semibold text-brand-600">
+                              <PlayCircle size={12} />
+                              Vídeo
+                            </span>
+                          ) : (
+                            <span className="flex items-center gap-1 text-xs font-semibold text-brand-600">
+                              <Clock size={12} />
+                              {lesson.duration} min
+                            </span>
+                          )}
                           <span className="text-xs font-semibold text-brand-600">+{XP_LESSON} XP</span>
                         </div>
                         <h3 className="font-black">{lesson.title}</h3>
@@ -113,7 +120,7 @@ export default function ModuleDetail() {
                       </div>
                     </div>
                     <Button variant="secondary" size="sm">
-                      {completed ? 'Revisar' : 'Iniciar'}
+                      {completed ? 'Revisar' : lesson.type === 'videoLesson' ? 'Assistir' : 'Iniciar'}
                     </Button>
                   </div>
                 </Card>

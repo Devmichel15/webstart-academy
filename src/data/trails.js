@@ -5,10 +5,12 @@ import { fundamentosModules } from './modules/fundamentos-modules.js'
 import { htmlLessons } from './lessons/html-lessons.js'
 import { cssLessons } from './lessons/css-lessons.js'
 import { fundamentosLessons } from './lessons/fundamentos-lessons.js'
+import { videoLessons } from './lessons/video-lessons.js'
 
 export const TRAIL_ORDER = [
   'fundamentos-web',
   'html',
+  'html-exercises',
   'css',
   'javascript',
   'git-github',
@@ -97,8 +99,8 @@ export const trails = [
       }),
       nextSteps: createNextSteps({
         recommendations: [
+          { courseId: 'html-exercises', label: 'HTML Exercícios em Vídeo — Pratique o que aprendeu' },
           { courseId: 'css', label: 'CSS3 — Estilize suas páginas' },
-          { courseId: null, label: 'JavaScript — Torne suas páginas interativas' },
           { courseId: null, label: 'Prática no Laboratório WebStart' },
         ],
       }),
@@ -109,18 +111,35 @@ export const trails = [
     }),
   }),
   createTrail({
+    id: 'html-exercises',
+    slug: 'html-exercicios-em-video',
+    title: 'HTML • Exercícios em Vídeo',
+    description: 'Coloque em prática todos os conceitos de HTML aprendidos através de exercícios guiados em vídeo.',
+    icon: 'playCircle',
+    color: 'brand',
+    order: 2,
+    difficulty: 'beginner',
+    estimatedHours: 1,
+    modules: ['html-video-exercises-module'],
+    status: 'available',
+    requiredTrail: 'html',
+    xp: 200,
+    level: 1,
+    cover: null,
+  }),
+  createTrail({
     id: 'css',
     slug: 'css3',
     title: 'CSS3',
     description: 'Estilize interfaces com layout, cores e animações.',
     icon: 'palette',
     color: 'brand',
-    order: 2,
+    order: 3,
     difficulty: 'beginner',
     estimatedHours: 4,
     modules: ['css-fundamentals', 'css-layout', 'css-advanced'],
     status: 'building',
-    requiredTrail: 'html',
+    requiredTrail: 'html-exercises',
     xp: 1000,
     level: 2,
     cover: null,
@@ -182,7 +201,7 @@ export const trails = [
     description: 'Torne suas páginas interativas com a linguagem da web.',
     icon: 'fileJson',
     color: 'brand',
-    order: 3,
+    order: 4,
     difficulty: 'beginner',
     estimatedHours: 6,
     modules: [],
@@ -199,7 +218,7 @@ export const trails = [
     description: 'Controle de versão, colaboração e deploy com Git e GitHub.',
     icon: 'gitBranch',
     color: 'brand',
-    order: 4,
+    order: 5,
     difficulty: 'beginner',
     estimatedHours: 3,
     modules: [],
@@ -216,7 +235,7 @@ export const trails = [
     description: 'Construa interfaces modernas e reativas com componentização.',
     icon: 'atom',
     color: 'brand',
-    order: 5,
+    order: 6,
     difficulty: 'intermediate',
     estimatedHours: 8,
     modules: [],
@@ -233,7 +252,7 @@ export const trails = [
     description: 'Servidores, rotas, middleware e lógica do lado do servidor.',
     icon: 'terminal',
     color: 'brand',
-    order: 6,
+    order: 7,
     difficulty: 'intermediate',
     estimatedHours: 6,
     modules: [],
@@ -250,7 +269,7 @@ export const trails = [
     description: 'Modelagem, SQL e integração com bancos de dados relacionais.',
     icon: 'database',
     color: 'brand',
-    order: 7,
+    order: 8,
     difficulty: 'intermediate',
     estimatedHours: 5,
     modules: [],
@@ -267,7 +286,7 @@ export const trails = [
     description: 'Crie e consuma APIs RESTful completas com autenticação e documentação.',
     icon: 'link2',
     color: 'brand',
-    order: 8,
+    order: 9,
     difficulty: 'advanced',
     estimatedHours: 6,
     modules: [],
@@ -284,7 +303,7 @@ export const trails = [
     description: 'Publicação, CI/CD, cloud hosting e infraestrutura moderna.',
     icon: 'cloud',
     color: 'brand',
-    order: 9,
+    order: 10,
     difficulty: 'advanced',
     estimatedHours: 4,
     modules: [],
@@ -315,7 +334,7 @@ export function getModuleData(moduleId) {
 export function getModuleLessons(moduleId) {
   const mod = getModuleData(moduleId)
   if (!mod) return []
-  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons]
+  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons]
   return mod.lessons.map((lId) => allLessons.find((l) => l.id === lId)).filter(Boolean)
 }
 

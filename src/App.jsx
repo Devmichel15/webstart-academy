@@ -16,6 +16,7 @@ import ModuleQuiz from './pages/ModuleQuiz'
 import ModuleLab from './pages/ModuleLab'
 import ModuleMiniProject from './pages/ModuleMiniProject'
 import Lesson from './pages/Lesson'
+import VideoLesson from './pages/VideoLesson'
 import Lab from './pages/Lab'
 import Materials from './pages/Materials'
 import Profile from './pages/Profile'
@@ -61,6 +62,7 @@ export default function App() {
                   <Route path="trilhas/:courseId/modulo/:moduleId/lab" element={<ModuleLab />} />
                   <Route path="trilhas/:courseId/modulo/:moduleId/mini-projeto" element={<ModuleMiniProject />} />
                   <Route path="aula/:lessonId" element={<Lesson />} />
+                  <Route path="video-aula/:lessonId" element={<VideoLesson />} />
                   <Route path="laboratorio" element={<Lab />} />
                   <Route path="materiais" element={<Materials />} />
                   <Route path="perfil" element={<Profile />} />
