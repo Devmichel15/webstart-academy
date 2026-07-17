@@ -169,7 +169,7 @@ export default function CourseDetail() {
                         {lessonContent}
                       </div>
                     ) : (
-                      <Link key={lessonId} to={`/aula/${lessonId}`} className="block">
+                      <Link key={lessonId} to={lesson.type === 'videoLesson' ? `/video-aula/${lessonId}` : `/aula/${lessonId}`} className="block">
                         {lessonContent}
                       </Link>
                     )

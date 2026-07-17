@@ -8,7 +8,7 @@ export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons]
 export const allVideoLessons = [...videoLessons]
 
 export function getLessonById(id) {
-  return allLessons.find((l) => l.id === id) || null
+  return allLessons.find((l) => l.id === id) || allVideoLessons.find((l) => l.id === id) || null
 }
 
 export function getVideoLessonById(id) {
