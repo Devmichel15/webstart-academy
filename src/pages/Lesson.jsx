@@ -10,6 +10,7 @@ import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { LessonRenderer } from '../components/lesson/LessonRenderer.jsx'
 import { ShareButtons } from '../components/share/ShareButtons'
 import { AITutor } from '../components/ai/AITutor'
+import { ProactiveTutorTrigger } from '../components/ai/ProactiveTutorTrigger'
 import { getCourseById } from '../services/courseService.js'
 import { getLessonById, getNextLesson } from '../services/lessonService.js'
 import { useProgress } from '../hooks/useProgress.js'
@@ -105,7 +106,7 @@ export default function Lesson() {
 
       <LessonRenderer lesson={lesson} />
 
-      <div className="mt-8">
+      <div id="ai-tutor" className="mt-8 scroll-mt-24">
         <Card>
           <AITutor lessonContext={lesson.title} />
         </Card>
@@ -143,6 +144,7 @@ export default function Lesson() {
         </div>
       )}
     </div>
+    <ProactiveTutorTrigger />
     </>
   )
 }

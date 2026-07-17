@@ -10,7 +10,7 @@ import {
   where,
 } from 'firebase/firestore'
 import { db } from '../firebase/firebase.js'
-import { allLessons } from '../data/lessons/index.js'
+import { allLessons, allVideoLessons } from '../data/lessons/index.js'
 import { trails as staticCourses } from '../data/trails.js'
 import { getModuleData } from '../data/trails.js'
 import { withRetry } from '../utils/retry.js'
@@ -92,7 +92,8 @@ export async function visitLesson(userId, lesson) {
 
 export async function completeLesson(userId, lessonId) {
   return withRetry(async () => {
-    const lesson = allLessons.find((item) => item.id === lessonId)
+    const allAvailable = [...allLessons, ...allVideoLessons]
+    const lesson = allAvailable.find((item) => item.id === lessonId)
     if (!lesson) throw new Error('Aula não encontrada.')
 
     const user = await getUserProfile(userId)
