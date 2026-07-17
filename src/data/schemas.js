@@ -28,7 +28,6 @@ export function createTrail({
   cover = null,
   level = 1,
   xp = 500,
-  certificate = null,
 }) {
   return {
     id,
@@ -46,11 +45,9 @@ export function createTrail({
     cover,
     level,
     xp,
-    certificate,
     completion: completion || {
       finalProject: null,
       finalEvaluation: null,
-      certificate: null,
       nextSteps: null,
     },
   }
@@ -85,7 +82,6 @@ export function createCourse({
     completion: completion || {
       finalProject: null,
       finalEvaluation: null,
-      certificate: null,
       nextSteps: null,
     },
   }
@@ -259,10 +255,6 @@ export function createFinalProject({
 
 export function createFinalEvaluation({ questions = [] }) {
   return { questions }
-}
-
-export function createCertificate({ title, description }) {
-  return { title, description }
 }
 
 export function createNextSteps({ recommendations = [] }) {

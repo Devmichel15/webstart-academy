@@ -37,7 +37,6 @@ const defaultProfile = {
   currentLesson: null,
   currentCourse: null,
   totalStudyTime: 0,
-  certificates: [],
   name: '',
   photoURL: '',
   email: '',
@@ -143,7 +142,7 @@ export function ProgressProvider({ children }) {
         showSuccess('Módulo concluído! +200 XP de bónus')
       }
       if (result.courseComplete) {
-        showSuccess('Curso concluído! +1000 XP e certificado desbloqueado!')
+        showSuccess('Curso concluído! +1000 XP de bónus!')
       }
       if (result.shareData) setCelebration(result.shareData)
       return result
@@ -189,7 +188,7 @@ export function ProgressProvider({ children }) {
         showSuccess('Módulo concluído! +200 XP de bónus')
       }
       if (result.courseComplete) {
-        showSuccess('Curso concluído! +1000 XP e certificado desbloqueado!')
+        showSuccess('Curso concluído! +1000 XP de bónus!')
       }
       return result
     } catch (err) {
@@ -261,7 +260,6 @@ export function ProgressProvider({ children }) {
       lastLesson,
       completedCourses,
       completedQuizzes,
-      certificates: profile.certificates || [],
       studyHours,
       progressRecords,
       loading,

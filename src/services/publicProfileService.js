@@ -20,7 +20,6 @@ const PUBLIC_FIELDS = [
   'completedExercises',
   'completedProjects',
   'completedCourses',
-  'certificates',
   'isPublic',
   'photoURL',
 ]

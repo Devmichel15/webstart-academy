@@ -27,10 +27,6 @@ export async function uploadCourseThumbnail(courseId, file) {
   return uploadFile(`course-thumbnails/${courseId}.${extension}`, file)
 }
 
-export async function uploadCertificate(uid, courseId, file) {
-  return uploadFile(`certificates/${uid}/${courseId}.pdf`, file)
-}
-
 export async function getFileUrl(path) {
   return withRetry(async () => getDownloadURL(ref(storage, path)))
 }

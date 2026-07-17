@@ -167,7 +167,7 @@ export default function Journey() {
                         <div className="mt-4">
                           <Link to={`/trilhas/${trail.id}/conclusao`}>
                             <Button variant="secondary">
-                              Ver certificado
+                              Ver conclusão
                               <ArrowRight size={16} />
                             </Button>
                           </Link>

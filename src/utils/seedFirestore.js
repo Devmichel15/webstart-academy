@@ -1,4 +1,4 @@
-import { doc, setDoc, writeBatch } from 'firebase/firestore'
+import { doc, writeBatch } from 'firebase/firestore'
 import { db } from '../firebase/firebase.js'
 import { achievements } from '../data/achievements.js'
 import { courses } from '../data/courses.js'
@@ -58,14 +58,4 @@ export async function seedFirestoreContent() {
   })
 
   await batch.commit()
-}
-
-export async function seedCertificate(userId, courseId, courseName) {
-  await setDoc(doc(db, 'certificates', `${userId}_${courseId}`), {
-    userId,
-    courseId,
-    courseName,
-    issuedAt: new Date().toISOString(),
-    certificateUrl: '',
-  })
 }

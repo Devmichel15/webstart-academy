@@ -37,7 +37,6 @@ function buildDefaultUser(userRecord) {
     currentCourse: null,
     currentLesson: null,
     totalStudyTime: 0,
-    certificates: [],
     isPublic: true,
   }
 }
@@ -67,7 +66,6 @@ function userRecordToProfile(userRecord) {
     currentCourse: null,
     currentLesson: null,
     totalStudyTime: 0,
-    certificates: [],
     isPublic: false,
     _fromAuth: true,
   }

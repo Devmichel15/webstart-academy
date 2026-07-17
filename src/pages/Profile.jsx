@@ -30,7 +30,6 @@ export default function Profile() {
     progressPercent,
     studyHours,
     journeyProgress,
-    certificates,
     achievements,
     loading,
   } = useProgress()
@@ -152,28 +151,6 @@ export default function Profile() {
           ))}
         </div>
       </section>
-
-      {(allComplete || certificates.length > 0) && (
-        <Card className="border-brand-500 bg-gradient-to-br from-brand-100 to-brand-200 text-center dark:from-brand-900 dark:to-brand-950">
-          <Award className="mx-auto mb-4 text-brand-600" size={48} />
-          <h2 className="mb-2 text-2xl font-black">Certificados WebStart</h2>
-          <p className="mb-4 text-brand-800 dark:text-brand-200">
-            Seus certificados emitidos e salvos no Firestore.
-          </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {(certificates.length ? certificates : [{ courseName: 'HTML5 & CSS3 — Formação Completa', issuedAt: new Date().toISOString() }]).map((cert) => (
-              <div key={cert.courseId || cert.courseName} className="rounded-xl border-3 border-brand-800 bg-white p-6 dark:border-brand-400 dark:bg-brand-950">
-                <p className="text-sm font-bold uppercase tracking-widest text-brand-600">Certificado de Conclusão</p>
-                <p className="my-2 text-xl font-black">WebStart Academy</p>
-                <p className="text-sm">{cert.courseName}</p>
-                <p className="mt-4 text-xs text-brand-600">
-                  {new Date(cert.issuedAt).toLocaleDateString('pt-PT')}
-                </p>
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
     </div>
     </>
   )

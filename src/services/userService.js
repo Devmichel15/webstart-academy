@@ -47,7 +47,6 @@ function buildDefaultUser(user, extra = {}) {
     currentCourse: null,
     currentLesson: null,
     totalStudyTime: 0,
-    certificates: [],
     isPublic: true,
     firstStepsDone: false,
     lastReactivationEmail: null,
@@ -191,17 +190,8 @@ export async function addCompletedCourse(uid, courseId, courseName) {
   const completedCourses = user.completedCourses || [];
   if (completedCourses.includes(courseId)) return user;
 
-  const certificates = user.certificates || [];
-  const certificate = {
-    courseId,
-    courseName,
-    issuedAt: serverTimestamp(), // ← Alterado conforme solicitado
-    certificateUrl: "",
-  };
-
   await updateUserProfile(uid, {
     completedCourses: [...completedCourses, courseId],
-    certificates: [...certificates, certificate],
   });
 }
 

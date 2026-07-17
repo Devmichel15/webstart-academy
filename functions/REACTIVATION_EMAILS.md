@@ -171,7 +171,7 @@ firebase functions:log --only sendReactivationEmails
 
 ## Melhorias Futuras
 
-- **Emails transaccionais:** enviar email de boas-vindas, conclusão de módulo, certificado
+- **Emails transaccionais:** enviar email de boas-vindas, conclusão de módulo
 - **Segmentação:** emails diferentes para D-1 vs D-3 (urgência crescente)
 - **A/B testing:** testar diferentes assuntos e CTAs
 - **Preferências:** permitir ao utilizador optar por não receber emails

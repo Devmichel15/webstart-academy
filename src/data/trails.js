@@ -1,4 +1,4 @@
-import { createTrail, createFinalProject, createFinalEvaluation, createCertificate, createNextSteps } from './schemas.js'
+import { createTrail, createFinalProject, createFinalEvaluation, createNextSteps } from './schemas.js'
 import { htmlModules } from './modules/html-modules.js'
 import { cssModules } from './modules/css-modules.js'
 import { fundamentosModules } from './modules/fundamentos-modules.js'
@@ -38,10 +38,6 @@ export const trails = [
     xp: 500,
     level: 1,
     cover: null,
-    certificate: createCertificate({
-      title: 'Certificado WebStart - Fundamentos da Web',
-      description: 'Certifica que o aluno concluiu a trilha de Fundamentos da Web com domínio dos conceitos fundamentais de internet.',
-    }),
   }),
   createTrail({
     id: 'html',
@@ -93,10 +89,6 @@ export const trails = [
           { question: 'O que é o DOM?', answer: 'Representação em árvore dos elementos HTML.' },
         ],
       }),
-      certificate: createCertificate({
-        title: 'Certificado HTML5 WebStart',
-        description: 'Certifica que o aluno concluiu a trilha de HTML5 com domínio em estruturação semântica de páginas web.',
-      }),
       nextSteps: createNextSteps({
         recommendations: [
           { courseId: 'html-exercises', label: 'HTML Exercícios em Vídeo — Pratique o que aprendeu' },
@@ -105,10 +97,6 @@ export const trails = [
         ],
       }),
     },
-    certificate: createCertificate({
-      title: 'Certificado HTML5 WebStart',
-      description: 'Certifica que o aluno concluiu a trilha de HTML5 com domínio em estruturação semântica de páginas web.',
-    }),
   }),
   createTrail({
     id: 'html-exercises',
@@ -177,10 +165,6 @@ export const trails = [
           { question: 'Por que usar variáveis CSS?', answer: 'Reutilização, manutenção, temas.' },
         ],
       }),
-      certificate: createCertificate({
-        title: 'Certificado CSS3 WebStart',
-        description: 'Certifica que o aluno concluiu a trilha de CSS3 com domínio em estilização, layout e design responsivo.',
-      }),
       nextSteps: createNextSteps({
         recommendations: [
           { courseId: null, label: 'JavaScript — Interatividade e lógica' },
@@ -189,10 +173,6 @@ export const trails = [
         ],
       }),
     },
-    certificate: createCertificate({
-      title: 'Certificado CSS3 WebStart',
-      description: 'Certifica que o aluno concluiu a trilha de CSS3 com domínio em estilização, layout e design responsivo.',
-    }),
   }),
   createTrail({
     id: 'javascript',

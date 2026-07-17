@@ -440,6 +440,6 @@ export const cssLessons = [
       'Design system consistente = marca forte',
       'Responsivo e animado = experiência profissional',
     ],
-    checklist: ['Landing page estilizada', 'Design responsivo', 'Animações sutis', 'Pronto para certificado'],
+    checklist: ['Landing page estilizada', 'Design responsivo', 'Animações sutis', 'Projeto concluído'],
   }),
 ]

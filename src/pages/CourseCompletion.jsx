@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, Award, CheckCircle2, GraduationCap, ListChecks, Target, Trophy } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, GraduationCap, ListChecks, Target, Trophy } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { SEO } from '../components/seo/SEO'
 import { Card } from '../components/ui/Card'
@@ -54,7 +54,7 @@ export default function CourseCompletion() {
       >
         <Badge className="mb-3 !border-white/30 !bg-white/20 !text-white">Conclusão</Badge>
         <h1 className="mb-2 text-2xl font-black md:text-3xl">{course.title}</h1>
-        <p className="text-brand-100">Complete a trilha e receba seu certificado</p>
+        <p className="text-brand-100">Complete a trilha e desbloqueie a conclusão</p>
       </motion.section>
 
       <div className="mb-4 h-2 overflow-hidden rounded-full border-2 border-brand-800 bg-brand-100 dark:bg-brand-900">
@@ -113,22 +113,6 @@ export default function CourseCompletion() {
                 ))}
               </ul>
             )}
-          </Card>
-        )}
-
-        {completion?.certificate && (
-          <Card className="!border-amber-500 dark:!border-amber-400">
-            <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-[3px_3px_0_0_#92400e]">
-                <Award size={20} />
-              </div>
-              <h2 className="text-lg font-black">Certificado</h2>
-            </div>
-            <h3 className="mb-2 font-bold">{completion.certificate.title}</h3>
-            <p className="mb-4 text-sm text-brand-700 dark:text-brand-300">{completion.certificate.description}</p>
-            <Badge variant={progress >= 100 ? 'success' : 'warning'}>
-              {progress >= 100 ? 'Disponível' : 'Complete a trilha para desbloquear'}
-            </Badge>
           </Card>
         )}
 
