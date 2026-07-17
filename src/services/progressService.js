@@ -269,7 +269,12 @@ export async function completeQuiz(userId, moduleId, score, totalQuestions) {
 
 export function getModuleProgressPercent(completedLessons, completedQuizzes, moduleId) {
   const mod = getModuleData(moduleId)
-  if (!mod || !mod.lessons || !mod.lessons.length) return 0
+  if (!mod) return 0
+
+  if (!mod.lessons || mod.lessons.length === 0) {
+    return mod.quiz && !completedQuizzes.includes(moduleId) ? 0 : 100
+  }
+
   const lessonsDone = mod.lessons.filter((l) => completedLessons.includes(l)).length
   const lessonsPercent = (lessonsDone / mod.lessons.length) * 100
   if (mod.quiz) {

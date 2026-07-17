@@ -10,8 +10,8 @@ import { Button } from '../components/ui/Button'
 import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { getModuleData, getTrailById, getModuleLessons } from '../data/trails.js'
 import { useProgressContext } from '../contexts/ProgressContext.jsx'
-import { getModuleProgressPercent } from '../services/progressService.js'
-import { XP_LESSON } from '../utils/xp.js'
+import { getModuleProgressPercent, isModuleComplete } from '../services/progressService.js'
+import { XP_LESSON, XP_MODULE } from '../utils/xp.js'
 
 
 export default function ModuleDetail() {
@@ -57,6 +57,7 @@ export default function ModuleDetail() {
   const completedLessonsFiltered = lessons.filter((l) => isLessonCompleted(l.id))
   const progress = getModuleProgressPercent(completedLessons, completedQuizzes, moduleId)
   const quizCompleted = completedQuizzes?.includes(moduleId) || false
+  const moduleDone = isModuleComplete(completedLessons, completedQuizzes, moduleId)
 
   return (
     <>
@@ -77,10 +78,44 @@ export default function ModuleDetail() {
         <p className="max-w-2xl text-brand-100">{module.description}</p>
       </motion.section>
 
-      <div className="mb-4 h-2 overflow-hidden rounded-full border-2 border-brand-800 bg-brand-100 dark:bg-brand-900">
-        <div className="h-full bg-brand-500 transition-all duration-500" style={{ width: `${progress}%` }} />
+      <div className="mb-6 rounded-2xl border-2 border-brand-200 bg-brand-50 p-4 dark:border-brand-700 dark:bg-brand-900/50">
+        <div className="mb-3 flex items-center justify-between">
+          <span className="text-sm font-black text-brand-700 dark:text-brand-300">
+            {moduleDone ? 'Módulo concluído' : 'Progresso do módulo'}
+          </span>
+          {moduleDone ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700 dark:bg-green-900/40 dark:text-green-300">
+              <CheckCircle2 size={14} /> +{XP_MODULE} XP ganho
+            </span>
+          ) : (
+            <span className="text-xs font-bold text-brand-500">{progress}%</span>
+          )}
+        </div>
+
+        <div className="mb-3 h-2 overflow-hidden rounded-full border border-brand-300 bg-brand-100 dark:border-brand-600 dark:bg-brand-800">
+          <div
+            className={`h-full transition-all duration-500 ${moduleDone ? 'bg-green-500' : 'bg-brand-500'}`}
+            style={{ width: `${moduleDone ? 100 : progress}%` }}
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold">
+          <span className={completedLessonsFiltered.length === lessons.length ? 'text-green-600 dark:text-green-400' : 'text-brand-600 dark:text-brand-400'}>
+            {completedLessonsFiltered.length}/{lessons.length} aulas
+          </span>
+          {module.quiz && (
+            <span className={quizCompleted ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}>
+              quiz {quizCompleted ? 'concluído' : 'pendente'}
+            </span>
+          )}
+          {module.lab && (
+            <span className="text-teal-600 dark:text-teal-400">lab disponível</span>
+          )}
+          {module.miniProject && (
+            <span className="text-purple-600 dark:text-purple-400">mini projeto disponível</span>
+          )}
+        </div>
       </div>
-      <p className="mb-6 text-sm font-bold text-brand-600">{completedLessonsFiltered.length}/{lessons.length} aulas concluídas</p>
 
       <div className="mb-8 space-y-3">
         <h2 className="text-lg font-black">Aulas</h2>

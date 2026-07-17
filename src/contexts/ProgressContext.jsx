@@ -139,6 +139,9 @@ export function ProgressProvider({ children }) {
       if (result.streakResult?.broke) {
         showError(`Streak reiniciado. -${result.streakResult.penaltyXp} XP`)
       }
+      if (result.moduleComplete) {
+        showSuccess('Módulo concluído! +200 XP de bónus')
+      }
       if (result.courseComplete) {
         showSuccess('Curso concluído! +1000 XP e certificado desbloqueado!')
       }
@@ -182,6 +185,12 @@ export function ProgressProvider({ children }) {
     try {
       const result = await completeQuizService(user.uid, moduleId, score, totalQuestions)
       showSuccess('Quiz concluído!')
+      if (result.moduleComplete) {
+        showSuccess('Módulo concluído! +200 XP de bónus')
+      }
+      if (result.courseComplete) {
+        showSuccess('Curso concluído! +1000 XP e certificado desbloqueado!')
+      }
       return result
     } catch (err) {
       showError(err.message || 'Erro ao salvar quiz.')
