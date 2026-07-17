@@ -15,6 +15,8 @@ const auth = admin.auth()
 const { sendEmail } = require('./services/brevo')
 const { findReactivationUsers, getCourseTitle } = require('./services/users')
 const { buildReactivationEmail } = require('./templates/reactivation')
+const { buildNewLessonEmail } = require('./templates/newLesson')
+const { sendNewLessonNotifications } = require('./services/notifications')
 
 function buildDefaultUser(userRecord) {
   const now = admin.firestore.FieldValue.serverTimestamp()
@@ -200,4 +202,46 @@ exports.getReactivationUsers = onCall({ cors: true }, async (request) => {
 
   const eligible = await findReactivationUsers()
   return { users: eligible, count: eligible.length }
+})
+
+// ─── NEW LESSON NOTIFICATIONS (BREVO) ───────────────────────────────────────
+
+exports.onNewLessonPublished = onDocumentCreated('lessons/{lessonId}', async (event) => {
+  const snap = event.data
+  if (!snap) return
+
+  const lessonId = event.params.lessonId
+  const lessonData = snap.data()
+
+  if (lessonData.notificationSent) {
+    logger.info(`[newLesson] Lesson ${lessonId} already notified, skipping`)
+    return
+  }
+
+  if (!lessonData.title) {
+    logger.warn(`[newLesson] Lesson ${lessonId} has no title, skipping`)
+    return
+  }
+
+  try {
+    const result = await sendNewLessonNotifications(
+      { id: lessonId, ...lessonData },
+      buildNewLessonEmail,
+      sendEmail,
+    )
+
+    await snap.ref.update({
+      notificationSent: true,
+      notificationSentAt: admin.firestore.FieldValue.serverTimestamp(),
+      notificationStats: {
+        sent: result.sent,
+        errors: result.errors,
+        total: result.total,
+      },
+    })
+
+    logger.info(`[newLesson] Lesson ${lessonId} marked as notified (${result.sent}/${result.total})`)
+  } catch (error) {
+    logger.error(`[newLesson] Fatal error processing lesson ${lessonId}:`, error)
+  }
 })
