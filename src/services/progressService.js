@@ -60,7 +60,12 @@ export function subscribeToUserProgress(userId, callback, onError) {
 
 export function isModuleComplete(completedLessons, completedQuizzes, moduleId) {
   const mod = getModuleData(moduleId)
-  if (!mod || !mod.lessons || !mod.lessons.length) return false
+  if (!mod) return false
+
+  if (!mod.lessons || mod.lessons.length === 0) {
+    return !mod.quiz
+  }
+
   const allLessonsDone = mod.lessons.every((lessonId) => completedLessons.includes(lessonId))
   if (!allLessonsDone) return false
   if (mod.quiz && !completedQuizzes.includes(moduleId)) return false
