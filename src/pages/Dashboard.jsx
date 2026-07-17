@@ -10,7 +10,6 @@ import {
   Sparkles,
   Target,
   Trophy,
-  Lock,
   CheckCircle2,
   Code2,
   Globe,
@@ -92,11 +91,7 @@ export default function Dashboard() {
 
   const orderedTrails = (allTrails || []).sort((a, b) => a.order - b.order)
 
-  const displayTrails = orderedTrails.filter((t) => {
-    if (t.status === 'soon') return false
-    const trailStatus = getTrailStatus(t.id)
-    return trailStatus !== 'locked'
-  })
+  const displayTrails = orderedTrails.filter((t) => t.status !== 'soon')
 
   const allCombinedLessons = [...allLessons, ...allVideoLessons].sort((a, b) => {
     const trailOrderA = orderedTrails.findIndex((t) => t.id === a.courseId)
@@ -199,31 +194,26 @@ export default function Dashboard() {
               const trailStatus = getTrailStatus(trail.id)
               const Icon = trailIcons[trail.id] || GraduationCap
               const isComplete = trailStatus === 'completed'
-              const isLocked = trailStatus === 'locked' || trailStatus === 'soon'
 
               return (
                 <Link
                   key={trail.id}
-                  to={isLocked ? '#' : `/trilhas/${trail.id}`}
+                  to={`/trilhas/${trail.id}`}
                   className={`flex items-center gap-3 rounded-lg border-2 p-2.5 text-sm font-semibold transition ${
                     isComplete
                       ? 'border-accent bg-accent-soft'
-                      : isLocked
-                        ? 'border opacity-50'
-                        : 'border hover:border-strong'
+                      : 'border hover:border-strong'
                   }`}
                 >
                   {isComplete ? (
                     <CheckCircle2 size={18} className="shrink-0 text-green-500" />
-                  ) : isLocked ? (
-                    <Lock size={18} className="shrink-0 text-muted" />
                   ) : (
                     <Icon size={18} className="shrink-0 text-brand-500" />
                   )}
-                  <span className={isLocked ? 'text-muted' : ''}>
+                  <span>
                     {trail.title}
                   </span>
-                  {!isLocked && !isComplete && getCourseProgress(trail.id) > 0 && (
+                  {!isComplete && getCourseProgress(trail.id) > 0 && (
                     <span className="ml-auto text-xs font-bold text-secondary">
                       {getCourseProgress(trail.id)}%
                     </span>

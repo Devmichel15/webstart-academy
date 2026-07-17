@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { CheckCircle2, Circle, ArrowRight, FlaskConical, HelpCircle, Trophy, Award, Lock } from 'lucide-react'
+import { CheckCircle2, Circle, ArrowRight, FlaskConical, HelpCircle, Trophy, Award } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SEO } from '../components/seo/SEO'
@@ -18,7 +18,7 @@ export default function CourseDetail() {
   const { courseId } = useParams()
   const [trail, setTrail] = useState(null)
   const [loading, setLoading] = useState(true)
-  const { isLessonCompleted, getCourseProgress, getTrailStatus, trails: allTrails } = useProgress()
+  const { isLessonCompleted, getCourseProgress, getTrailStatus } = useProgress()
   const status = getTrailStatus(courseId)
 
   useEffect(() => {
@@ -49,11 +49,6 @@ export default function CourseDetail() {
     )
   }
 
-  const isLocked = status === 'locked' || trail.status === 'soon'
-  const requiredTrailTitle = trail.requiredTrail
-    ? allTrails?.find((t) => t.id === trail.requiredTrail)?.title || trail.requiredTrail
-    : null
-
   if (trail.status === 'soon') {
     return (
       <div>
@@ -69,29 +64,6 @@ export default function CourseDetail() {
           <Link to="/trilhas">
             <Button>
               Voltar para jornada
-              <ArrowRight size={16} />
-            </Button>
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  if (isLocked && trail.status !== 'soon') {
-    return (
-      <div>
-        <Header title={trail.title} subtitle={trail.description} />
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-muted bg-surface text-muted">
-            <Lock size={48} />
-          </div>
-          <h2 className="mb-2 text-2xl font-black text-secondary">Trilha Bloqueada</h2>
-          <p className="mb-6 max-w-md text-muted">
-            Complete <strong>{requiredTrailTitle}</strong> primeiro para desbloquear esta trilha.
-          </p>
-          <Link to={`/trilhas/${trail.requiredTrail}`}>
-            <Button>
-              Ir para {requiredTrailTitle}
               <ArrowRight size={16} />
             </Button>
           </Link>

@@ -238,7 +238,7 @@ export function ProgressProvider({ children }) {
   }, [completedLessons, completedCourses, completedQuizzes])
 
   const getTrailStatus = useCallback(
-    (trailId) => trailStatuses[trailId] || 'locked',
+    (trailId) => trailStatuses[trailId] || 'available',
     [trailStatuses],
   )
 
