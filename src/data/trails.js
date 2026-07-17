@@ -126,7 +126,7 @@ export const trails = [
     difficulty: 'beginner',
     estimatedHours: 4,
     modules: ['css-vid-intro', 'css-vid-colors', 'css-vid-typography', 'css-vid-selectors', 'css-vid-boxmodel', 'css-vid-backgrounds', 'css-vid-responsive', 'css-vid-flexbox', 'css-vid-grid'],
-    status: 'building',
+    status: 'available',
     requiredTrail: 'html-exercises',
     xp: 1000,
     level: 2,
