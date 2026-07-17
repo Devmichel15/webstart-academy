@@ -1,12 +1,20 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https')
 const { onDocumentCreated } = require('firebase-functions/v2/firestore')
+const { onSchedule } = require('firebase-functions/v2/scheduler')
 const { logger } = require('firebase-functions/v2')
 const admin = require('firebase-admin')
+const path = require('path')
+
+require('dotenv').config({ path: path.resolve(__dirname, '..', '.env') })
 
 admin.initializeApp()
 
 const db = admin.firestore()
 const auth = admin.auth()
+
+const { sendEmail } = require('./services/brevo')
+const { findReactivationUsers, getCourseTitle } = require('./services/users')
+const { buildReactivationEmail } = require('./templates/reactivation')
 
 function buildDefaultUser(userRecord) {
   const now = admin.firestore.FieldValue.serverTimestamp()
@@ -129,4 +137,69 @@ exports.syncAuthUser = onDocumentCreated('users/{userId}', async (event) => {
   const snap = event.data
   if (!snap) return
   logger.info(`syncAuthUser: user document created for ${event.params.userId}`)
+})
+
+// ─── REACTIVATION EMAILS (BREVO) ────────────────────────────────────────────
+
+exports.sendReactivationEmails = onSchedule(
+  {
+    schedule: 'every 24 hours',
+    timeZone: 'Africa/Luanda',
+    retryConfig: { retryCount: 2 },
+  },
+  async () => {
+    logger.info('sendReactivationEmails: starting...')
+
+    const eligible = await findReactivationUsers()
+    logger.info(`sendReactivationEmails: ${eligible.length} users eligible`)
+
+    if (eligible.length === 0) return
+
+    let sentCount = 0
+    let errorCount = 0
+    const now = admin.firestore.FieldValue.serverTimestamp()
+
+    for (const user of eligible) {
+      try {
+        const courseName =
+          (await getCourseTitle(user.currentCourse)) ||
+          (user.currentCourse || 'web')
+            .replace(/-/g, ' ')
+            .replace(/\b\w/g, (c) => c.toUpperCase())
+
+        const html = buildReactivationEmail(user, courseName, user.currentLesson)
+
+        await sendEmail({
+          to: user.email,
+          toName: user.name,
+          subject: `${user.name}, a tua trilha está te esperando! 🚀`,
+          htmlContent: html,
+        })
+
+        await db.collection('users').doc(user.uid).update({
+          lastReactivationEmail: now,
+        })
+
+        sentCount++
+        logger.info(`sendReactivationEmails: email sent to ${user.email}`)
+      } catch (error) {
+        errorCount++
+        logger.error(`sendReactivationEmails: failed for ${user.email}`, error)
+      }
+    }
+
+    logger.info(`sendReactivationEmails: completed — ${sentCount} sent, ${errorCount} errors`)
+  },
+)
+
+exports.getReactivationUsers = onCall({ cors: true }, async (request) => {
+  if (!request.auth) throw new HttpsError('unauthenticated', 'Login required.')
+
+  const callerDoc = await db.collection('users').doc(request.auth.uid).get()
+  if (callerDoc.data()?.role !== 'admin') {
+    throw new HttpsError('permission-denied', 'Admin only.')
+  }
+
+  const eligible = await findReactivationUsers()
+  return { users: eligible, count: eligible.length }
 })

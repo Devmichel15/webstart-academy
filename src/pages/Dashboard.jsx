@@ -17,6 +17,7 @@ import {
   Palette,
   FileJson,
   GraduationCap,
+  Rocket,
 } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
@@ -66,6 +67,7 @@ export default function Dashboard() {
     journeyProgress,
     getTrailStatus,
     trails: allTrails,
+    firstStepsDone,
   } = useProgress()
 
   const heroRef = useGsapReveal([progressPercent, name])
@@ -113,6 +115,26 @@ export default function Dashboard() {
         title={`Olá, ${name || 'Aluno'}!`}
         subtitle="Acompanhe seu progresso na WebStart Academy em tempo real."
       />
+
+      {firstStepsDone === false && (
+        <Card className="mb-8 border-2 border-brand-400 bg-brand-50 dark:bg-brand-900/30">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-white">
+              <Rocket size={24} />
+            </div>
+            <div className="flex-1">
+              <p className="font-black">Continua o teu registo!</p>
+              <p className="text-sm text-secondary">Começa a tua primeira aula para desbloquear todo o conteúdo.</p>
+            </div>
+            <Link to="/primeiros-passos">
+              <Button>
+                Começar agora
+                <ArrowRight size={16} />
+              </Button>
+            </Link>
+          </div>
+        </Card>
+      )}
 
       <Card className="mb-8 flex flex-wrap items-center gap-4">
         {photoURL ? (

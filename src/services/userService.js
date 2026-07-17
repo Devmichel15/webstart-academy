@@ -1,11 +1,14 @@
 // ARCHIVE: userService.js
 import {
+  collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   serverTimestamp,
   setDoc,
   updateDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../firebase/firebase.js";
 import { withRetry } from "../utils/retry.js";
@@ -40,11 +43,14 @@ function buildDefaultUser(user, extra = {}) {
     completedCourses: [],
     completedExercises: 0,
     completedProjects: 0,
+    completedQuizzes: [],
     currentCourse: null,
     currentLesson: null,
     totalStudyTime: 0,
     certificates: [],
     isPublic: true,
+    firstStepsDone: false,
+    lastReactivationEmail: null,
     ...cleanExtra,
   };
 }
@@ -150,6 +156,17 @@ export async function incrementCompletedProjects(uid) {
   return count;
 }
 
+export async function addCompletedQuiz(uid, moduleId) {
+  const user = await getUserProfile(uid);
+  if (!user) return null;
+  const completedQuizzes = user.completedQuizzes || [];
+  if (completedQuizzes.includes(moduleId)) return completedQuizzes;
+  await updateUserProfile(uid, {
+    completedQuizzes: [...completedQuizzes, moduleId],
+  });
+  return [...completedQuizzes, moduleId];
+}
+
 export async function updateCurrentLesson(uid, { courseId, lessonId }) {
   await updateUserProfile(uid, {
     currentCourse: courseId,
@@ -208,4 +225,35 @@ export async function ensureUsername(uid) {
     completedProjects: user.completedProjects || 0,
   });
   return username;
+}
+
+/**
+ * Migra utilizadores existentes que já têm atividade (xp > 0 ou completedLessons > 0)
+ * para firstStepsDone: true. Utilizadores novos recebem false por defeito no buildDefaultUser.
+ * Executar uma única vez — idempotente (ignora quem já tem o campo definido).
+ */
+export async function migrateFirstStepsDone() {
+  const usersRef = collection(db, "users");
+  const snapshot = await getDocs(usersRef);
+  const batch = writeBatch(db);
+  let count = 0;
+
+  snapshot.forEach((userDoc) => {
+    const data = userDoc.data();
+    if (data.firstStepsDone !== undefined) return;
+
+    const hasActivity =
+      (data.xp && data.xp > 0) ||
+      (data.completedLessons && data.completedLessons.length > 0) ||
+      (data.completedCourses && data.completedCourses.length > 0);
+
+    batch.update(userDoc.ref, { firstStepsDone: hasActivity });
+    count++;
+  });
+
+  if (count > 0) {
+    await batch.commit();
+  }
+
+  return count;
 }

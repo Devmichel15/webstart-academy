@@ -12,6 +12,7 @@ import { db, app } from '../firebase/firebase.js'
 import { trails } from '../data/trails.js'
 import { allLessons } from '../data/lessons/index.js'
 import { allModules } from '../data/modules/index.js'
+import { getAccessibleTrails } from './trailProgressService.js'
 
 const USERS_PER_PAGE = 50
 
@@ -219,6 +220,7 @@ export function computeDashboardMetrics(users, progressRecords) {
 
   let totalProgressSum = 0
   let activeUsersCount = 0
+  const accessibleCount = getAccessibleTrails().length
   for (const u of users) {
     const completed = (u.completedLessons || []).length
     const pct = allLessons.length > 0 ? Math.round((completed / allLessons.length) * 100) : 0
@@ -227,7 +229,7 @@ export function computeDashboardMetrics(users, progressRecords) {
   }
   const avgProgress = users.length > 0 ? Math.round(totalProgressSum / users.length) : 0
 
-  const totalTrails = trails.length
+  const totalTrails = accessibleCount
   const totalModules = allModules.length
   const totalLessons = allLessons.length
 
@@ -250,6 +252,7 @@ export function computeDashboardMetrics(users, progressRecords) {
 }
 
 export function computeRankings(users) {
+  const accessibleCount = getAccessibleTrails().length
   const userRanking = users.map((u) => {
     const completed = u.completedLessons || []
     const completedCount = completed.length
@@ -265,7 +268,7 @@ export function computeRankings(users) {
       photoURL: u.photoURL || '',
       completedLessons: completedCount,
       progressPct,
-      completedCourses,
+      completedCourses: completedCourses > accessibleCount ? accessibleCount : completedCourses,
       lastAccess,
       xp: u.xp || 0,
     }
@@ -412,4 +415,22 @@ export function computeInsights(metrics, trailStats, lessonPopularity) {
   }
 
   return insights
+}
+
+// ─── REACTIVATION ────────────────────────────────────────────────────────────
+
+/**
+ * Invoca a Cloud Function getReactivationUsers para obter
+ * a lista de utilizadores elegíveis para email de reativação.
+ */
+export async function getReactivationUsers() {
+  try {
+    const fn = getFunctionsInstance()
+    const getReactivation = httpsCallable(fn, 'getReactivationUsers')
+    const result = await getReactivation()
+    return result.data
+  } catch (err) {
+    console.error('[adminService] getReactivationUsers error:', err)
+    throw err
+  }
 }

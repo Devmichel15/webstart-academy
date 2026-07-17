@@ -52,6 +52,8 @@ export default function Journey() {
 
   const trailsList = allTrails || []
   const orderedTrails = [...trailsList].sort((a, b) => a.order - b.order)
+  const accessibleTrails = orderedTrails.filter((t) => t.status !== 'soon')
+  const soonTrails = orderedTrails.filter((t) => t.status === 'soon')
 
   const getTrailTitle = (id) => trailsList.find((t) => t.id === id)?.title || id
 
@@ -68,13 +70,10 @@ export default function Journey() {
         <div className="absolute left-8 top-0 bottom-0 w-1 bg-border hidden md:block" />
 
         <div className="space-y-6">
-          {orderedTrails.map((trail, tIndex) => {
+          {accessibleTrails.map((trail, tIndex) => {
             const Icon = trailIcons[trail.id] || BookOpen
             const status = getTrailStatus(trail.id)
-            const displayStatus = trail.status === 'soon' ? 'soon' : status
-            const cfg = displayStatus === 'soon'
-              ? { label: 'Em breve', color: 'border-muted bg-surface text-muted', icon: Clock }
-              : statusConfig[status] || statusConfig.locked
+            const cfg = statusConfig[status] || statusConfig.locked
             const StatusIcon = cfg.icon
             const progress = getCourseProgress(trail.id)
             const modList = (trail.modules || []).map((mId) => getModuleData(mId)).filter(Boolean)
@@ -127,13 +126,11 @@ export default function Journey() {
                               <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border-3 ${
                                 status === 'completed'
                                   ? 'border-green-500 bg-green-500 text-white'
-                                  : trail.status === 'soon'
+                                  : status === 'locked'
                                     ? 'border-muted bg-surface text-muted'
-                                    : status === 'locked'
-                                      ? 'border-muted bg-surface text-muted'
-                                      : 'border-strong bg-brand-500 text-white shadow-[4px_4px_0_0_#064e3b]'
+                                    : 'border-strong bg-brand-500 text-white shadow-[4px_4px_0_0_#064e3b]'
                               }`}>
-                                {trail.status === 'soon' ? <Clock size={28} /> : status === 'locked' ? <Lock size={28} /> : <Icon size={28} />}
+                                {status === 'locked' ? <Lock size={28} /> : <Icon size={28} />}
                               </div>
 
                               <div>
@@ -150,11 +147,6 @@ export default function Journey() {
                                   {trail.status === 'building' && (
                                     <span className="rounded-lg border-2 border-yellow-500 px-2 py-0.5 text-xs font-bold text-yellow-600 dark:border-yellow-400 dark:text-yellow-300">
                                       Em construção
-                                    </span>
-                                  )}
-                                  {trail.status === 'soon' && (
-                                    <span className="rounded-lg border-2 border-muted px-2 py-0.5 text-xs font-bold text-muted">
-                                      Em breve
                                     </span>
                                   )}
                                 </div>
@@ -182,12 +174,7 @@ export default function Journey() {
                             </div>
 
                             <div className="sm:text-right shrink-0">
-                              {trail.status === 'soon' && (
-                                <p className="text-xs font-semibold text-muted">
-                                  Em desenvolvimento
-                                </p>
-                              )}
-                              {status === 'locked' && trail.status !== 'soon' && trail.requiredTrail && (
+                              {status === 'locked' && trail.requiredTrail && (
                                 <p className="text-xs font-semibold text-muted">
                                   Complete {getTrailTitle(trail.requiredTrail)} para desbloquear
                                 </p>
@@ -233,6 +220,33 @@ export default function Journey() {
           })}
         </div>
       </div>
+
+      {soonTrails.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: accessibleTrails.length * 0.08 + 0.2 }}
+          className="mt-12"
+        >
+          <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-muted">
+            Em breve no roadmap
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {soonTrails.map((trail) => {
+              const Icon = trailIcons[trail.id] || BookOpen
+              return (
+                <span
+                  key={trail.id}
+                  className="flex items-center gap-2 rounded-lg border-2 border-border bg-surface px-3 py-1.5 text-sm font-semibold text-muted"
+                >
+                  <Icon size={14} />
+                  {trail.title}
+                </span>
+              )
+            })}
+          </div>
+        </motion.div>
+      )}
     </div>
     </>
   )

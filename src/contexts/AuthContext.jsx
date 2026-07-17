@@ -1,14 +1,25 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { auth } from '../firebase/firebase.js'
 import { onAuthStateChanged } from '../services/authService.js'
-import { createUserProfile } from '../services/userService.js'
+import { createUserProfile, migrateFirstStepsDone } from '../services/userService.js'
 
 const AuthContext = createContext(null)
+
+let migrationRan = false
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (!migrationRan) {
+      migrationRan = true
+      migrateFirstStepsDone().catch((err) => {
+        console.warn('[migrateFirstStepsDone] skipped:', err.message)
+      })
+    }
+  }, [])
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {

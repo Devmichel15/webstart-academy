@@ -23,7 +23,7 @@ export default function Register() {
     try {
       await registerWithEmail({ name, email, password })
       showSuccess('Conta criada com sucesso!')
-      navigate('/', { replace: true })
+      navigate('/primeiros-passos', { replace: true })
     } catch (error) {
       showError(error.message)
     } finally {
@@ -37,7 +37,7 @@ export default function Register() {
     try {
       await loginWithGoogle()
       showSuccess('Conta criada com Google!')
-      navigate('/', { replace: true })
+      navigate('/primeiros-passos', { replace: true })
     } catch (error) {
       showError(error.message)
     } finally {

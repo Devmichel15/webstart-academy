@@ -4,7 +4,7 @@ import { CheckCircle2, XCircle, ChevronRight } from 'lucide-react'
 import { Button } from '../../ui/Button'
 import { Card } from '../../ui/Card'
 
-export function QuizBlock({ quiz }) {
+export function QuizBlock({ quiz, onComplete }) {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [showResult, setShowResult] = useState(false)
@@ -52,6 +52,7 @@ export function QuizBlock({ quiz }) {
 
   if (finished) {
     const percentage = Math.round((score / quiz.questions.length) * 100)
+    if (onComplete) onComplete(score, quiz.questions.length)
     return (
       <motion.div initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
         <Card className="text-center">

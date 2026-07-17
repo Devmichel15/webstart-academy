@@ -9,7 +9,8 @@ import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { getModuleData, getTrailById, getModuleLessons } from '../data/trails.js'
-import { useProgress } from '../hooks/useProgress.js'
+import { useProgressContext } from '../contexts/ProgressContext.jsx'
+import { getModuleProgressPercent } from '../services/progressService.js'
 import { XP_LESSON } from '../utils/xp.js'
 
 
@@ -19,7 +20,7 @@ export default function ModuleDetail() {
   const [course, setCourse] = useState(null)
   const [lessons, setLessons] = useState([])
   const [loading, setLoading] = useState(true)
-  const { isLessonCompleted } = useProgress()
+  const { isLessonCompleted, completedLessons, completedQuizzes } = useProgressContext()
 
   useEffect(() => {
     async function load() {
@@ -53,8 +54,9 @@ export default function ModuleDetail() {
     )
   }
 
-  const completedLessons = lessons.filter((l) => isLessonCompleted(l.id))
-  const progress = lessons.length ? Math.round((completedLessons.length / lessons.length) * 100) : 0
+  const completedLessonsFiltered = lessons.filter((l) => isLessonCompleted(l.id))
+  const progress = getModuleProgressPercent(completedLessons, completedQuizzes, moduleId)
+  const quizCompleted = completedQuizzes?.includes(moduleId) || false
 
   return (
     <>
@@ -78,7 +80,7 @@ export default function ModuleDetail() {
       <div className="mb-4 h-2 overflow-hidden rounded-full border-2 border-brand-800 bg-brand-100 dark:bg-brand-900">
         <div className="h-full bg-brand-500 transition-all duration-500" style={{ width: `${progress}%` }} />
       </div>
-      <p className="mb-6 text-sm font-bold text-brand-600">{completedLessons.length}/{lessons.length} aulas concluídas</p>
+      <p className="mb-6 text-sm font-bold text-brand-600">{completedLessonsFiltered.length}/{lessons.length} aulas concluídas</p>
 
       <div className="mb-8 space-y-3">
         <h2 className="text-lg font-black">Aulas</h2>
@@ -133,14 +135,14 @@ export default function ModuleDetail() {
       <div className="grid gap-4 sm:grid-cols-3">
         {module.quiz && (
           <Link to={`/trilhas/${courseId}/modulo/${moduleId}/quiz`}>
-            <Card hover className="h-full !border-amber-500 dark:!border-amber-400">
+            <Card hover className={`h-full ${quizCompleted ? '!border-green-500' : '!border-amber-500 dark:!border-amber-400'}`}>
               <div className="flex flex-col items-center gap-3 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-[3px_3px_0_0_#92400e]">
-                  <HelpCircle size={24} />
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-[3px_3px_0_0_#92400e] ${quizCompleted ? 'bg-gradient-to-br from-green-500 to-green-700 shadow-[3px_3px_0_0_#166534]' : 'bg-gradient-to-br from-amber-500 to-amber-700'}`}>
+                  {quizCompleted ? <CheckCircle2 size={24} /> : <HelpCircle size={24} />}
                 </div>
                 <div>
                   <h3 className="font-black">Quiz</h3>
-                  <p className="text-sm text-brand-700 dark:text-brand-300">{module.quiz.questions.length} questões</p>
+                  <p className="text-sm text-brand-700 dark:text-brand-300">{quizCompleted ? 'Concluído' : `${module.quiz.questions.length} questões`}</p>
                 </div>
               </div>
             </Card>

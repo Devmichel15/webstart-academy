@@ -1,12 +1,15 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { QuizBlock } from '../components/lesson/sections/QuizBlock.jsx'
 import { getModuleData } from '../data/trails.js'
+import { useProgressContext } from '../contexts/ProgressContext.jsx'
 
 export default function ModuleQuiz() {
   const { courseId, moduleId } = useParams()
+  const navigate = useNavigate()
+  const { completeQuiz } = useProgressContext()
   const mod = getModuleData(moduleId)
 
   if (!mod || !mod.quiz) {
@@ -20,6 +23,11 @@ export default function ModuleQuiz() {
     )
   }
 
+  const handleQuizComplete = async (score, totalQuestions) => {
+    await completeQuiz(moduleId, score, totalQuestions)
+    navigate(`/trilhas/${courseId}/modulo/${moduleId}`)
+  }
+
   return (
     <>
     <SEO title={mod ? `Quiz: ${mod.title}` : 'Quiz'} description={`Teste seus conhecimentos em ${mod ? mod.title : 'desenvolvimento web'} com este quiz interativo.`} url={`/trilhas/${courseId}/modulo/${moduleId}/quiz`} />
@@ -31,7 +39,7 @@ export default function ModuleQuiz() {
 
       <Header title={mod.quiz.title} subtitle="Teste seus conhecimentos sobre o módulo" />
 
-      <QuizBlock quiz={mod.quiz} />
+      <QuizBlock quiz={mod.quiz} onComplete={handleQuizComplete} />
     </div>
     </>
   )

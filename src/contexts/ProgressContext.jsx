@@ -7,6 +7,7 @@ import {
   completeLesson as completeLessonService,
   completeExercise as completeExerciseService,
   completeProject as completeProjectService,
+  completeQuiz as completeQuizService,
   getCourseProgressPercent,
   isLessonCompleted as isLessonCompletedService,
   subscribeToUserProgress,
@@ -15,6 +16,8 @@ import {
 import { subscribeToUser, ensureUsername } from '../services/userService.js'
 import {
   computeTrailStatus,
+  getAccessibleTrails,
+  getAccessibleLessonsCount,
   getJourneyProgress,
   getRecommendedTrail,
   isTrailUnlocked,
@@ -103,17 +106,20 @@ export function ProgressProvider({ children }) {
 
   const completedLessons = profile.completedLessons || []
   const completedCourses = profile.completedCourses || []
+  const completedQuizzes = profile.completedQuizzes || []
   const allCombinedLessons = [...allLessons, ...allVideoLessons]
-  const totalLessons = allCombinedLessons.length
-  const completedCount = completedLessons.length
+  const accessibleIds = new Set(getAccessibleTrails().map((t) => t.id))
+  const accessibleLessons = allCombinedLessons.filter((l) => accessibleIds.has(l.courseId))
+  const totalLessons = accessibleLessons.length
+  const completedCount = accessibleLessons.filter((l) => completedLessons.includes(l.id)).length
   const progressPercent = totalLessons ? Math.round((completedCount / totalLessons) * 100) : 0
   const level = profile.level || getLevelFromXp(profile.xp || 0)
 
-  const remainingMinutes = allCombinedLessons
+  const remainingMinutes = accessibleLessons
     .filter((lesson) => !completedLessons.includes(lesson.id))
     .reduce((sum, lesson) => sum + (lesson.duration || 0), 0)
 
-  const recommendedLesson = allCombinedLessons.find((lesson) => !completedLessons.includes(lesson.id))
+  const recommendedLesson = accessibleLessons.find((lesson) => !completedLessons.includes(lesson.id))
 
   const lastLesson = profile.currentLesson
     ? allCombinedLessons.find((lesson) => lesson.id === profile.currentLesson)
@@ -171,6 +177,18 @@ export function ProgressProvider({ children }) {
     }
   }, [user, showSuccess, showError])
 
+  const completeQuiz = useCallback(async (moduleId, score, totalQuestions) => {
+    if (!user) return null
+    try {
+      const result = await completeQuizService(user.uid, moduleId, score, totalQuestions)
+      showSuccess('Quiz concluído!')
+      return result
+    } catch (err) {
+      showError(err.message || 'Erro ao salvar quiz.')
+      return null
+    }
+  }, [user, showSuccess, showError])
+
   const dismissCelebration = useCallback(() => setCelebration(null), [])
 
   const visitLesson = useCallback(async (lessonId) => {
@@ -191,24 +209,24 @@ export function ProgressProvider({ children }) {
   )
 
   const getCourseProgress = useCallback(
-    (courseId) => getCourseProgressPercent(completedLessons, courseId),
-    [completedLessons],
+    (courseId) => getCourseProgressPercent(completedLessons, completedQuizzes, courseId),
+    [completedLessons, completedQuizzes],
   )
 
   const studyHours = Math.round(((profile.totalStudyTime || 0) / 60) * 10) / 10
 
   const journeyProgress = useMemo(
-    () => getJourneyProgress(completedCourses, completedLessons),
-    [completedCourses, completedLessons],
+    () => getJourneyProgress(completedCourses, completedLessons, completedQuizzes),
+    [completedCourses, completedLessons, completedQuizzes],
   )
 
   const trailStatuses = useMemo(() => {
     const map = {}
     for (const trail of trails) {
-      map[trail.id] = computeTrailStatus(trail.id, completedLessons, completedCourses)
+      map[trail.id] = computeTrailStatus(trail.id, completedLessons, completedCourses, completedQuizzes)
     }
     return map
-  }, [completedLessons, completedCourses])
+  }, [completedLessons, completedCourses, completedQuizzes])
 
   const getTrailStatus = useCallback(
     (trailId) => trailStatuses[trailId] || 'locked',
@@ -233,6 +251,7 @@ export function ProgressProvider({ children }) {
       recommendedLesson,
       lastLesson,
       completedCourses,
+      completedQuizzes,
       certificates: profile.certificates || [],
       studyHours,
       progressRecords,
@@ -241,6 +260,7 @@ export function ProgressProvider({ children }) {
       completeLesson,
       completeExercise,
       completeProject,
+      completeQuiz,
       dismissCelebration,
       celebration,
       visitLesson,
@@ -262,6 +282,7 @@ export function ProgressProvider({ children }) {
       recommendedLesson,
       lastLesson,
       completedCourses,
+      completedQuizzes,
       studyHours,
       progressRecords,
       loading,

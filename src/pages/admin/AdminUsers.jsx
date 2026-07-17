@@ -12,6 +12,7 @@ import { Button } from '../../components/ui/Button'
 import { subscribeToAllUsersMerged, subscribeToAllProgress } from '../../services/adminService.js'
 import { allLessons } from '../../data/lessons/index.js'
 import { trails } from '../../data/trails.js'
+import { getAccessibleTrails } from '../../services/trailProgressService.js'
 
 const FILTER_OPTIONS = [
   { value: 'all', label: 'Todos' },
@@ -33,7 +34,8 @@ function UserRow({ user, expanded, onToggle }) {
   const completedCount = (user.completedLessons || []).length
   const totalLessons = allLessons.length
   const progressPct = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0
-  const completedCourses = (user.completedCourses || []).length
+  const accessibleCount = getAccessibleTrails().length
+  const completedCourses = Math.min((user.completedCourses || []).length, accessibleCount)
   const currentTrail = user.currentCourse
     ? trails.find((t) => t.id === user.currentCourse)?.title || user.currentCourse
     : 'Nenhuma'
