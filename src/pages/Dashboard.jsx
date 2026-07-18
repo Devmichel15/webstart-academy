@@ -10,12 +10,6 @@ import {
   Sparkles,
   Target,
   Trophy,
-  CheckCircle2,
-  Code2,
-  Globe,
-  Palette,
-  FileJson,
-  GraduationCap,
   Rocket,
 } from 'lucide-react'
 import { Header } from '../components/layout/Header'
@@ -23,6 +17,7 @@ import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { ProgressBar } from '../components/ui/ProgressBar'
 import { PageSkeleton } from '../components/ui/Skeleton.jsx'
+import { TrilhaBadgeCard } from '../components/TrilhaBadgeCard.jsx'
 import { useProgress } from '../hooks/useProgress.js'
 import { allLessons, allVideoLessons } from '../data/lessons/index.js'
 import { useGsapReveal } from '../hooks/useGsapReveal'
@@ -32,20 +27,6 @@ const statIcons = {
   lessons: BookOpen,
   time: Clock,
   streak: Flame,
-}
-
-const trailIcons = {
-  'fundamentos-web': Globe,
-  html: Code2,
-  'html-exercises': Code2,
-  css: Palette,
-  javascript: FileJson,
-  'git-github': GraduationCap,
-  react: GraduationCap,
-  backend: GraduationCap,
-  database: GraduationCap,
-  apis: GraduationCap,
-  deploy: GraduationCap,
 }
 
 export default function Dashboard() {
@@ -189,47 +170,29 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
             {orderedTrails.slice(0, 5).map((trail) => {
               const trailStatus = getTrailStatus(trail.id)
-              const Icon = trailIcons[trail.id] || GraduationCap
-              const isComplete = trailStatus === 'completed'
+              const progress = getCourseProgress(trail.id)
 
               return (
-                <Link
+                <TrilhaBadgeCard
                   key={trail.id}
-                  to={`/trilhas/${trail.id}`}
-                  className={`flex items-center gap-3 rounded-lg border-2 p-2.5 text-sm font-semibold transition ${
-                    isComplete
-                      ? 'border-accent bg-accent-soft'
-                      : 'border hover:border-strong'
-                  }`}
-                >
-                  {isComplete ? (
-                    <CheckCircle2 size={18} className="shrink-0 text-green-500" />
-                  ) : (
-                    <Icon size={18} className="shrink-0 text-brand-500" />
-                  )}
-                  <span>
-                    {trail.title}
-                  </span>
-                  {!isComplete && getCourseProgress(trail.id) > 0 && (
-                    <span className="ml-auto text-xs font-bold text-secondary">
-                      {getCourseProgress(trail.id)}%
-                    </span>
-                  )}
-                  {isComplete && (
-                    <span className="ml-auto text-xs font-bold text-green-600">Concluído</span>
-                  )}
-                </Link>
+                  trail={trail}
+                  status={trailStatus}
+                  progress={progress}
+                  completedLessons={0}
+                  totalLessons={0}
+                  compact
+                />
               )
             })}
-            {orderedTrails.length > 5 && (
-              <Link to="/trilhas" className="block text-center text-xs font-bold text-secondary hover:underline">
-                Ver todas as {orderedTrails.length} trilhas
-              </Link>
-            )}
           </div>
+          {orderedTrails.length > 5 && (
+            <Link to="/trilhas" className="mt-3 block text-center text-xs font-bold text-secondary hover:underline">
+              Ver todas as {orderedTrails.length} trilhas
+            </Link>
+          )}
         </Card>
 
         <Card>
@@ -257,20 +220,22 @@ export default function Dashboard() {
       {displayTrails.length > 0 && (
         <section className="mt-8">
           <h2 className="mb-4 text-lg font-black">Suas trilhas</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {displayTrails.map((trail) => (
-              <Card key={trail.id} hover>
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="text-xl font-black">{trail.title}</h3>
-                  <span className="text-sm font-bold">{getCourseProgress(trail.id)}%</span>
-                </div>
-                <p className="mb-4 text-sm text-secondary">{trail.description}</p>
-                <ProgressBar value={getCourseProgress(trail.id)} className="mb-4" />
-                <Link to={`/trilhas/${trail.id}`}>
-                  <Button variant="secondary" size="sm">Ver módulos</Button>
-                </Link>
-              </Card>
-            ))}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+            {displayTrails.map((trail) => {
+              const trailStatus = getTrailStatus(trail.id)
+              const progress = getCourseProgress(trail.id)
+
+              return (
+                <TrilhaBadgeCard
+                  key={trail.id}
+                  trail={trail}
+                  status={trailStatus}
+                  progress={progress}
+                  completedLessons={0}
+                  totalLessons={0}
+                />
+              )
+            })}
           </div>
         </section>
       )}

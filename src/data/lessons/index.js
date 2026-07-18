@@ -2,9 +2,10 @@ import { htmlLessons } from './html-lessons.js'
 import { cssLessons } from './css-lessons.js'
 import { fundamentosLessons } from './fundamentos-lessons.js'
 import { videoLessons } from './video-lessons.js'
+import { javascriptLessons } from './javascript-lessons.js'
 
-export { htmlLessons, cssLessons, fundamentosLessons, videoLessons }
-export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons]
+export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons }
+export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...javascriptLessons]
 export const allVideoLessons = [...videoLessons]
 
 export function getLessonById(id) {

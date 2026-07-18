@@ -1,0 +1,73 @@
+export const trailTechConfig = {
+  'fundamentos-web': {
+    deviconClass: null,
+    brandColor: '#10b981',
+    brandColorDark: '#34d399',
+    label: 'Fundamentos da Web',
+    useLucide: 'globe',
+  },
+  html: {
+    deviconClass: 'devicon-html5-plain-wordmark',
+    brandColor: '#E34F26',
+    brandColorDark: '#F06539',
+    label: 'HTML5',
+  },
+  'html-exercises': {
+    deviconClass: 'devicon-html5-plain',
+    brandColor: '#E34F26',
+    brandColorDark: '#F06539',
+    label: 'HTML5',
+    badge: 'Exercícios',
+  },
+  css: {
+    deviconClass: 'devicon-css3-plain-wordmark',
+    brandColor: '#1572B6',
+    brandColorDark: '#2196F3',
+    label: 'CSS3',
+  },
+  javascript: {
+    deviconClass: 'devicon-javascript-plain',
+    brandColor: '#F7DF1E',
+    brandColorDark: '#F7DF1E',
+    label: 'JavaScript',
+    textDark: true,
+  },
+  'git-github': {
+    deviconClass: 'devicon-git-plain',
+    brandColor: '#F05032',
+    brandColorDark: '#F4725B',
+    label: 'Git',
+  },
+  react: {
+    deviconClass: 'devicon-react-original',
+    brandColor: '#61DAFB',
+    brandColorDark: '#90E0EF',
+    label: 'React',
+    textDark: true,
+  },
+  backend: {
+    deviconClass: 'devicon-nodejs-plain',
+    brandColor: '#339933',
+    brandColorDark: '#4ADE80',
+    label: 'Node.js',
+  },
+  database: {
+    deviconClass: 'devicon-postgresql-plain',
+    brandColor: '#336791',
+    brandColorDark: '#60A5FA',
+    label: 'PostgreSQL',
+  },
+  apis: {
+    deviconClass: null,
+    brandColor: '#FF6C37',
+    brandColorDark: '#FF8A5C',
+    label: 'APIs REST',
+    useLucide: 'link2',
+  },
+  deploy: {
+    deviconClass: 'devicon-docker-plain',
+    brandColor: '#2496ED',
+    brandColorDark: '#60C4F0',
+    label: 'Docker',
+  },
+}

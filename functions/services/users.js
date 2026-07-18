@@ -20,6 +20,9 @@ async function findReactivationUsers() {
     const user = doc.data()
     const uid = doc.id
 
+    const prefs = user.emailPreferences || {}
+    if (prefs.marketingOptOut === true) continue
+
     const completed = user.completedLessons || []
     if (completed.length < 1) continue
 

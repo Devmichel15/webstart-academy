@@ -2,6 +2,7 @@ function buildReactivationEmail(user, courseName, nextLessonId) {
   const firstName = (user.name || 'Aluno').split(' ')[0]
   const appUrl = process.env.APP_URL || 'https://webstart-academy.web.app'
   const lessonUrl = nextLessonId ? `${appUrl}/aula/${nextLessonId}` : appUrl
+  const unsubscribeUrl = user._unsubscribeUrl || `${appUrl}/email-preferences?uid=${user.uid || ''}`
 
   return `
     <!DOCTYPE html>
@@ -40,6 +41,9 @@ function buildReactivationEmail(user, courseName, nextLessonId) {
 
       <p style="text-align: center; color: #94a3b8; font-size: 12px;">
         WebStart Academy — Aprende desenvolvimento web do zero.
+      </p>
+      <p style="text-align: center; color: #94a3b8; font-size: 11px; margin-top: 8px;">
+        <a href="${unsubscribeUrl}" style="color: #94a3b8; text-decoration: underline;">Cancelar subscrição de emails</a>
       </p>
     </body>
     </html>

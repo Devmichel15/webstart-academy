@@ -50,6 +50,11 @@ function buildDefaultUser(user, extra = {}) {
     isPublic: true,
     firstStepsDone: false,
     lastReactivationEmail: null,
+    emailPreferences: {
+      marketingOptOut: false,
+      notificationsOptOut: false,
+    },
+    welcomeEmailSent: false,
     ...cleanExtra,
   };
 }

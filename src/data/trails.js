@@ -2,10 +2,12 @@ import { createTrail, createFinalProject, createFinalEvaluation, createNextSteps
 import { htmlModules } from './modules/html-modules.js'
 import { cssModules } from './modules/css-modules.js'
 import { fundamentosModules } from './modules/fundamentos-modules.js'
+import { javascriptModules } from './modules/javascript-modules.js'
 import { htmlLessons } from './lessons/html-lessons.js'
 import { cssLessons } from './lessons/css-lessons.js'
 import { fundamentosLessons } from './lessons/fundamentos-lessons.js'
 import { videoLessons } from './lessons/video-lessons.js'
+import { javascriptLessons } from './lessons/javascript-lessons.js'
 
 export const TRAIL_ORDER = [
   'fundamentos-web',
@@ -183,9 +185,9 @@ export const trails = [
     color: 'brand',
     order: 4,
     difficulty: 'beginner',
-    estimatedHours: 6,
-    modules: [],
-    status: 'soon',
+    estimatedHours: 3,
+    modules: ['js-vid-fundamentals', 'js-vid-dom-loops', 'js-vid-arrays'],
+    status: 'available',
     requiredTrail: 'css',
     xp: 1500,
     level: 3,
@@ -307,14 +309,14 @@ export function getTrailWithModules(trailId) {
 }
 
 export function getModuleData(moduleId) {
-  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules]
+  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules]
   return allMods.find((m) => m.id === moduleId) || null
 }
 
 export function getModuleLessons(moduleId) {
   const mod = getModuleData(moduleId)
   if (!mod) return []
-  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons]
+  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons]
   return mod.lessons.map((lId) => allLessons.find((l) => l.id === lId)).filter(Boolean)
 }
 

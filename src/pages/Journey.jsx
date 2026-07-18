@@ -1,35 +1,11 @@
-import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { SEO } from '../components/seo/SEO'
-import { ArrowRight, Code2, Globe, Palette, FileJson, BookOpen, GraduationCap, CheckCircle2, GitBranch, Atom, Terminal, Database, Link2, Cloud, Clock, Sparkles } from 'lucide-react'
 import { Header } from '../components/layout/Header'
-import { Card } from '../components/ui/Card'
-import { ProgressBar } from '../components/ui/ProgressBar'
-import { Button } from '../components/ui/Button'
-import { Badge } from '../components/ui/Badge'
 import { PageSkeleton } from '../components/ui/Skeleton.jsx'
+import { TrilhaBadgeCard } from '../components/TrilhaBadgeCard.jsx'
 import { useProgress } from '../hooks/useProgress.js'
 import { getModuleData } from '../data/trails.js'
 import { useEffect, useState } from 'react'
-
-const trailIcons = {
-  'fundamentos-web': Globe,
-  html: Code2,
-  css: Palette,
-  javascript: FileJson,
-  'git-github': GitBranch,
-  react: Atom,
-  backend: Terminal,
-  database: Database,
-  apis: Link2,
-  deploy: Cloud,
-}
-
-const statusConfig = {
-  available: { label: 'Disponível', color: 'border-strong bg-accent-soft text-secondary', icon: Sparkles },
-  in_progress: { label: 'Em andamento', color: 'border-blue-400 bg-blue-50 text-blue-600 dark:border-blue-500 dark:bg-blue-950 dark:text-blue-300', icon: Clock },
-  completed: { label: 'Concluído', color: 'border-accent bg-accent-soft text-green-600', icon: CheckCircle2 },
-}
 
 export default function Journey() {
   const { getCourseProgress, isLessonCompleted, getTrailStatus, trails: allTrails } = useProgress()
@@ -51,8 +27,19 @@ export default function Journey() {
 
   const trailsList = allTrails || []
   const orderedTrails = [...trailsList].sort((a, b) => a.order - b.order)
-  const accessibleTrails = orderedTrails.filter((t) => t.status !== 'soon')
-  const soonTrails = orderedTrails.filter((t) => t.status === 'soon')
+
+  const trailCards = orderedTrails.map((trail) => {
+    const status = getTrailStatus(trail.id)
+    const progress = getCourseProgress(trail.id)
+    const modList = (trail.modules || []).map((mId) => getModuleData(mId)).filter(Boolean)
+    const totalLessons = modList.reduce((sum, m) => sum + (m.lessons?.length || 0), 0)
+    const completedInTrail = modList.reduce((sum, m) => sum + (m.lessons?.filter((lId) => isLessonCompleted(lId)).length || 0), 0)
+
+    return { trail, status, progress, totalLessons, completedInTrail }
+  })
+
+  const accessibleCards = trailCards.filter((c) => c.trail.status !== 'soon')
+  const soonCards = trailCards.filter((c) => c.trail.status === 'soon')
 
   return (
     <>
@@ -63,148 +50,52 @@ export default function Journey() {
         subtitle="Escolha qualquer trilha e comece a aprender. Todo o conteúdo está disponível desde o primeiro acesso."
       />
 
-      <div className="relative">
-        <div className="absolute left-8 top-0 bottom-0 w-1 bg-border hidden md:block" />
-
-        <div className="space-y-6">
-          {accessibleTrails.map((trail, tIndex) => {
-            const Icon = trailIcons[trail.id] || BookOpen
-            const status = getTrailStatus(trail.id)
-            const cfg = statusConfig[status] || statusConfig.available
-            const StatusIcon = cfg.icon
-            const progress = getCourseProgress(trail.id)
-            const modList = (trail.modules || []).map((mId) => getModuleData(mId)).filter(Boolean)
-            const totalLessons = modList.reduce((sum, m) => sum + (m.lessons?.length || 0), 0)
-            const completedInTrail = modList.reduce((sum, m) => sum + (m.lessons?.filter((lId) => isLessonCompleted(lId)).length || 0), 0)
-
-            return (
-              <motion.div
-                key={trail.id}
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: tIndex * 0.08 }}
-                className="relative"
-              >
-                <div className="hidden md:flex absolute left-0 top-6 items-center justify-center">
-                  <div className={`z-10 flex h-8 w-8 items-center justify-center rounded-full border-3 transition-all ${
-                    status === 'completed'
-                      ? 'border-green-500 bg-green-500 text-white'
-                      : status === 'in_progress'
-                        ? 'border-blue-500 bg-blue-500 text-white'
-                        : 'border-strong bg-brand-500 text-white'
-                  }`}>
-                    {status === 'completed' ? (
-                      <CheckCircle2 size={14} />
-                    ) : (
-                      <span className="text-xs font-black">{tIndex + 1}</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="md:ml-16">
-                  <Link to={`/trilhas/${trail.id}`} className="block">
-                    <Card hover className="h-full transition-all">
-                      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                        <div className="flex items-start gap-4">
-                          <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border-3 ${
-                            status === 'completed'
-                              ? 'border-green-500 bg-green-500 text-white'
-                              : 'border-strong bg-brand-500 text-white shadow-[4px_4px_0_0_#064e3b]'
-                          }`}>
-                            <Icon size={28} />
-                          </div>
-
-                          <div>
-                            <div className="mb-1 flex flex-wrap items-center gap-2">
-                              <h2 className="text-xl font-black">
-                                {trail.title}
-                              </h2>
-                              <span className={`inline-flex items-center gap-1 rounded-lg border-2 px-2 py-0.5 text-xs font-bold ${cfg.color}`}>
-                                <StatusIcon size={12} />
-                                {cfg.label}
-                              </span>
-                              {trail.status === 'building' && (
-                                <span className="rounded-lg border-2 border-yellow-500 px-2 py-0.5 text-xs font-bold text-yellow-600 dark:border-yellow-400 dark:text-yellow-300">
-                                  Em construção
-                                </span>
-                              )}
-                            </div>
-
-                            <p className="text-sm text-secondary">
-                              {trail.description}
-                            </p>
-
-                            <div className="mt-2 flex flex-wrap gap-2">
-                              <Badge variant={trail.difficulty === 'beginner' ? 'default' : trail.difficulty === 'intermediate' ? 'warning' : 'danger'}>
-                                {trail.difficulty === 'beginner' ? 'Iniciante' : trail.difficulty === 'intermediate' ? 'Intermediário' : 'Avançado'}
-                              </Badge>
-                              <Badge variant="success">{trail.estimatedHours}h</Badge>
-                              <Badge>Nível {trail.level}</Badge>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="sm:text-right shrink-0">
-                          {status !== 'completed' && trail.status === 'available' && (
-                            <Button>
-                              {status === 'in_progress' ? 'Continuar trilha' : 'Explorar trilha'}
-                              <ArrowRight size={16} />
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-
-                      {totalLessons > 0 && (
-                        <div className="mt-4">
-                          <ProgressBar
-                            value={progress}
-                            label={`${completedInTrail}/${totalLessons} aulas`}
-                          />
-                        </div>
-                      )}
-
-                      {status === 'completed' && (
-                        <div className="mt-4">
-                          <Link to={`/trilhas/${trail.id}/conclusao`}>
-                            <Button variant="secondary">
-                              Ver conclusão
-                              <ArrowRight size={16} />
-                            </Button>
-                          </Link>
-                        </div>
-                      )}
-                    </Card>
-                  </Link>
-                </div>
-              </motion.div>
-            )
-          })}
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+        {accessibleCards.map(({ trail, status, progress, totalLessons, completedInTrail }, index) => (
+          <motion.div
+            key={trail.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.06 }}
+          >
+            <TrilhaBadgeCard
+              trail={trail}
+              status={status}
+              progress={progress}
+              completedLessons={completedInTrail}
+              totalLessons={totalLessons}
+            />
+          </motion.div>
+        ))}
       </div>
 
-      {soonTrails.length > 0 && (
+      {soonCards.length > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: accessibleTrails.length * 0.08 + 0.2 }}
-          className="mt-12"
+          transition={{ delay: accessibleCards.length * 0.06 + 0.2 }}
+          className="mt-10"
         >
-          <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-muted">
+          <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-muted">
             Em breve no roadmap
           </h3>
-          <div className="flex flex-wrap gap-2">
-            {soonTrails.map((trail) => {
-              const Icon = trailIcons[trail.id] || BookOpen
-              return (
-                <span
-                  key={trail.id}
-                  className="flex items-center gap-2 rounded-lg border-2 border-border bg-surface px-3 py-1.5 text-sm font-semibold text-muted"
-                >
-                  <Icon size={14} />
-                  {trail.title}
-                </span>
-              )
-            })}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+            {soonCards.map(({ trail }, index) => (
+              <motion.div
+                key={trail.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.06 }}
+              >
+                <TrilhaBadgeCard
+                  trail={trail}
+                  status="available"
+                  progress={0}
+                  completedLessons={0}
+                  totalLessons={0}
+                />
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       )}

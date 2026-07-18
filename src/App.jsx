@@ -28,6 +28,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import Onboarding from './pages/Onboarding'
+import EmailPreferences from './pages/EmailPreferences'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminUsers from './pages/admin/AdminUsers'
@@ -47,6 +48,7 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/registro" element={<Register />} />
                 <Route path="/recuperar-senha" element={<ForgotPassword />} />
+                <Route path="/email-preferences" element={<EmailPreferences />} />
 
                 <Route
                   element={

@@ -1,18 +1,28 @@
 const { logger } = require('firebase-functions/v2')
 const admin = require('firebase-admin')
+const crypto = require('crypto')
 
 const db = admin.firestore()
 
 const BATCH_SIZE = 50
 const DELAY_BETWEEN_BATCHES_MS = 1000
 
-async function getAllEligibleUsers() {
+async function getCourseEnrolledUsers(courseId) {
   const snapshot = await db.collection('users').get()
   const users = []
 
   snapshot.forEach((doc) => {
     const data = doc.data()
-    if (data.email && data.email.trim() !== '') {
+    const prefs = data.emailPreferences || {}
+    if (prefs.notificationsOptOut === true) return
+    if (!data.email || data.email.trim() === '') return
+
+    const isEnrolled =
+      data.currentCourse === courseId ||
+      (data.completedCourses || []).includes(courseId) ||
+      (data.completedLessons || []).some((lId) => typeof lId === 'string' && lId.startsWith(courseId + '-'))
+
+    if (isEnrolled) {
       users.push({
         uid: doc.id,
         email: data.email,
@@ -38,6 +48,13 @@ function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+function generateUnsubscribeUrl(uid) {
+  const secret = process.env.UNSUBSCRIBE_SECRET || process.env.BREVO_API_KEY || 'webstart-default-secret'
+  const token = crypto.createHmac('sha256', secret).update(uid).digest('hex').slice(0, 32)
+  const appUrl = process.env.APP_URL || 'https://webstart-academy.web.app'
+  return `${appUrl}/email-preferences?uid=${encodeURIComponent(uid)}&token=${token}`
+}
+
 async function sendNewLessonNotifications(lessonData, buildEmailFn, sendEmailFn) {
   const startTime = Date.now()
   const { id: lessonId, courseId, title: lessonTitle } = lessonData
@@ -47,8 +64,8 @@ async function sendNewLessonNotifications(lessonData, buildEmailFn, sendEmailFn)
   const courseName = await getCourseName(courseId)
   logger.info(`[newLesson] Course: "${courseName}" (${courseId})`)
 
-  const users = await getAllEligibleUsers()
-  logger.info(`[newLesson] Found ${users.length} eligible users`)
+  const users = await getCourseEnrolledUsers(courseId)
+  logger.info(`[newLesson] Found ${users.length} users enrolled in course "${courseId}"`)
 
   if (users.length === 0) {
     logger.info('[newLesson] No eligible users, skipping')
@@ -67,6 +84,7 @@ async function sendNewLessonNotifications(lessonData, buildEmailFn, sendEmailFn)
 
     for (const user of batch) {
       try {
+        user._unsubscribeUrl = generateUnsubscribeUrl(user.uid)
         const html = buildEmailFn(user, courseName, lessonTitle, lessonId)
 
         await sendEmailFn({
@@ -94,4 +112,4 @@ async function sendNewLessonNotifications(lessonData, buildEmailFn, sendEmailFn)
   return { sent: sentCount, errors: errorCount, total: users.length }
 }
 
-module.exports = { sendNewLessonNotifications, getAllEligibleUsers, getCourseName }
+module.exports = { sendNewLessonNotifications, getCourseEnrolledUsers, getCourseName }
