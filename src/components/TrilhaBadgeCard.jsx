@@ -4,9 +4,9 @@ import { CheckCircle2, Clock, Sparkles, Lock, ArrowRight, Globe, Link2 } from 'l
 import { trailTechConfig } from '../data/trailTechConfig'
 
 const statusConfig = {
-  available: { label: 'Disponível', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300', icon: Sparkles },
-  in_progress: { label: 'Em andamento', color: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300', icon: Clock },
-  completed: { label: 'Concluído', color: 'bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-300', icon: CheckCircle2 },
+  available: { label: 'Disponível', color: 'text-emerald-600 dark:text-emerald-400', icon: Sparkles },
+  in_progress: { label: 'Em andamento', color: 'text-blue-600 dark:text-blue-400', icon: Clock },
+  completed: { label: 'Concluído', color: 'text-green-600 dark:text-green-400', icon: CheckCircle2 },
 }
 
 const lucideMap = {
@@ -15,22 +15,21 @@ const lucideMap = {
 }
 
 function TechIcon({ config, size = 'normal' }) {
-  const sizeClass = size === 'compact' ? 'text-3xl' : 'text-6xl'
-
   if (config.deviconClass) {
+    const sizeClass = size === 'compact' ? 'text-5xl' : 'text-7xl md:text-8xl'
     return (
       <i
-        className={`${config.deviconClass} ${sizeClass}`}
+        className={`${config.deviconClass} ${sizeClass} drop-shadow-lg`}
         aria-hidden="true"
       />
     )
   }
 
   if (config.useLucide) {
-    const iconSize = size === 'compact' ? 28 : 56
+    const iconSize = size === 'compact' ? 48 : 72
     const Icon = lucideMap[config.useLucide]
     if (Icon) {
-      return <Icon size={iconSize} strokeWidth={1.5} aria-hidden="true" />
+      return <Icon size={iconSize} strokeWidth={1.5} className="drop-shadow-lg" aria-hidden="true" />
     }
   }
 
@@ -53,57 +52,55 @@ export function TrilhaBadgeCard({ trail, status, progress, completedLessons, tot
 
   const cardContent = (
     <div
-      className={`trail-badge-card group relative overflow-hidden rounded-2xl border-3 transition-all duration-200 ${
+      className={`trail-badge-card group relative overflow-hidden rounded-2xl border-2 transition-all duration-200 ${
         isLocked
-          ? 'border-border bg-surface opacity-80'
-          : 'border-border-strong hover-lift cursor-pointer'
-      } ${compact ? 'p-0' : ''}`}
+          ? 'border-border bg-surface'
+          : 'border-transparent hover-lift cursor-pointer'
+      }`}
       style={{
-        boxShadow: isLocked ? 'none' : `4px 4px 0 0 ${activeColor}33`,
-        ['--badge-color']: activeColor,
+        boxShadow: isLocked ? 'none' : `4px 4px 0 0 ${activeColor}44`,
       }}
     >
-      {/* Logo area */}
+      {/* Logo area - solid brand color */}
       <div
-        className={`trail-badge-icon-area relative flex items-center justify-center ${
-          compact ? 'h-20' : 'h-28 sm:h-32'
-        } ${isLocked ? 'grayscale opacity-30' : ''}`}
+        className={`relative flex items-center justify-center overflow-hidden ${
+          compact ? 'h-24' : 'h-32 sm:h-40'
+        }`}
         style={{
-          background: `linear-gradient(135deg, ${activeColor}22, ${activeColor}11)`,
+          backgroundColor: isLocked ? '#374151' : activeColor,
         }}
       >
+        {/* Icon */}
         <div
-          className={`flex items-center justify-center transition-transform duration-200 group-hover:scale-110 ${
-            config.textDark ? 'text-gray-800 dark:text-gray-800' : 'text-white'
-          } ${compact ? '' : 'drop-shadow-lg'}`}
-          style={{ color: isLocked ? '#9ca3af' : undefined }}
+          className={`flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${
+            config.textDark && !isLocked ? 'text-gray-900' : 'text-white'
+          }`}
         >
           <TechIcon config={config} size={compact ? 'compact' : 'normal'} />
         </div>
 
-        {config.badge && (
-          <span className="absolute top-2 right-2 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white">
+        {/* Badge */}
+        {config.badge && !isLocked && (
+          <span className="absolute top-2 right-2 rounded-md bg-black/30 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
             {config.badge}
           </span>
         )}
 
+        {/* Lock overlay for "soon" trails */}
         {isLocked && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-            <Lock size={compact ? 16 : 24} className="text-gray-400" />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
+            <div className="flex flex-col items-center gap-1">
+              <Lock size={compact ? 20 : 28} className="text-white/80" />
+              {!compact && (
+                <span className="text-xs font-bold text-white/70">Em breve</span>
+              )}
+            </div>
           </div>
         )}
       </div>
 
-      {/* Color accent line */}
-      {!isLocked && (
-        <div
-          className="h-1 w-full"
-          style={{ background: `linear-gradient(90deg, ${activeColor}, ${activeColor}88)` }}
-        />
-      )}
-
-      {/* Info area */}
-      <div className={`${compact ? 'px-3 py-2.5' : 'px-4 py-3'}`}>
+      {/* Info footer - outside colored block */}
+      <div className={`${compact ? 'px-3 py-2' : 'px-4 py-3'} bg-surface`}>
         <h3
           className={`font-black leading-tight ${
             compact ? 'text-xs' : 'text-sm'
@@ -112,60 +109,51 @@ export function TrilhaBadgeCard({ trail, status, progress, completedLessons, tot
           {trail.title}
         </h3>
 
-        {isLocked ? (
-          <span className="mt-1 inline-flex items-center gap-1 rounded-md border border-border px-2 py-0.5 text-[10px] font-semibold text-muted">
-            <Lock size={10} />
-            Em breve
-          </span>
-        ) : (
-          <>
-            {!compact && (
-              <span className={`mt-1 inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-bold ${cfg.color}`}>
-                <StatusIcon size={10} />
-                {cfg.label}
+        {!isLocked && (
+          <div className={`mt-1.5 flex items-center gap-1.5 text-[10px] font-semibold ${cfg.color}`}>
+            <StatusIcon size={10} />
+            {cfg.label}
+          </div>
+        )}
+
+        {!isLocked && totalLessons > 0 && (
+          <div className="mt-2">
+            {compact ? (
+              <span className="text-[10px] font-bold text-secondary">
+                {completedLessons}/{totalLessons} aulas
               </span>
+            ) : (
+              <>
+                <div className="flex items-center justify-between text-[10px] font-bold text-secondary">
+                  <span>{completedLessons}/{totalLessons} aulas</span>
+                  <span>{progress}%</span>
+                </div>
+                <div className="mt-1 h-1 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${progress}%`,
+                      backgroundColor: activeColor,
+                    }}
+                  />
+                </div>
+              </>
             )}
+          </div>
+        )}
 
-            {totalLessons > 0 && (
-              <div className={`mt-1.5 ${compact ? 'mt-1' : ''}`}>
-                {compact ? (
-                  <span className="text-[10px] font-bold text-secondary">
-                    {completedLessons}/{totalLessons}
-                  </span>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-between text-[10px] font-bold text-secondary">
-                      <span>{completedLessons}/{totalLessons} aulas</span>
-                      <span>{progress}%</span>
-                    </div>
-                    <div className="mt-1 h-1.5 overflow-hidden rounded-full border border-border-strong bg-surface">
-                      <div
-                        className="h-full rounded-full transition-all duration-500"
-                        style={{
-                          width: `${progress}%`,
-                          backgroundColor: activeColor,
-                        }}
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
+        {!isLocked && !compact && status !== 'completed' && trail.status === 'available' && (
+          <div className="mt-2 flex items-center gap-1 text-[10px] font-bold text-accent">
+            {status === 'in_progress' ? 'Continuar' : 'Explorar'}
+            <ArrowRight size={10} className="transition-transform group-hover:translate-x-0.5" />
+          </div>
+        )}
 
-            {!compact && status !== 'completed' && trail.status === 'available' && (
-              <div className="mt-2 flex items-center gap-1 text-[10px] font-bold text-accent">
-                {status === 'in_progress' ? 'Continuar' : 'Explorar'}
-                <ArrowRight size={10} className="transition-transform group-hover:translate-x-0.5" />
-              </div>
-            )}
-
-            {!compact && status === 'completed' && (
-              <div className="mt-2 flex items-center gap-1 text-[10px] font-bold text-green-600 dark:text-green-400">
-                <CheckCircle2 size={10} />
-                Ver conclusão
-              </div>
-            )}
-          </>
+        {!isLocked && !compact && status === 'completed' && (
+          <div className="mt-2 flex items-center gap-1 text-[10px] font-bold text-green-600 dark:text-green-400">
+            <CheckCircle2 size={10} />
+            Ver conclusão
+          </div>
         )}
       </div>
     </div>
