@@ -1153,3 +1153,34 @@ input[type="checkbox"] {
 .dark .hover-lift:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
+
+/* ══════════════════════════════════════════════
+   Trail Badge Cards
+   ══════════════════════════════════════════════ */
+.trail-badge-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.trail-badge-card:hover {
+  transform: translateY(-3px);
+}
+
+.trail-badge-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 4px 4px 0 0 var(--badge-color, #10b981) !important;
+}
+
+.dark .trail-badge-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 4px 4px 0 0 var(--badge-color, #34d399) !important;
+}
+
+.trail-badge-icon-area {
+  border-radius: 1rem 1rem 0 0;
+}
+
+.trail-badge-card .devicon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.dark .trail-badge-card .devicon {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
