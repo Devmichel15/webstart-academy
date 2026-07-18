@@ -1184,3 +1184,12 @@ input[type="checkbox"] {
 .dark .trail-badge-card .devicon {
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
+
+/* ══════════════════════════════════════════════
+   Mobile Nav Drawer
+   ══════════════════════════════════════════════ */
+body.drawer-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}

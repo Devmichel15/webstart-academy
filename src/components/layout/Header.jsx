@@ -11,7 +11,7 @@ export function Header({ title, subtitle }) {
         <h1 className="text-2xl font-black tracking-tight text-primary md:text-3xl">{title}</h1>
         {subtitle && <p className="mt-1 text-secondary">{subtitle}</p>}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="hidden items-center gap-2 lg:flex">
         <Badge>Nível {level}</Badge>
         <Badge variant="success">{xp} XP</Badge>
         {streak > 0 && <Badge variant="warning">{streak} dias</Badge>}
