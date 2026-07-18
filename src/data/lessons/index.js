@@ -6,7 +6,7 @@ import { javascriptLessons } from './javascript-lessons.js'
 
 export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons }
 export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...javascriptLessons]
-export const allVideoLessons = [...videoLessons]
+export const allVideoLessons = [...videoLessons, ...javascriptLessons]
 
 export function getLessonById(id) {
   return allLessons.find((l) => l.id === id) || allVideoLessons.find((l) => l.id === id) || null
