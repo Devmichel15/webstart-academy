@@ -39,7 +39,7 @@ function buildDefaultUser(userRecord) {
     currentCourse: null,
     currentLesson: null,
     totalStudyTime: 0,
-    isPublic: true,
+    isPublic: true, //por padrão deve setar mesmo como true
     emailPreferences: {
       marketingOptOut: false,
       notificationsOptOut: false,
