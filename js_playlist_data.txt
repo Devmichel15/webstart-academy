@@ -1,0 +1,92 @@
+﻿1|TkD0QMyBa28|Curso JavaScript #01 - Introdução
+2|rQseLH4LDXQ|Curso JavaScript #02 - Primeiro programa
+3|xmk1PjuYHIw|Curso JavaScript #03 - Como inserir código JavaScript em uma página web
+4|oN7L8oQWyPY|Curso JavaScript #04 - Particularidades da linguagem JavaScript
+5|sIXUNUqnoXI|Curso JavaScript #05 - Declarando variáveis
+6|7Isq6ekQT1k|Curso JavaScript #06 - Tipos de dados
+7|59PcA9YsoQ0|Curso JavaScript #07 - Como utilizar strings
+8|Otd2KA4LrzU|Curso JavaScript #08 - Boolean
+9|AoSTIPwYXWc|Curso JavaScript #09 - null e undefined
+10|x89T_rGiFiY|Curso JavaScript #10 - Tipos de dados Objeto
+11|bDDpv-BL2v0|Curso JavaScript #11 - Arrays
+12|DGvRhPgsuMo|Curso JavaScript #12 - Operador condicional if
+13|I9QXIDcxkIE|Curso JavaScript #13 - Operadores de comparação
+14|G95Se9RNhoA|Curso JavaScript #14 - Else if e else
+15|jbs4087iV7k|Curso JavaScript #15 - Comparação de valor e tipo de dado (=== e !==)
+16|jQgKM0L5DYs|Curso JavaScript #16 - Operador lógico AND (\u0026\u0026)
+17|Ie5GRz7QupY|Curso JavaScript #17 - Operador lógico OR (||)
+18|CHuuY1DeIa4|Curso JavaScript #18 - Operador lógico NOT (!)
+19|R-jwbPkJZvA|Curso JavaScript #19 - Estrutura de repetição while
+20|uL8-YwULUHA|Curso JavaScript #20 - Operadores de atribuição
+21|wiUUASSieOE|Curso JavaScript #21 - for (estrutura de repetição - loop)
+22|1q05l_Vgukg|Curso JavaScript #22 - break e continue
+23|ItzRdMj1lzw|Curso JavaScript #23 - funções (function)
+24|VPXLOXz2Xzg|Curso JavaScript #24 - Alterando o DOM com um for
+25|5XExYUXaItg|Curso JavaScript #25 - Escopo em JS (scope)
+26|kugQNQl8sF0|Curso JavaScript #26 - let e const
+27|wLeSTjpTfsg|Curso JavaScript #27 - Métodos numéricos (parseInt, parseFloat)
+28|2LkSVSenlA0|Curso JavaScript #28 - Funções de string (toUpperCase, toLowerCase, length)
+29|BKw97_UOR1o|Curso JavaScript #29 - Funções de string PARTE 2
+30|6A0qz-tybc0|Curso JavaScript #30 - Funções de array
+31|jk74IvG4Eh8|Curso JavaScript #31 - Funções de Array PARTE 2
+32|GQ8jMODjh0k|Curso JavaScript #32 - Criando Objetos com métodos
+33|WsbMaN3PP9I|Curso JavaScript #33 - Utilizando o this
+34|snaMsZuYoFo|Curso JavaScript #34 - O que é DOM? (Document Object Model)
+35|BbwQHFVpQWs|Curso JavaScript #35 - Acessando elementos através do DOM
+36|rqj4SlhfCR0|Curso JavaScript #36 - querySelector e querySelectorAll
+37|nA3QJYFGsYc|Curso JavaScript #37 - Alterar conteúdo do elemento (textContent e innerHTML)
+38|eC-z9oHLzBc|Curso JavaScript #38 - Criando elementos com DOM (createElement)
+39|pSkaIyRAt7w|Curso JavaScript #39 - Removendo elementos (removeChild)
+40|0XJyTa6B-GA|Curso JavaScript #40 - Inserindo elementos (appendChild e insertBefore)
+41|c5av-lPRt6A|Curso JavaScript #41 - Trocando elementos (replaceChild)
+42|NvaRXr4gdWU|Curso JavaScript #42 - Adicionando atributo (setAttribute)
+43|7KBjz6f27zA|Curso JavaScript #43 - Adicionando CSS pelo DOM
+44|peEiczr8LSI|Curso JavaScript #44 - Propriedades do document
+45|jFfg_IdZAc8|Curso JavaScript #45 - Callback functions
+46|tXnY9-gVN1E|Curso JavaScript #46 - setTimeout e setInterval
+47|KV1ph8CYWi4|Curso JavaScript #47 - clearTimeout e clearInterval
+48|8nnLz8GtQe4|Curso JavaScript #48 - Eventos e onload
+49|cjpQU6NutU0|Curso JavaScript #49 - Eventos click e dblclick do DOM
+50|U8-NbkaDJf0|Curso JavaScript #50 - Eventos mouseover e mouseout
+51|0vQMTKeIkcE|Curso JavaScript #51 - Eventos keydown e keyup
+52|KNk0Cex3zcM|Curso JavaScript #52 - Criando o projeto do curso
+53|VM4S9yffT1w|Curso JavaScript #53 - Finalizando o projeto com CSS
+54|UZNUB9-tUAY|Curso JavaScript #54 - Adicionando eventos ao projeto
+55|BWPUSXzSWA8|Aprenda JSON em 20 minutos
+56|we5Ac8U21lI|Tudo sobre Async e Await - Funções assíncronas em JavaScript
+57|hyMCPZNLXps|Curso de JavaScript para iniciantes - aprenda os fundamentos de JavaScript
+58|KCfaPZ2t2yA|CRIE UMA CALCULADORA COM HTML CSS E JAVASCRIPT
+59|qIGYM4S8x50|APRENDA FETCH API DE JAVASCRIPT COM PROJETO
+60|FMaEIVdaAFo|AUTOCOMPLETAR ENDEREÇO PELO CEP - PROJETO DE HTML, CSS E JAVASCRIPT (API VIACEP)
+61|mnjQeXqA3Z0|10 MÉTODOS DE ARRAY QUE TODO DESENVOLVEDOR PRECISA CONHECER
+62|i1dNnS6pXAo|COMO APLICAR DARK MODE COM HTML, CSS E JAVASCRIPT
+63|kj6GFACwLYo|MODAL COM JAVASCRIPT - PROJETO DE HTML, CSS E JAVASCRIPT
+64|HSssE1PRQcA|Projeto de JavaScript para iniciantes - To Do List com JavaScript puro
+65|dHPP83T9dAs|Gerador de senhas seguras com JavaScript - Projeto de JavaScript
+66|E3sKnfq4myo|Clone página iPhone 13 Pro - Projeto de HTML e CSS para iniciantes
+67|VS8EBgPwsSU|Aplicação de Clima com OpenWeather API - Projeto de JavaScript com API
+68|Jx_msqDaiCg|Projeto Calculadora de IMC com JavaScript - Projeto HTML CSS e JavaScript
+69|fFCqaZ8Tz-Y|Gerador de box shadow com JavaScript - Projeto de JavaScript
+70|TtDi0xrEvAE|CLONE DO GOOGLE KEEP COM JAVASCRIPT
+71|NbhoeLj6lBs|REACT.JS E AXIOS - CONSUMIR DADOS DE API COM REACT E AXIOS
+72|e9w8GIV0Yq4|Axios x Fetch: qual é a melhor biblioteca para fazer requisições HTTP em JavaScript?
+73|rudAiGQ-mes|Como criar um formulário incrível com validações em JavaScript - Tutorial Passo a Passo
+74|SbST27OWpmo|Aprenda a Programar um Cronômetro com JavaScript - Projeto de JavaScript para iniciantes
+75|NyxoqGTFrqo|7 Recursos de JavaScript que todo Dev precisa saber - Técnicas para ter JavaScript avançado
+76|0SFRhpzHw94|Princípios de Clean Code em JavaScript: Melhore Sua Produtividade
+77|7wksVf3g3z4|Como remover caracteres especiais em JavaScript
+78|wzJy46B-8eA|Como adicionar elementos a um objeto JavaScript
+79|ICVQj1FGEDM|Dicas práticas para chamar múltiplas funções em um onclick em JavaScript
+80|oQ3_p4oCzDE|Como gerar PDF com JavaScript
+81|wdq7Yad6jWM|Como verificar se string é data em JavaScript? As melhores técnicas!
+82|x8CM9e23-yo|Contador de caracteres e palavras - Projeto com HTML, CSS e JavaScript
+83|MOsJdRmQoko|Teste de velocidade de digitação - PROJETO com HTML, CSS e JAVASCRIPT
+84|OYPbr6ZG3pc|CURSO DE JAVASCRIPT COM EXERCÍCIOS E PROJETOS
+85|F0bZ1YN0unQ|JAVASCRIPT COM NOVAS FUNCIONALIDADES EM 2024 - novos métodos de array, groupBy, Temporal API e mais!
+86|J6LCE7jHgmU|7 conceitos de JS que todo dev demora para aprender por completo e são OBRIGATÓRIOS!
+87|oz4wSEhRRuU|Como criar uma barra de navegação responsiva - Menu Navbar Responsivo com HTML CSS e JavaScript
+88|aJH2KybHFDI|Projeto Verificador de Força de Senha com JavaScript - Projeto de JavaScript para inciantes
+89|3pWHFh4lST4|Mostrar ou ocultar a senha com JavaScript - Olho de mostrar senha com JS
+90|RBP_W06QfrY|Como validar e-mail com JavaScript e regex - Validação de e-mail com JavaScript
+91|jbzZUuN1sRA|Como fazer async await no foreach
+92|n_vmS00Az2w|PROJETO CONVERSOR DE TEXTO PARA AUDIO - COMO CONVERTER TEXTO PARA AUDIO COM JAVASCRIPT

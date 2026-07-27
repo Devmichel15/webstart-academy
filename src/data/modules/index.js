@@ -2,9 +2,10 @@ import { htmlModules } from './html-modules.js'
 import { cssModules } from './css-modules.js'
 import { fundamentosModules } from './fundamentos-modules.js'
 import { javascriptModules } from './javascript-modules.js'
+import { phpModules } from './php-modules.js'
 
-export { htmlModules, cssModules, fundamentosModules, javascriptModules }
-export const allModules = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules]
+export { htmlModules, cssModules, fundamentosModules, javascriptModules, phpModules }
+export const allModules = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules]
 
 export function getModuleById(id) {
   return allModules.find((m) => m.id === id) || null

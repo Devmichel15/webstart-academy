@@ -3,10 +3,11 @@ import { cssLessons } from './css-lessons.js'
 import { fundamentosLessons } from './fundamentos-lessons.js'
 import { videoLessons } from './video-lessons.js'
 import { javascriptLessons } from './javascript-lessons.js'
+import { phpLessons } from './php-lessons.js'
 
-export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons }
-export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...javascriptLessons]
-export const allVideoLessons = [...videoLessons, ...javascriptLessons]
+export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons, phpLessons }
+export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...javascriptLessons, ...phpLessons]
+export const allVideoLessons = [...videoLessons, ...javascriptLessons, ...phpLessons]
 
 export function getLessonById(id) {
   return allLessons.find((l) => l.id === id) || allVideoLessons.find((l) => l.id === id) || null

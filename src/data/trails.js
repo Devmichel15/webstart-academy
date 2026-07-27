@@ -3,11 +3,13 @@ import { htmlModules } from './modules/html-modules.js'
 import { cssModules } from './modules/css-modules.js'
 import { fundamentosModules } from './modules/fundamentos-modules.js'
 import { javascriptModules } from './modules/javascript-modules.js'
+import { phpModules } from './modules/php-modules.js'
 import { htmlLessons } from './lessons/html-lessons.js'
 import { cssLessons } from './lessons/css-lessons.js'
 import { fundamentosLessons } from './lessons/fundamentos-lessons.js'
 import { videoLessons } from './lessons/video-lessons.js'
 import { javascriptLessons } from './lessons/javascript-lessons.js'
+import { phpLessons } from './lessons/php-lessons.js'
 
 export const TRAIL_ORDER = [
   'fundamentos-web',
@@ -15,6 +17,7 @@ export const TRAIL_ORDER = [
   'html-exercises',
   'css',
   'javascript',
+  'php',
   'git-github',
   'react',
   'backend',
@@ -179,17 +182,54 @@ export const trails = [
   createTrail({
     id: 'javascript',
     slug: 'javascript',
-    title: 'JavaScript',
-    description: 'Torne suas páginas interativas com a linguagem da web.',
+    title: 'JavaScript Completo & Prático',
+    description: 'Aprenda JavaScript do zero ao avançado com Matheus Battisti (Hora de Codar). Fundamentos, manipulação do DOM, eventos, assincronismo, JSON, Fetch API, projetos reais e recursos modernos.',
+    instructor: 'Matheus Battisti (Hora de Codar)',
     icon: 'fileJson',
     color: 'brand',
     order: 4,
     difficulty: 'beginner',
-    estimatedHours: 3,
-    modules: ['js-vid-fundamentals', 'js-vid-dom-loops', 'js-vid-arrays'],
+    estimatedHours: 25,
+    modules: [
+      'js-mod-intro-fundamentos',
+      'js-mod-estruturas-controle',
+      'js-mod-funcoes-escopo',
+      'js-mod-dom-eventos',
+      'js-mod-projeto-pratico',
+      'js-mod-assincrono-apis',
+      'js-mod-projetos-praticos-1',
+      'js-mod-projetos-praticos-2',
+      'js-mod-tecnicas-avancadas',
+    ],
     status: 'available',
     requiredTrail: 'css',
-    xp: 1500,
+    xp: 3000,
+    level: 3,
+    cover: null,
+  }),
+  createTrail({
+    id: 'php',
+    slug: 'php-moderno',
+    title: 'PHP Moderno',
+    description: 'Aprenda PHP do zero ao moderno — scripts, formulários, operadores e desafios práticos.',
+    icon: 'server',
+    color: 'brand',
+    order: 5,
+    difficulty: 'beginner',
+    estimatedHours: 40,
+    modules: [
+      'php-vid-intro',
+      'php-vid-environment',
+      'php-vid-scripts',
+      'php-vid-types',
+      'php-vid-forms',
+      'php-vid-operators',
+      'php-vid-challenges',
+      'php-vid-evaluation',
+    ],
+    status: 'available',
+    requiredTrail: null,
+    xp: 2000,
     level: 3,
     cover: null,
   }),
@@ -200,7 +240,7 @@ export const trails = [
     description: 'Controle de versão, colaboração e deploy com Git e GitHub.',
     icon: 'gitBranch',
     color: 'brand',
-    order: 5,
+    order: 6,
     difficulty: 'beginner',
     estimatedHours: 3,
     modules: [],
@@ -217,7 +257,7 @@ export const trails = [
     description: 'Construa interfaces modernas e reativas com componentização.',
     icon: 'atom',
     color: 'brand',
-    order: 6,
+    order: 7,
     difficulty: 'intermediate',
     estimatedHours: 8,
     modules: [],
@@ -234,7 +274,7 @@ export const trails = [
     description: 'Servidores, rotas, middleware e lógica do lado do servidor.',
     icon: 'terminal',
     color: 'brand',
-    order: 7,
+    order: 8,
     difficulty: 'intermediate',
     estimatedHours: 6,
     modules: [],
@@ -251,7 +291,7 @@ export const trails = [
     description: 'Modelagem, SQL e integração com bancos de dados relacionais.',
     icon: 'database',
     color: 'brand',
-    order: 8,
+    order: 9,
     difficulty: 'intermediate',
     estimatedHours: 5,
     modules: [],
@@ -268,7 +308,7 @@ export const trails = [
     description: 'Crie e consuma APIs RESTful completas com autenticação e documentação.',
     icon: 'link2',
     color: 'brand',
-    order: 9,
+    order: 10,
     difficulty: 'advanced',
     estimatedHours: 6,
     modules: [],
@@ -285,7 +325,7 @@ export const trails = [
     description: 'Publicação, CI/CD, cloud hosting e infraestrutura moderna.',
     icon: 'cloud',
     color: 'brand',
-    order: 10,
+    order: 11,
     difficulty: 'advanced',
     estimatedHours: 4,
     modules: [],
@@ -309,14 +349,14 @@ export function getTrailWithModules(trailId) {
 }
 
 export function getModuleData(moduleId) {
-  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules]
+  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules]
   return allMods.find((m) => m.id === moduleId) || null
 }
 
 export function getModuleLessons(moduleId) {
   const mod = getModuleData(moduleId)
   if (!mod) return []
-  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons]
+  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons]
   return mod.lessons.map((lId) => allLessons.find((l) => l.id === lId)).filter(Boolean)
 }
 

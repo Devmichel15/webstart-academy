@@ -32,6 +32,12 @@ export const trailTechConfig = {
     label: 'JavaScript',
     textDark: true,
   },
+  php: {
+    deviconClass: 'devicon-php-plain',
+    brandColor: '#777BB4',
+    brandColorDark: '#9B9DD4',
+    label: 'PHP',
+  },
   'git-github': {
     deviconClass: 'devicon-git-plain',
     brandColor: '#F05032',
