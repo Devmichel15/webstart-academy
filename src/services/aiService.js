@@ -1,3 +1,6 @@
+import { getFallbackRoadmap } from '../utils/fallbackRoadmap.js'
+import { allLessons } from '../data/lessons/index.js'
+
 const HF_API_URL = 'https://router.huggingface.co/v1/chat/completions'
 
 const SYSTEM_PROMPT = `You are an expert web development tutor (HTML, CSS, JavaScript, PHP) at WebStart Academy.
@@ -206,3 +209,99 @@ function parseResponse(text) {
 export function clearAICache() {
   cache.clear()
 }
+
+export async function analyzeLearningProfile({ assessment, archetype, availableTrails = [] }) {
+  const fallback = getFallbackRoadmap(assessment, availableTrails)
+  const apiKey = token()
+  if (!apiKey) return fallback
+
+  const trailList = availableTrails.map((t) => (typeof t === 'string' ? t : `${t.id} ("${t.title}")`)).join(', ')
+
+  const systemPrompt = `Você é o tutor IA sênior da WebStart Academy. Sua tarefa é analisar o perfil de aprendizagem do aluno e gerar um roadmap personalizado em JSON estrito.
+  
+REGRA CRÍTICA INEGOCIÁVEL:
+Você só pode recomendar cursos/trilhas presentes nesta lista EXATA: [${trailList}].
+NUNCA cite, sugira ou invente cursos fora dessa lista.
+
+Retorne APENAS o JSON no seguinte formato:
+{
+  "archetype": "${archetype}",
+  "aiSummary": "um parágrafo motivacional e personalizado de 3 a 5 frases em português analisando as respostas do aluno e explicando a estratégia do roadmap",
+  "recommendedCourses": ["id1", "id2", "id3"],
+  "estimatedWeeks": 6,
+  "welcomeMessage": "mensagem curta e encorajadora em português assinada pelo Mentor IA"
+}`
+
+  const userPrompt = `Perfil do Aluno:
+- Experiência: ${assessment.experience}
+- Objetivo: ${assessment.objective}
+- Área de interesse: ${assessment.interest}
+- Tempo semanal: ${assessment.studyTime}
+- Maior dificuldade: ${assessment.difficulty}
+- Confiança: ${assessment.confidence}
+- Motivação: ${assessment.motivation}
+- Arquétipo preliminar: ${archetype}`
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 3500)
+
+  try {
+    const response = await fetch(HF_API_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: 'openai/gpt-oss-120b:groq',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],
+        max_tokens: 700,
+        temperature: 0.4,
+      }),
+    })
+
+    clearTimeout(timeoutId)
+
+    if (!response.ok) return fallback
+
+    const data = await response.json()
+    const content = data.choices?.[0]?.message?.content || ''
+    const jsonMatch = content.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) return fallback
+
+    const parsed = JSON.parse(jsonMatch[0].replace(/```json|```/g, '').trim())
+
+    const validIds = new Set(availableTrails.map((t) => (typeof t === 'string' ? t : t.id)))
+    let filteredCourses = (parsed.recommendedCourses || []).filter((id) => validIds.has(id))
+
+    if (filteredCourses.length === 0) {
+      filteredCourses = fallback.recommendedCourses
+    }
+
+    const firstCourseId = filteredCourses[0]
+    const firstCourseLessons = allLessons.filter((l) => l.courseId === firstCourseId)
+    const firstLessonId = firstCourseLessons.length > 0 ? firstCourseLessons[0].id : `${firstCourseId}-vid-1`
+
+    return {
+      archetype: parsed.archetype || archetype,
+      aiSummary: parsed.aiSummary || fallback.aiSummary,
+      recommendedCourses: filteredCourses,
+      firstStep: {
+        courseId: firstCourseId,
+        lessonId: firstLessonId,
+      },
+      estimatedWeeks: typeof parsed.estimatedWeeks === 'number' ? parsed.estimatedWeeks : fallback.estimatedWeeks,
+      welcomeMessage: parsed.welcomeMessage || fallback.welcomeMessage,
+      generatedBy: 'ai',
+    }
+  } catch (err) {
+    clearTimeout(timeoutId)
+    console.warn('[AI] Profile analysis failed or timed out, using fallback rules:', err.message)
+    return fallback
+  }
+}
+

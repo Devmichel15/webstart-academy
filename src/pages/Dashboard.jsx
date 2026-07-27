@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
+import { Link, useOutletContext } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { SEO } from '../components/seo/SEO'
+import { AssessmentBanner } from '../components/assessment/AssessmentBanner'
 import {
   ArrowRight,
   BookOpen,
@@ -81,6 +82,7 @@ export default function Dashboard() {
     return a.order - b.order
   })
 
+  const outletContext = useOutletContext() || {}
   const firstIncompleteLesson = allCombinedLessons.find((l) => !isLessonCompleted(l.id))
 
   return (
@@ -91,6 +93,8 @@ export default function Dashboard() {
         title={`Olá, ${name || 'Aluno'}!`}
         subtitle="Acompanhe seu progresso na WebStart Academy em tempo real."
       />
+
+      {outletContext.assessmentCompleted === false && <AssessmentBanner />}
 
       {firstStepsDone === false && (
         <Card className="mb-8 border-2 border-brand-400 bg-brand-50 dark:bg-brand-900/30">
