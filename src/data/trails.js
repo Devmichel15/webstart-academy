@@ -4,12 +4,14 @@ import { cssModules } from './modules/css-modules.js'
 import { fundamentosModules } from './modules/fundamentos-modules.js'
 import { javascriptModules } from './modules/javascript-modules.js'
 import { phpModules } from './modules/php-modules.js'
+import { gitModules } from './modules/git-modules.js'
 import { htmlLessons } from './lessons/html-lessons.js'
 import { cssLessons } from './lessons/css-lessons.js'
 import { fundamentosLessons } from './lessons/fundamentos-lessons.js'
 import { videoLessons } from './lessons/video-lessons.js'
 import { javascriptLessons } from './lessons/javascript-lessons.js'
 import { phpLessons } from './lessons/php-lessons.js'
+import { gitLessons } from './lessons/git-lessons.js'
 
 export const TRAIL_ORDER = [
   'fundamentos-web',
@@ -245,14 +247,22 @@ export const trails = [
     id: 'git-github',
     slug: 'git-e-github',
     title: 'Git & GitHub',
-    description: 'Controle de versão, colaboração e deploy com Git e GitHub.',
+    description: 'Aprenda Git e GitHub do zero com Carlos Uchoa (Horadev). Controle de versão, branches, merge, repositórios remotos e colaboração.',
+    instructor: 'Carlos Uchoa (Horadev)',
     icon: 'gitBranch',
     color: 'brand',
     order: 6,
     difficulty: 'beginner',
-    estimatedHours: 3,
-    modules: [],
-    status: 'soon',
+    estimatedHours: 2,
+    modules: [
+      'git-mod-introducao',
+      'git-mod-primeiros-passos',
+      'git-mod-github',
+      'git-mod-manipulacao',
+      'git-mod-branches',
+      'git-mod-stash',
+    ],
+    status: 'available',
     requiredTrail: 'javascript',
     xp: 800,
     level: 2,
@@ -357,14 +367,14 @@ export function getTrailWithModules(trailId) {
 }
 
 export function getModuleData(moduleId) {
-  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules]
+  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules]
   return allMods.find((m) => m.id === moduleId) || null
 }
 
 export function getModuleLessons(moduleId) {
   const mod = getModuleData(moduleId)
   if (!mod) return []
-  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons]
+  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons]
   return mod.lessons.map((lId) => allLessons.find((l) => l.id === lId)).filter(Boolean)
 }
 

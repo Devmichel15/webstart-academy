@@ -4,11 +4,12 @@ import { fundamentosLessons } from './fundamentos-lessons.js'
 import { videoLessons } from './video-lessons.js'
 import { javascriptLessons } from './javascript-lessons.js'
 import { phpLessons } from './php-lessons.js'
+import { gitLessons } from './git-lessons.js'
 
 // fundamentosLessons são agora videoLessons (Lógica de Programação — Curso em Vídeo)
-export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons, phpLessons }
-export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...javascriptLessons, ...phpLessons]
-export const allVideoLessons = [...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons]
+export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons, phpLessons, gitLessons }
+export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...javascriptLessons, ...phpLessons, ...gitLessons]
+export const allVideoLessons = [...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons]
 
 export function getLessonById(id) {
   return allLessons.find((l) => l.id === id) || allVideoLessons.find((l) => l.id === id) || null
