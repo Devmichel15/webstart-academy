@@ -49,6 +49,9 @@ export default function Dashboard() {
     getTrailStatus,
     trails: allTrails,
     firstStepsDone,
+    trailCompletionRate,
+    averageStartedTrailProgress,
+    startedTrailsCount,
   } = useProgress()
 
   const heroRef = useGsapReveal([progressPercent, name])
@@ -164,13 +167,16 @@ export default function Dashboard() {
             <Map className="text-brand-500" size={20} />
             <h2 className="text-lg font-black">Sua Jornada</h2>
           </div>
-          <div className="mb-4 flex items-center justify-between rounded-lg border-2 border bg-surface-hover p-3">
-            <div>
-              <p className="text-xs font-semibold text-secondary">Trilhas concluídas</p>
-              <p className="text-2xl font-black">{journeyProgress?.completedCount || 0}<span className="text-lg text-secondary">/{journeyProgress?.totalCount || 0}</span></p>
+          <div className="mb-3 grid grid-cols-2 gap-3">
+            <div className="rounded-lg border-2 border bg-surface-hover p-3">
+              <p className="text-xs font-semibold text-secondary">Taxa de Conclusão</p>
+              <p className="text-2xl font-black">{trailCompletionRate}%</p>
+              <p className="text-xs text-secondary">{journeyProgress?.completedCount || 0}/{journeyProgress?.totalCount || 0} trilhas</p>
             </div>
-            <div className="h-10 w-10 rounded-full border-2 border-strong bg-brand-500 text-white flex items-center justify-center text-sm font-black">
-              {journeyProgress?.percent || 0}%
+            <div className="rounded-lg border-2 border bg-surface-hover p-3">
+              <p className="text-xs font-semibold text-secondary">Progresso Médio das Trilhas Iniciadas</p>
+              <p className="text-2xl font-black">{startedTrailsCount > 0 ? `${averageStartedTrailProgress}%` : '\u2014'}</p>
+              <p className="text-xs text-secondary">{startedTrailsCount} trilha(s) iniciada(s)</p>
             </div>
           </div>
 

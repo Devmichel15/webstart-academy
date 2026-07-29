@@ -211,7 +211,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard icon={TrendingUp} label="Progresso Médio" value={`${metrics.avgProgress}%`} delay={0.4} color="text-brand-500" />
+        <StatCard icon={TrendingUp} label="Progresso Médio das Trilhas" value={`${metrics.avgProgress}%`} delay={0.4} color="text-brand-500" />
         <StatCard icon={Flame} label="Utilizadores Ativos" value={metrics.activeUsers} delay={0.45} color="text-orange-500" />
         <StatCard icon={Award} label="Concluíram ≥1 Trilha" value={metrics.usersCompletedAnyTrail} delay={0.5} color="text-green-500" />
         <StatCard icon={Crown} label="Concluíram Todas" value={metrics.usersCompletedAllTrails} delay={0.55} color="text-yellow-500" />

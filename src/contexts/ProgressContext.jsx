@@ -23,6 +23,11 @@ import {
   isTrailUnlocked,
 } from '../services/trailProgressService.js'
 import { getLevelFromXp, XP_LESSON } from '../utils/xp.js'
+import {
+  calculateTrailCompletionRate,
+  calculateAverageStartedTrailProgress,
+  getStartedTrailsCount,
+} from '../utils/progressMetrics.js'
 import { useToast } from './ToastContext.jsx'
 import { AchievementCelebration } from '../components/gamification/AchievementCelebration.jsx'
 
@@ -228,6 +233,21 @@ export function ProgressProvider({ children }) {
     [completedCourses, completedLessons, completedQuizzes],
   )
 
+  const trailCompletionRate = useMemo(
+    () => calculateTrailCompletionRate(completedCourses),
+    [completedCourses],
+  )
+
+  const averageStartedTrailProgress = useMemo(
+    () => calculateAverageStartedTrailProgress(completedLessons, completedQuizzes),
+    [completedLessons, completedQuizzes],
+  )
+
+  const startedTrailsCount = useMemo(
+    () => getStartedTrailsCount(completedLessons, completedQuizzes),
+    [completedLessons, completedQuizzes],
+  )
+
   const trailStatuses = useMemo(() => {
     const map = {}
     for (const trail of trails) {
@@ -278,6 +298,9 @@ export function ProgressProvider({ children }) {
       getTrailStatus,
       recommendedTrail,
       trails,
+      trailCompletionRate,
+      averageStartedTrailProgress,
+      startedTrailsCount,
     }),
     [
       profile,
@@ -306,6 +329,9 @@ export function ProgressProvider({ children }) {
       journeyProgress,
       getTrailStatus,
       recommendedTrail,
+      trailCompletionRate,
+      averageStartedTrailProgress,
+      startedTrailsCount,
     ],
   )
 
