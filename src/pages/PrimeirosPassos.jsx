@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Globe, BookOpen, Zap } from 'lucide-react'
+import { ArrowRight, Cpu, BookOpen, Zap } from 'lucide-react'
 import { Button } from '../components/ui/Button.jsx'
 import { Card } from '../components/ui/Card.jsx'
 import { SEO } from '../components/seo/SEO'
@@ -14,7 +14,7 @@ export default function PrimeirosPassos() {
     if (user) {
       await updateUserProfile(user.uid, { firstStepsDone: true })
     }
-    navigate('/aula/web-intro', { replace: true })
+    navigate('/video-aula/logica-vid-1', { replace: true })
   }
 
   const handleSkip = async () => {
@@ -28,38 +28,38 @@ export default function PrimeirosPassos() {
     <>
     <SEO
       title="Primeiros Passos"
-      description="Escolhe a tua primeira trilha de aprendizado na WebStart Academy."
+      description="Inicia a tua jornada de programação com Lógica de Programação na WebStart Academy."
       url="/primeiros-passos"
     />
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-brand-950 p-4">
       <div className="brutal-card w-full max-w-lg rounded-2xl p-8 text-center">
-        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border-3 border-brand-700 bg-brand-950">
-          <Globe size={40} className="text-brand-400" />
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border-3 border-indigo-700 bg-indigo-950">
+          <Cpu size={40} className="text-indigo-400" />
         </div>
 
         <h2 className="mb-2 text-2xl font-black text-primary">
           Bem-vindo à WebStart!
         </h2>
         <p className="mb-8 text-secondary">
-          Para começar, escolhe a tua primeira trilha. Vais aprender os fundamentos da web do zero.
+          Antes de escrever código, vais aprender a pensar como um programador. Tudo começa pela lógica!
         </p>
 
         <Card className="mb-8 text-left">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-strong bg-brand-500 text-white">
-              <Globe size={24} />
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-strong bg-indigo-600 text-white">
+              <Cpu size={24} />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-black">Fundamentos da Web</h3>
+              <h3 className="text-lg font-black">Lógica de Programação</h3>
               <p className="mb-3 text-sm text-secondary">
-                Como a internet funciona — protocolos, DNS, navegadores e o modelo cliente-servidor.
+                Algoritmos, variáveis, condicionais, laços e vetores com o Prof. Gustavo Guanabara.
               </p>
               <div className="flex flex-wrap gap-3 text-xs font-semibold">
                 <span className="flex items-center gap-1 text-secondary">
-                  <BookOpen size={14} /> 6 aulas
+                  <BookOpen size={14} /> 15 aulas
                 </span>
                 <span className="flex items-center gap-1 text-secondary">
-                  <Zap size={14} /> ~2 horas
+                  <Zap size={14} /> ~6 horas
                 </span>
                 <span className="rounded-full bg-accent-soft px-2 py-0.5 text-accent">
                   Iniciante

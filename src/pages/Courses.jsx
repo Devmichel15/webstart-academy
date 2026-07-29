@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, Code2, Globe, Palette, FileJson, BookOpen, GraduationCap } from 'lucide-react'
+import { ArrowRight, Code2, Cpu, Palette, FileJson, BookOpen, GraduationCap } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { ProgressBar } from '../components/ui/ProgressBar'
@@ -14,12 +14,12 @@ import { useEffect, useState } from 'react'
 const courseIcons = {
   html: Code2,
   css: Palette,
-  'fundamentos-web': Globe,
+  'fundamentos-web': Cpu,
   javascript: FileJson,
 }
 
 const roadmapIcons = {
-  fundamentos: Globe,
+  fundamentos: Cpu,
   frontend: Code2,
   backend: GraduationCap,
 }

@@ -1,10 +1,10 @@
 export const trailTechConfig = {
   'fundamentos-web': {
     deviconClass: null,
-    brandColor: '#10b981',
-    brandColorDark: '#34d399',
-    label: 'Fundamentos da Web',
-    useLucide: 'globe',
+    brandColor: '#6366f1',
+    brandColorDark: '#818cf8',
+    label: 'Lógica de Programação',
+    useLucide: 'cpu',
   },
   html: {
     deviconClass: 'devicon-html5-plain-wordmark',

@@ -1,65 +1,75 @@
-import { createModule, createLab, createMiniProject } from '../schemas.js'
+import { createModule } from '../schemas.js'
 
-export const webFinalLab = createLab({
-  id: 'web-final-lab',
-  title: 'Laboratório: Mapa Visual da Internet',
-  description: 'Crie uma página que explique visualmente como a Internet funciona.',
-  context:
-    'Você foi contratado para criar uma página educativa que mostre o fluxo completo de como um site chega até o usuário. Use títulos, listas e imagens para ilustrar o processo.',
-  starterHtml: '<!DOCTYPE html>\n<html lang="pt">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Como a Internet Funciona</title>\n</head>\n<body>\n  <h1>Mapa da Internet</h1>\n  \n</body>\n</html>',
-  starterCss: 'body {\n  font-family: system-ui, sans-serif;\n  max-width: 720px;\n  margin: 0 auto;\n  padding: 2rem;\n  line-height: 1.6;\n}\nh1 { color: #059669; }\nh2 { margin-top: 2rem; }',
-  hint: 'Use h2 para cada etapa (DNS, Servidor, HTTP, Navegador) e p para explicar cada uma. Adicione uma imagem ilustrativa no final.',
-  checklist: [
-    'Título principal com h1',
-    'Cada etapa explicada com h2 + p',
-    'Pelo menos 4 etapas do fluxo',
-    'Imagem ilustrativa com alt',
-    'Lista de curiosidades',
-    'Código limpo e indentado',
-  ],
-})
-
-export const webFinalMiniProject = createMiniProject({
-  id: 'web-final-mini',
-  title: 'Mini Projeto: Guia Visual da Internet',
-  description: 'Crie uma página completa que funcione como um guia visual sobre os fundamentos da Internet.',
-  context:
-    'A WebStart Academy precisa de um material didático sobre fundamentos da Internet. Crie uma página que explique os conceitos de forma clara e visual, usando tudo que aprendeu.',
-  requirements: [
-    'DOCTYPE HTML5 e lang="pt"',
-    'meta charset e viewport',
-    'Título descritivo',
-    'Seção sobre a história da Internet',
-    'Seção explicando cliente vs servidor',
-    'Seção sobre DNS e HTTP',
-    'Seção sobre frontend e backend',
-    'Lista de tecnologias web',
-    'Imagens ilustrativas',
-    'Links para fontes de pesquisa',
-  ],
-  starterHtml: '<!DOCTYPE html>\n<html lang="pt">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Guia da Internet - WebStart</title>\n</head>\n<body>\n  <h1>Guia Completo da Internet</h1>\n  \n</body>\n</html>',
-  starterCss: 'body {\n  font-family: system-ui, sans-serif;\n  max-width: 800px;\n  margin: 0 auto;\n  padding: 2rem;\n  line-height: 1.6;\n}\nh1 { color: #059669; text-align: center; }\nh2 { border-bottom: 2px solid #059669; padding-bottom: 0.5rem; }',
-  hint: 'Organize cada conceito em uma seção separada com h2. Use listas para tecnologias. Adicione uma imagem representativa.',
-  rubric: [
-    'Estrutura HTML completa',
-    'Todas as seções obrigatórias',
-    'Hierarquia de headings correta',
-    'Imagens com alt descritivo',
-    'Links funcionais',
-    'Código bem indentado',
-  ],
-})
+// ─── LÓGICA DE PROGRAMAÇÃO — Módulos ─────────────────────────────────────────
+// Playlist: https://www.youtube.com/playlist?list=PLfzRxaru7YPtu8TPQChFnLN9rGXoXfNUQ
+// Instrutor: Cataline
+// courseId mantido como 'fundamentos-web' para compatibilidade com o sistema de progresso.
 
 export const fundamentosModules = [
   createModule({
-    id: 'web-fundamentos',
+    id: 'logica-mod-introducao',
     courseId: 'fundamentos-web',
-    title: 'Fundamentos da Internet',
-    description: 'História, DNS, HTTP, frontend, backend e o ecossistema web.',
+    title: 'Módulo 1 — Introdução à Lógica de Programação',
+    description: 'Conceitos essenciais de lógica, algoritmos e a base do pensamento computacional.',
     order: 1,
-    lessons: ['web-intro', 'web-dns-http', 'web-front-back', 'web-ecosystem'],
+    lessons: ['logica-vid-1', 'logica-vid-2', 'logica-vid-3'],
     quiz: null,
-    lab: webFinalLab,
-    miniProject: webFinalMiniProject,
+    lab: null,
+    miniProject: null,
+  }),
+  createModule({
+    id: 'logica-mod-variaveis',
+    courseId: 'fundamentos-web',
+    title: 'Módulo 2 — Variáveis e Tipos de Dados',
+    description: 'Entenda como armazenar informações com variáveis e os diferentes tipos de dados.',
+    order: 2,
+    lessons: ['logica-vid-4', 'logica-vid-5'],
+    quiz: null,
+    lab: null,
+    miniProject: null,
+  }),
+  createModule({
+    id: 'logica-mod-operadores',
+    courseId: 'fundamentos-web',
+    title: 'Módulo 3 — Operadores',
+    description: 'Operadores matemáticos, de comparação e lógicos para construir expressões.',
+    order: 3,
+    lessons: ['logica-vid-6', 'logica-vid-7', 'logica-vid-8'],
+    quiz: null,
+    lab: null,
+    miniProject: null,
+  }),
+  createModule({
+    id: 'logica-mod-controle',
+    courseId: 'fundamentos-web',
+    title: 'Módulo 4 — Estruturas de Controle',
+    description: 'Condicionais e laços de repetição para controlar o fluxo dos seus algoritmos.',
+    order: 4,
+    lessons: ['logica-vid-9', 'logica-vid-10'],
+    quiz: null,
+    lab: null,
+    miniProject: null,
+  }),
+  createModule({
+    id: 'logica-mod-funcoes',
+    courseId: 'fundamentos-web',
+    title: 'Módulo 5 — Funções',
+    description: 'Crie blocos de código reutilizáveis com funções.',
+    order: 5,
+    lessons: ['logica-vid-11'],
+    quiz: null,
+    lab: null,
+    miniProject: null,
+  }),
+  createModule({
+    id: 'logica-mod-projetos',
+    courseId: 'fundamentos-web',
+    title: 'Módulo 6 — Projetos Práticos',
+    description: 'Aplique tudo que aprendeu em projetos práticos do dia a dia da programação.',
+    order: 6,
+    lessons: ['logica-vid-12', 'logica-vid-13', 'logica-vid-14'],
+    quiz: null,
+    lab: null,
+    miniProject: null,
   }),
 ]

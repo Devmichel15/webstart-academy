@@ -5,9 +5,10 @@ import { videoLessons } from './video-lessons.js'
 import { javascriptLessons } from './javascript-lessons.js'
 import { phpLessons } from './php-lessons.js'
 
+// fundamentosLessons são agora videoLessons (Lógica de Programação — Curso em Vídeo)
 export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons, phpLessons }
 export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...javascriptLessons, ...phpLessons]
-export const allVideoLessons = [...videoLessons, ...javascriptLessons, ...phpLessons]
+export const allVideoLessons = [...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons]
 
 export function getLessonById(id) {
   return allLessons.find((l) => l.id === id) || allVideoLessons.find((l) => l.id === id) || null
