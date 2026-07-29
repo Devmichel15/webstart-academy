@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { CheckCircle2, Clock, Sparkles, Lock, ArrowRight, Globe, Link2 } from 'lucide-react'
+import { CheckCircle2, Clock, Sparkles, Lock, ArrowRight, Globe, Link2, Code2 } from 'lucide-react'
 import { trailTechConfig } from '../data/trailTechConfig'
 
 const statusConfig = {
@@ -12,6 +12,7 @@ const statusConfig = {
 const lucideMap = {
   globe: Globe,
   link2: Link2,
+  code2: Code2,
 }
 
 function TechIcon({ config, size = 'normal' }) {

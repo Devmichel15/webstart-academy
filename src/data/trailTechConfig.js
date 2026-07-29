@@ -4,7 +4,7 @@ export const trailTechConfig = {
     brandColor: '#6366f1',
     brandColorDark: '#818cf8',
     label: 'Lógica de Programação',
-    useLucide: 'cpu',
+    useLucide: 'code2',
   },
   html: {
     deviconClass: 'devicon-html5-plain-wordmark',
