@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../contexts/AuthContext.jsx'
 import { useProgress } from '../hooks/useProgress.js'
 import { trails } from '../data/trails.js'
+import { getLessonById } from '../data/lessons/index.js'
 import { getArchetype } from '../utils/archetypes.js'
 import { analyzeLearningProfile } from '../services/aiService.js'
 import { saveFullLearningProfile } from '../services/learningProfileService.js'
@@ -78,8 +79,12 @@ export default function AssessmentPage() {
 
     const firstStep = roadmapResult?.firstStep
     if (firstStep?.lessonId) {
-      // Navigate directly to the first lesson
-      navigate(`/aula/${firstStep.lessonId}`)
+      const lesson = getLessonById(firstStep.lessonId)
+      if (lesson?.type === 'videoLesson') {
+        navigate(`/video-aula/${firstStep.lessonId}`)
+      } else {
+        navigate(`/aula/${firstStep.lessonId}`)
+      }
     } else if (firstStep?.courseId) {
       navigate(`/trilhas/${firstStep.courseId}`)
     } else {

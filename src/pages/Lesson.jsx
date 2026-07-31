@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react'
 import { SEO } from '../components/seo/SEO'
@@ -18,6 +18,7 @@ import { XP_LESSON } from '../utils/xp.js'
 
 export default function Lesson() {
   const { lessonId } = useParams()
+  const navigate = useNavigate()
   const [lesson, setLesson] = useState(null)
   const [course, setCourse] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -44,6 +45,12 @@ export default function Lesson() {
   useEffect(() => {
     if (lesson) visitLesson(lesson.id)
   }, [lesson, visitLesson])
+
+  useEffect(() => {
+    if (lesson?.type === 'videoLesson') {
+      navigate(`/video-aula/${lesson.id}`, { replace: true })
+    }
+  }, [lesson, navigate])
 
   if (loading) {
     return (
