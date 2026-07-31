@@ -1,20 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Button } from '../components/ui/Button'
 import { Badge } from '../components/ui/Badge'
 import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { LessonRenderer } from '../components/lesson/LessonRenderer.jsx'
-import { ShareButtons } from '../components/share/ShareButtons'
 import { AITutor } from '../components/ai/AITutor'
 import { ProactiveTutorTrigger } from '../components/ai/ProactiveTutorTrigger'
 import { getCourseById } from '../services/courseService.js'
 import { getLessonById, getNextLesson } from '../services/lessonService.js'
 import { useProgress } from '../hooks/useProgress.js'
-import { XP_LESSON } from '../utils/xp.js'
 
 export default function Lesson() {
   const { lessonId } = useParams()
@@ -22,8 +20,7 @@ export default function Lesson() {
   const [lesson, setLesson] = useState(null)
   const [course, setCourse] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [completing, setCompleting] = useState(false)
-  const { completeLesson, visitLesson, isLessonCompleted, name, level, streak, achievements } = useProgress()
+  const { completeLesson, visitLesson } = useProgress()
 
   useEffect(() => {
     async function loadLesson() {
@@ -73,23 +70,12 @@ export default function Lesson() {
   }
 
   const nextLesson = getNextLesson(lessonId, course?.lessons)
-  const completed = isLessonCompleted(lesson.id)
-  const latestBadge = achievements.filter((a) => a.unlocked).pop()?.title
 
-  const shareData = completed ? {
-    name: name || 'Aluno',
-    title: `Aula: ${lesson.title}`,
-    xpEarned: XP_LESSON,
-    streak,
-    level,
-    badge: latestBadge,
-    tagline: 'Aprendendo a estruturar a Web como um dev real',
-  } : null
-
-  const handleComplete = async () => {
-    setCompleting(true)
+  const handleGoNext = async () => {
+    if (!nextLesson) return
     await completeLesson(lesson.id)
-    setCompleting(false)
+    const target = nextLesson.type === 'videoLesson' ? `/video-aula/${nextLesson.id}` : `/aula/${nextLesson.id}`
+    navigate(target)
   }
 
   return (
@@ -119,35 +105,12 @@ export default function Lesson() {
         </Card>
       </div>
 
-      <div className="mt-8 space-y-4">
-        <Card className="!p-5">
-          <h2 className="mb-4 text-lg font-black">Concluir Aula</h2>
-          {!completed ? (
-            <Button onClick={handleComplete} disabled={completing} className="w-full sm:w-auto">
-              {completing ? <Loader2 className="animate-spin" size={18} /> : `Concluir aula (+${XP_LESSON} XP)`}
-            </Button>
-          ) : (
-            <div>
-              <p className="mb-4 font-bold text-secondary">Aula concluída! Progresso salvo na nuvem.</p>
-              {shareData && (
-                <div className="border-t-2 border pt-4">
-                  <p className="mb-2 text-sm font-bold text-secondary">Partilhar conquista</p>
-                  <ShareButtons shareData={shareData} />
-                </div>
-              )}
-            </div>
-          )}
-        </Card>
-      </div>
-
       {nextLesson && (
         <div className="mt-6 flex justify-end">
-          <Link to={`/aula/${nextLesson.id}`}>
-            <Button>
-              Próxima aula: {nextLesson.title}
-              <ArrowRight size={16} />
-            </Button>
-          </Link>
+          <Button onClick={handleGoNext}>
+            Próxima aula: {nextLesson.title}
+            <ArrowRight size={16} />
+          </Button>
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, CheckCircle2, Circle, Loader2, PlayCircle, BookOpen, Wrench } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CheckCircle2, Circle, PlayCircle, BookOpen, Wrench } from 'lucide-react'
 import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Button } from '../components/ui/Button'
@@ -11,17 +11,16 @@ import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { getTrailById, getModuleData } from '../data/trails.js'
 import { getVideoLessonById, getVideoLessonsByModule } from '../data/lessons/index.js'
 import { useProgress } from '../hooks/useProgress.js'
-import { XP_LESSON } from '../utils/xp.js'
 
 export default function VideoLesson() {
   const { lessonId } = useParams()
+  const navigate = useNavigate()
   const [lesson, setLesson] = useState(null)
   const [module, setModule] = useState(null)
   const [course, setCourse] = useState(null)
   const [moduleLessons, setModuleLessons] = useState([])
   const [loading, setLoading] = useState(true)
-  const [completing, setCompleting] = useState(false)
-  const { completeLesson, visitLesson, isLessonCompleted, getCourseProgress } = useProgress()
+  const { completeLesson, visitLesson, getCourseProgress } = useProgress()
 
   useEffect(() => {
     async function loadLesson() {
@@ -75,15 +74,18 @@ export default function VideoLesson() {
   const currentIndex = moduleLessons.findIndex((l) => l.id === lessonId)
   const prevLesson = currentIndex > 0 ? moduleLessons[currentIndex - 1] : null
   const nextLesson = currentIndex < moduleLessons.length - 1 ? moduleLessons[currentIndex + 1] : null
-  const completed = isLessonCompleted(lesson.id)
 
   const courseProgress = course ? getCourseProgress(course.id) : 0
   const completedCount = course ? Math.round((courseProgress / 100) * (course.modules?.length || 0)) : 0
 
-  const handleComplete = async () => {
-    setCompleting(true)
+  const handleGoNext = async (nextLessonId) => {
     await completeLesson(lesson.id)
-    setCompleting(false)
+    navigate(`/video-aula/${nextLessonId}`)
+  }
+
+  const handleFinishModule = async () => {
+    await completeLesson(lesson.id)
+    navigate(`/trilhas/${course?.id}/modulo/${module?.id}`)
   }
 
   return (
@@ -203,28 +205,6 @@ export default function VideoLesson() {
           )}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mb-8"
-        >
-          <Card>
-            <h2 className="mb-4 text-lg font-black">Concluir Aula</h2>
-            {!completed ? (
-              <Button onClick={handleComplete} disabled={completing} className="w-full sm:w-auto">
-                {completing ? (
-                  <Loader2 className="animate-spin" size={18} />
-                ) : (
-                  `Marcar como concluída (+${XP_LESSON} XP)`
-                )}
-              </Button>
-            ) : (
-              <p className="font-bold text-brand-600">Aula concluída! Progresso salvo na nuvem.</p>
-            )}
-          </Card>
-        </motion.div>
-
         <div className="flex items-center justify-between gap-4">
           {prevLesson ? (
             <Link to={`/video-aula/${prevLesson.id}`}>
@@ -237,19 +217,15 @@ export default function VideoLesson() {
             <div />
           )}
           {nextLesson ? (
-            <Link to={`/video-aula/${nextLesson.id}`}>
-              <Button>
-                Próxima aula
-                <ArrowRight size={16} />
-              </Button>
-            </Link>
+            <Button onClick={() => handleGoNext(nextLesson.id)}>
+              Próxima aula
+              <ArrowRight size={16} />
+            </Button>
           ) : (
-            <Link to={`/trilhas/${course?.id}/modulo/${module?.id}`}>
-              <Button>
-                Ver módulo
-                <ArrowRight size={16} />
-              </Button>
-            </Link>
+            <Button onClick={handleFinishModule}>
+              Ver módulo
+              <ArrowRight size={16} />
+            </Button>
           )}
         </div>
       </div>
