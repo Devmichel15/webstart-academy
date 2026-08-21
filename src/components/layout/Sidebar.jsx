@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { LogOut } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth.js'
 import { useProgress } from '../../hooks/useProgress.js'
@@ -11,10 +11,12 @@ export function UserBadge() {
   const { user } = useAuth()
   const { name, photoURL, level } = useProgress()
   const { showSuccess, showError } = useToast()
+  const navigate = useNavigate()
 
   const handleLogout = async () => {
     try {
       await logoutUser()
+      navigate('/')
       showSuccess('Sessão encerrada.')
     } catch (error) {
       showError(error.message)

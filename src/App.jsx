@@ -8,6 +8,7 @@ import { FirstStepsGuard } from './components/auth/FirstStepsGuard.jsx'
 import { LearningProfileGuard } from './components/auth/LearningProfileGuard.jsx'
 import { AdminRoute } from './components/auth/AdminRoute.jsx'
 import { ToastContainer } from './components/ui/Toast.jsx'
+import { HomeGate } from './pages/PublicHome.jsx'
 import { AppLayout } from './components/layout/AppLayout'
 import Dashboard from './pages/Dashboard'
 import PrimeirosPassos from './pages/PrimeirosPassos'
@@ -63,31 +64,33 @@ export default function App() {
                   <Route path="avaliacao-perfil" element={<AssessmentPage />} />
                 </Route>
 
-                {/* Main App Routes (With AppLayout / Sidebar / Header) */}
-                <Route
-                  element={
-                    <ProtectedRoute>
-                      <AppLayout />
-                    </ProtectedRoute>
-                  }
-                >
-                  <Route element={<LearningProfileGuard />}>
-                    <Route path="primeiros-passos" element={<PrimeirosPassos />} />
-                    <Route element={<FirstStepsGuard />}>
+                {/* Home pública: visitantes veem a landing em "/", autenticados vão para a área interna */}
+                <Route element={<HomeGate />}>
+                  <Route
+                    element={
+                      <ProtectedRoute>
+                        <AppLayout />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route element={<LearningProfileGuard />}>
+                      <Route path="primeiros-passos" element={<PrimeirosPassos />} />
                       <Route index element={<Dashboard />} />
-                      <Route path="trilhas" element={<Journey />} />
-                      <Route path="trilhas/:courseId" element={<CourseDetail />} />
-                      <Route path="trilhas/:courseId/conclusao" element={<CourseCompletion />} />
-                      <Route path="trilhas/:courseId/modulo/:moduleId" element={<ModuleDetail />} />
-                      <Route path="trilhas/:courseId/modulo/:moduleId/quiz" element={<ModuleQuiz />} />
-                      <Route path="trilhas/:courseId/modulo/:moduleId/lab" element={<ModuleLab />} />
-                      <Route path="trilhas/:courseId/modulo/:moduleId/mini-projeto" element={<ModuleMiniProject />} />
-                      <Route path="aula/:lessonId" element={<Lesson />} />
-                      <Route path="video-aula/:lessonId" element={<VideoLesson />} />
-                      <Route path="laboratorio" element={<Lab />} />
-                      <Route path="materiais" element={<Materials />} />
-                      <Route path="perfil" element={<Profile />} />
-                      <Route path="chat" element={<AIChat />} />
+                      <Route element={<FirstStepsGuard />}>
+                        <Route path="trilhas" element={<Journey />} />
+                        <Route path="trilhas/:courseId" element={<CourseDetail />} />
+                        <Route path="trilhas/:courseId/conclusao" element={<CourseCompletion />} />
+                        <Route path="trilhas/:courseId/modulo/:moduleId" element={<ModuleDetail />} />
+                        <Route path="trilhas/:courseId/modulo/:moduleId/quiz" element={<ModuleQuiz />} />
+                        <Route path="trilhas/:courseId/modulo/:moduleId/lab" element={<ModuleLab />} />
+                        <Route path="trilhas/:courseId/modulo/:moduleId/mini-projeto" element={<ModuleMiniProject />} />
+                        <Route path="aula/:lessonId" element={<Lesson />} />
+                        <Route path="video-aula/:lessonId" element={<VideoLesson />} />
+                        <Route path="laboratorio" element={<Lab />} />
+                        <Route path="materiais" element={<Materials />} />
+                        <Route path="perfil" element={<Profile />} />
+                        <Route path="chat" element={<AIChat />} />
+                      </Route>
                     </Route>
                   </Route>
                 </Route>
