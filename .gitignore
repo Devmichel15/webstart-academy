@@ -29,3 +29,10 @@ dist-ssr
 # Firebase service account keys
 firebase/serviceAccountKey.json
 firebase/*-firebase-adminsdk-*.json
+
+# Migration backups & reports (dados de usuários — nunca commitar)
+migration/backups/
+migration/normalized/
+migration/reports/
+migration/.env.local
+
