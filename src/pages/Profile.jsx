@@ -1,16 +1,14 @@
-import { Award, Copy, ExternalLink } from 'lucide-react'
+import { Copy, ExternalLink, Pencil } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { ProgressBar } from '../components/ui/ProgressBar'
-import { Badge } from '../components/ui/Badge'
 import { ProfileSkeleton } from '../components/ui/Skeleton.jsx'
-import { PlayerCard } from '../components/gamification/PlayerCard'
-import { ShareButtons } from '../components/share/ShareButtons'
 import { useProgress } from '../hooks/useProgress.js'
+import { ProfileProjectsSection } from './community/ProfileProjectsSection.jsx'
 import { getPublicProfileUrl } from '../utils/username.js'
-import { copyToClipboard } from '../utils/shareUtils.js'
+import { copyToClipboard } from '../utils/clipboard.js'
 import { useToast } from '../contexts/ToastContext.jsx'
 
 export default function Profile() {
@@ -30,7 +28,6 @@ export default function Profile() {
     progressPercent,
     studyHours,
     journeyProgress,
-    achievements,
     loading,
   } = useProgress()
 
@@ -43,9 +40,6 @@ export default function Profile() {
     )
   }
 
-  const allComplete = completedCount === totalLessons
-  const unlockedBadges = achievements.filter((a) => a.unlocked)
-  const latestBadge = unlockedBadges[unlockedBadges.length - 1]?.title
   const profileUrl = username ? getPublicProfileUrl(username) : null
 
   const handleCopyProfileLink = async () => {
@@ -60,25 +54,18 @@ export default function Profile() {
     <div>
       <Header
         title="Perfil do Jogador"
-        subtitle="XP, níveis, badges e perfil público compartilhável."
+        subtitle="XP, níveis e perfil público compartilhável."
       />
 
-      <PlayerCard
-        user={{
-          name,
-          level,
-          xp,
-          streak,
-          completedCount,
-          completedExercises: completedExercises || 0,
-          completedProjects: completedProjects || 0,
-          achievements: unlockedBadges,
-          latestBadge,
-          username,
-        }}
-        compact={false}
-        showLink={Boolean(profileUrl)}
-      />
+      <div className="mb-6">
+        <Link
+          to="/editar-perfil"
+          className="inline-flex items-center gap-2 rounded-xl border-2 border-brand-800 bg-brand-500 px-4 py-2 text-sm font-black text-white shadow-[3px_3px_0_0_#064e3b] transition hover:bg-brand-600 dark:border-brand-400"
+        >
+          <Pencil size={14} />
+          Editar perfil
+        </Link>
+      </div>
 
       {profileUrl && (
         <Card className="mb-8 mt-6">
@@ -95,16 +82,6 @@ export default function Profile() {
               <ExternalLink size={16} />
             </Link>
           </div>
-          <ShareButtons
-            shareData={{
-              name: name || 'Aluno',
-              title: `Perfil WebStart — Nível ${level}`,
-              streak,
-              level,
-              badge: latestBadge,
-              tagline: 'Dev em construção na WebStart Academy',
-            }}
-          />
         </Card>
       )}
 
@@ -129,28 +106,7 @@ export default function Profile() {
         <ProgressBar value={progressPercent} label={`${completedCount}/${totalLessons} aulas concluídas`} />
       </Card>
 
-      <section className="mb-8">
-        <h2 className="mb-4 text-lg font-black">Medalhas</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {achievements.map((achievement) => (
-            <div
-              key={achievement.id}
-              className={`flex items-start gap-3 rounded-xl border-3 p-4 ${
-                achievement.unlocked
-                  ? 'border-brand-500 bg-brand-50 dark:bg-brand-900'
-                  : 'border-brand-200 opacity-40 dark:border-brand-800'
-              }`}
-            >
-              <Award className={achievement.unlocked ? 'text-brand-500' : 'text-brand-300'} size={24} />
-              <div>
-                <p className="font-black">{achievement.title}</p>
-                <p className="text-sm text-brand-700 dark:text-brand-300">{achievement.description}</p>
-                {achievement.unlocked && <Badge className="mt-2">Desbloqueada</Badge>}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <ProfileProjectsSection />
     </div>
     </>
   )

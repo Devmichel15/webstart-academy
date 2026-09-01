@@ -1,14 +1,4 @@
-import {
-  collection,
-  getDocs,
-  onSnapshot,
-  query,
-  orderBy,
-  limit as firestoreLimit,
-  startAfter,
-} from 'firebase/firestore'
-import { getFunctions, httpsCallable } from 'firebase/functions'
-import { db, app } from '../firebase/firebase.js'
+import { supabase } from '../lib/supabase.js'
 import { trails } from '../data/trails.js'
 import { allLessons } from '../data/lessons/index.js'
 import { allModules } from '../data/modules/index.js'
@@ -16,59 +6,114 @@ import { getAccessibleTrails } from './trailProgressService.js'
 
 const USERS_PER_PAGE = 50
 
-let functionsInstance = null
-function getFunctionsInstance() {
-  if (!functionsInstance) {
-    functionsInstance = getFunctions(app)
+function mapProfileRow(row) {
+  if (!row) return null
+  return {
+    id: row.id,
+    name: row.name,
+    username: row.username,
+    email: row.email,
+    role: row.role,
+    provider: row.provider,
+    xp: row.xp || 0,
+    level: row.level || 1,
+    streak: row.streak || 0,
+    completedLessons: row.completed_lessons || [],
+    completedCourses: row.completed_courses || [],
+    completedExercises: row.completed_exercises || 0,
+    completedProjects: row.completed_projects || 0,
+    completedQuizzes: row.completed_quizzes || [],
+    isPublic: row.is_public,
+    photoURL: row.photo_url,
+    createdAt: row.created_at,
+    lastLogin: row.last_login,
+    totalStudyTime: row.total_study_time || 0,
   }
-  return functionsInstance
+}
+
+function mapProgressRow(row) {
+  if (!row) return null
+  return {
+    id: row.id,
+    userId: row.user_id,
+    courseId: row.course_id,
+    moduleId: row.module_id,
+    lessonId: row.lesson_id,
+    completed: row.completed,
+    completedAt: row.completed_at,
+    progressPercentage: row.progress_percentage,
+    timeSpent: row.time_spent,
+  }
 }
 
 export async function fetchAllUsersFromCloudFunction() {
   try {
-    const fn = getFunctionsInstance()
-    const callListAllUsers = httpsCallable(fn, 'listAllUsers')
-    const result = await callListAllUsers()
-    return result.data.users || []
+    return await getAllUsers()
   } catch (err) {
-    console.error('[adminService] Failed to call listAllUsers function:', err)
+    console.error('[adminService] Failed to list users:', err)
     return null
   }
 }
 
 export function subscribeToAllUsers(callback, onError) {
-  const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
-  return onSnapshot(q, (snap) => {
-    callback(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-  }, onError)
+  const channel = supabase
+    .channel('admin-users')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'profiles' },
+      async () => {
+        try {
+          const users = await getAllUsers()
+          callback(users)
+        } catch (err) {
+          onError?.(err)
+        }
+      }
+    )
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') {
+        getAllUsers()
+          .then(callback)
+          .catch(onError)
+      }
+    })
+
+  return () => {
+    supabase.removeChannel(channel)
+  }
 }
 
 export async function getAllUsers() {
-  const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')))
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
+  return (data || []).map(mapProfileRow)
 }
 
-export async function getUsersPage(lastDoc = null) {
-  let q
-  if (lastDoc) {
-    q = query(
-      collection(db, 'users'),
-      orderBy('createdAt', 'desc'),
-      startAfter(lastDoc),
-      firestoreLimit(USERS_PER_PAGE),
-    )
-  } else {
-    q = query(
-      collection(db, 'users'),
-      orderBy('createdAt', 'desc'),
-      firestoreLimit(USERS_PER_PAGE),
-    )
+export async function getUsersPage(cursor = null) {
+  let query = supabase
+    .from('profiles')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(USERS_PER_PAGE)
+
+  if (cursor) {
+    query = query.gt('created_at', cursor)
   }
-  const snap = await getDocs(q)
+
+  const { data, error } = await query
+  if (error) throw error
+
+  const users = (data || []).map(mapProfileRow)
+  const lastCursor = users.length > 0 ? users[users.length - 1].createdAt : null
+
   return {
-    users: snap.docs.map((d) => ({ id: d.id, ...d.data() })),
-    lastDoc: snap.docs[snap.docs.length - 1] || null,
-    hasMore: snap.docs.length === USERS_PER_PAGE,
+    users,
+    lastDoc: lastCursor,
+    hasMore: users.length === USERS_PER_PAGE,
   }
 }
 
@@ -100,49 +145,73 @@ export function mergeCloudData(firestoreUsers, cloudUsers) {
   return Array.from(merged.values())
 }
 
-export function subscribeToAllUsersMerged(firestoreCallback, mergeCallback, onError) {
-  let firestoreUsers = []
-  let cloudUsers = null
-
-  const callMerge = () => {
-    const merged = mergeCloudData(firestoreUsers, cloudUsers || [])
-    mergeCallback(merged)
+export function subscribeToAllUsersMerged(_firestoreCallback, mergeCallback, onError) {
+  const loadAndMerge = () => {
+    getAllUsers()
+      .then((users) => mergeCallback(users))
+      .catch((err) => {
+        console.error('[adminService] Error loading users:', err)
+        onError?.(err)
+      })
   }
 
-  fetchAllUsersFromCloudFunction().then((data) => {
-    cloudUsers = data || []
-    callMerge()
-  }).catch((err) => {
-    console.error('[adminService] Cloud function error:', err)
-    cloudUsers = []
-    callMerge()
-  })
+  const channel = supabase
+    .channel('admin-users-merged')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'profiles' },
+      loadAndMerge
+    )
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') loadAndMerge()
+    })
 
-  const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
-  return onSnapshot(q, (snap) => {
-    firestoreUsers = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
-    callMerge()
-  }, (err) => {
-    console.error('[adminService] Firestore subscription error:', err)
-    callMerge()
-    if (onError) onError(err)
-  })
+  return () => {
+    supabase.removeChannel(channel)
+  }
 }
 
 export async function getAllProgressRecords() {
-  const snap = await getDocs(collection(db, 'user_progress'))
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  const { data, error } = await supabase
+    .from('lesson_progress')
+    .select('*')
+
+  if (error) throw error
+  return (data || []).map(mapProgressRow)
 }
 
 export function subscribeToAllProgress(callback, onError) {
-  return onSnapshot(collection(db, 'user_progress'), (snap) => {
-    callback(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-  }, onError)
+  const channel = supabase
+    .channel('admin-progress')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'lesson_progress' },
+      async () => {
+        try {
+          const records = await getAllProgressRecords()
+          callback(records)
+        } catch (err) {
+          onError?.(err)
+        }
+      }
+    )
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') {
+        getAllProgressRecords()
+          .then(callback)
+          .catch(onError)
+      }
+    })
+
+  return () => {
+    supabase.removeChannel(channel)
+  }
 }
 
 function toDate(ts) {
   if (!ts) return null
-  if (ts.toDate) return ts.toDate()
+  if (ts instanceof Date) return ts
+  if (typeof ts === 'string') return new Date(ts)
   if (ts.seconds) return new Date(ts.seconds * 1000)
   return new Date(ts)
 }
@@ -417,18 +486,38 @@ export function computeInsights(metrics, trailStats, lessonPopularity) {
   return insights
 }
 
-// ─── REACTIVATION ────────────────────────────────────────────────────────────
-
-/**
- * Invoca a Cloud Function getReactivationUsers para obter
- * a lista de utilizadores elegíveis para email de reativação.
- */
 export async function getReactivationUsers() {
   try {
-    const fn = getFunctionsInstance()
-    const getReactivation = httpsCallable(fn, 'getReactivationUsers')
-    const result = await getReactivation()
-    return result.data
+    const thirtyDaysAgo = new Date()
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+
+    const { data: profiles, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .lt('last_login', thirtyDaysAgo.toISOString())
+      .or('last_login.is.null')
+
+    if (profileError) throw profileError
+
+    const { data: progressRecords, error: progressError } = await supabase
+      .from('lesson_progress')
+      .select('user_id')
+      .gte('completed_at', thirtyDaysAgo.toISOString())
+
+    if (progressError) throw progressError
+
+    const activeUserIds = new Set(progressRecords?.map((r) => r.user_id) || [])
+    const eligible = (profiles || []).filter((p) => !activeUserIds.has(p.id))
+
+    return {
+      users: eligible.map((p) => ({
+        uid: p.id,
+        name: p.name,
+        email: p.email,
+        lastLogin: p.last_login,
+        lastReactivationEmail: p.last_reactivation_email,
+      })),
+    }
   } catch (err) {
     console.error('[adminService] getReactivationUsers error:', err)
     throw err

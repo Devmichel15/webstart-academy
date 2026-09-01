@@ -1,23 +1,35 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from 'firebase/firestore'
-import { db } from '../firebase/firebase.js'
+import { supabase } from '../lib/supabase.js'
 import { allLessons, getLessonById as getStaticLesson } from '../data/lessons/index.js'
 import { getLessonsByModule as getStaticLessonsByModule } from '../data/lessons/index.js'
 import { withRetry } from '../utils/retry.js'
 
+function mapLessonRow(row) {
+  if (!row) return null
+  return {
+    id: row.id,
+    courseId: row.course_id,
+    moduleId: row.module_id,
+    title: row.title,
+    description: row.content?.substring(0, 200) || row.extra?.description || '',
+    duration: row.estimated_time,
+    order: row["order"],
+    videoUrl: row.extra?.videoUrl || row.extra?.youtubeUrl || '',
+    content: row.content,
+  }
+}
+
 export async function getLessonById(lessonId) {
   return withRetry(async () => {
-    const snap = await getDoc(doc(db, 'lessons', lessonId))
-    if (snap.exists()) {
-      const data = { id: snap.id, ...snap.data() }
+    const { data } = await supabase
+      .from('lessons')
+      .select('*')
+      .eq('id', lessonId)
+      .maybeSingle()
+
+    if (data) {
       const staticLesson = getStaticLesson(lessonId)
-      return staticLesson ? { ...staticLesson, ...data } : data
+      const mapped = mapLessonRow(data)
+      return staticLesson ? { ...staticLesson, ...mapped } : mapped
     }
 
     return getStaticLesson(lessonId) || null
@@ -26,18 +38,17 @@ export async function getLessonById(lessonId) {
 
 export async function getLessonsByModule(moduleId) {
   return withRetry(async () => {
-    const q = query(
-      collection(db, 'lessons'),
-      where('moduleId', '==', moduleId),
-    )
-    const snap = await getDocs(q)
+    const { data } = await supabase
+      .from('lessons')
+      .select('*')
+      .eq('module_id', moduleId)
 
-    if (!snap.empty) {
-      return snap.docs
-        .map((item) => {
-          const data = { id: item.id, ...item.data() }
-          const staticLesson = getStaticLesson(item.id)
-          return staticLesson ? { ...staticLesson, ...data } : data
+    if (data && data.length > 0) {
+      return data
+        .map((row) => {
+          const mapped = mapLessonRow(row)
+          const staticLesson = getStaticLesson(row.id)
+          return staticLesson ? { ...staticLesson, ...mapped } : mapped
         })
         .sort((a, b) => (a.order || 0) - (b.order || 0))
     }
@@ -50,19 +61,18 @@ export async function getLessonsByCourse(courseId) {
   const staticLessons = allLessons.filter((lesson) => lesson.courseId === courseId)
 
   return withRetry(async () => {
-    const q = query(
-      collection(db, 'lessons'),
-      where('courseId', '==', courseId),
-    )
-    const snap = await getDocs(q)
+    const { data } = await supabase
+      .from('lessons')
+      .select('*')
+      .eq('course_id', courseId)
 
-    if (snap.empty) return staticLessons
+    if (!data || data.length === 0) return staticLessons
 
-    return snap.docs
-      .map((item) => {
-        const data = { id: item.id, ...item.data() }
-        const staticLesson = getStaticLesson(item.id)
-        return staticLesson ? { ...staticLesson, ...data } : data
+    return data
+      .map((row) => {
+        const mapped = mapLessonRow(row)
+        const staticLesson = getStaticLesson(row.id)
+        return staticLesson ? { ...staticLesson, ...mapped } : mapped
       })
       .sort((a, b) => (a.order || 0) - (b.order || 0))
   }).catch(() => staticLessons)

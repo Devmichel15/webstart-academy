@@ -24,9 +24,10 @@ import Lesson from './pages/Lesson'
 import VideoLesson from './pages/VideoLesson'
 import Lab from './pages/Lab'
 import Materials from './pages/Materials'
+import CommunityPage from './pages/community/CommunityPage'
 import Profile from './pages/Profile'
+import EditProfile from './pages/EditProfile'
 import AIChat from './pages/AIChat'
-import PublicProfile from './pages/PublicProfile'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
@@ -46,7 +47,6 @@ export default function App() {
             <BrowserRouter>
               <ToastContainer />
               <Routes>
-                <Route path="/u/:username" element={<PublicProfile />} />
                 <Route path="/onboarding" element={<Onboarding />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/registro" element={<Register />} />
@@ -88,7 +88,9 @@ export default function App() {
                         <Route path="video-aula/:lessonId" element={<VideoLesson />} />
                         <Route path="laboratorio" element={<Lab />} />
                         <Route path="materiais" element={<Materials />} />
+                        <Route path="feed" element={<CommunityPage />} />
                         <Route path="perfil" element={<Profile />} />
+                        <Route path="editar-perfil" element={<EditProfile />} />
                         <Route path="chat" element={<AIChat />} />
                       </Route>
                     </Route>
@@ -106,6 +108,8 @@ export default function App() {
                   <Route path="admin/users" element={<AdminUsers />} />
                   <Route path="admin/analytics" element={<AdminAnalytics />} />
                 </Route>
+
+                <Route path="comunidade" element={<Navigate to="/feed" replace />} />
 
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>

@@ -12,14 +12,14 @@ export default function PrimeirosPassos() {
 
   const handleStart = async () => {
     if (user) {
-      await updateUserProfile(user.uid, { firstStepsDone: true })
+      await updateUserProfile(user.id, { firstStepsDone: true })
     }
     navigate('/video-aula/logica-vid-1', { replace: true })
   }
 
   const handleSkip = async () => {
     if (user) {
-      await updateUserProfile(user.uid, { firstStepsDone: true })
+      await updateUserProfile(user.id, { firstStepsDone: true })
     }
     navigate('/', { replace: true })
   }

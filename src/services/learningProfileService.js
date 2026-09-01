@@ -1,16 +1,26 @@
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore'
-import { db } from '../firebase/firebase.js'
+import { supabase } from '../lib/supabase.js'
 import { withRetry } from '../utils/retry.js'
+
+function mapLearningProfileRow(row) {
+  if (!row) return null
+  return {
+    id: row.user_id,
+    assessment: row.assessment,
+    roadmap: row.roadmap,
+    metadata: row.metadata,
+  }
+}
 
 export async function getLearningProfile(uid) {
   if (!uid) return null
   return withRetry(async () => {
-    const docRef = doc(db, 'learning_profiles', uid)
-    const snap = await getDoc(docRef)
-    if (snap.exists()) {
-      return { id: snap.id, ...snap.data() }
-    }
-    return null
+    const { data } = await supabase
+      .from('learning_profiles')
+      .select('*')
+      .eq('user_id', uid)
+      .maybeSingle()
+
+    return data ? mapLearningProfileRow(data) : null
   })
 }
 
@@ -29,27 +39,31 @@ export async function saveFullLearningProfile(uid, { assessment, roadmap, source
   if (!uid) throw new Error('UID is required to save learning profile')
 
   return withRetry(async () => {
-    const docRef = doc(db, 'learning_profiles', uid)
-
+    const now = new Date().toISOString()
     const payload = {
+      user_id: uid,
       assessment: {
         ...assessment,
-        answeredAt: serverTimestamp(),
+        answeredAt: now,
       },
       roadmap: {
         ...roadmap,
-        generatedAt: serverTimestamp(),
+        generatedAt: now,
       },
       metadata: {
         completed: true,
         version: 1,
         source,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt: now,
+        updatedAt: now,
       },
     }
 
-    await setDoc(docRef, payload, { merge: true })
+    const { error } = await supabase
+      .from('learning_profiles')
+      .upsert(payload, { onConflict: 'user_id' })
+
+    if (error) throw error
     return payload
   })
 }

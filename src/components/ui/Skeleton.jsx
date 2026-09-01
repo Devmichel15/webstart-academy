@@ -7,9 +7,9 @@ export function Skeleton({ className = '' }) {
   )
 }
 
-export function CardSkeleton() {
+export function CardSkeleton({ className = '' }) {
   return (
-    <div className="rounded-2xl border-2 border p-6">
+    <div className={`rounded-2xl border-2 border p-6 ${className}`}>
       <Skeleton className="mb-4 h-10 w-10" />
       <Skeleton className="mb-2 h-4 w-24" />
       <Skeleton className="h-8 w-16" />

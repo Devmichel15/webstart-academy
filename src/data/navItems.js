@@ -6,6 +6,7 @@ import {
   Bot,
   GraduationCap,
   LayoutDashboard,
+  Rocket,
   Shield,
   Users,
 } from 'lucide-react'
@@ -18,6 +19,7 @@ const baseNavItems = [
   { to: '/laboratorio', label: 'Laboratório', icon: Beaker },
   { to: '/chat', label: 'Tutor IA', icon: Bot },
   { to: '/materiais', label: 'Materiais', icon: GraduationCap },
+  { to: '/feed', label: 'Feed', icon: Rocket },
   { to: '/perfil', label: 'Perfil', icon: Award },
 ]
 

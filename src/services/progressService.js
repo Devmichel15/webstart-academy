@@ -1,15 +1,4 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  query,
-  serverTimestamp,
-  setDoc,
-  where,
-} from 'firebase/firestore'
-import { db } from '../firebase/firebase.js'
+import { supabase } from '../lib/supabase.js'
 import { allLessons, allVideoLessons } from '../data/lessons/index.js'
 import { trails as staticCourses } from '../data/trails.js'
 import { getModuleData } from '../data/trails.js'
@@ -27,35 +16,104 @@ import {
   updateCurrentLesson,
   updateUserStreak,
 } from './userService.js'
-import { checkAndUnlockAchievements } from './achievementService.js'
 
-function progressDocId(userId, lessonId) {
-  return `${userId}_${lessonId}`
+function mapProgressRow(row) {
+  if (!row) return null
+  return {
+    id: `${row.user_id}_${row.lesson_id}`,
+    userId: row.user_id,
+    courseId: row.course_id,
+    moduleId: row.module_id,
+    lessonId: row.lesson_id,
+    completed: row.completed,
+    completedAt: row.completed_at,
+    progressPercentage: row.progress_percentage,
+    timeSpent: row.time_spent,
+  }
 }
 
 export async function getLessonProgress(userId, lessonId) {
-  const snap = await getDoc(doc(db, 'user_progress', progressDocId(userId, lessonId)))
-  return snap.exists() ? { id: snap.id, ...snap.data() } : null
+  const { data } = await supabase
+    .from('lesson_progress')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('lesson_id', lessonId)
+    .maybeSingle()
+
+  return data ? mapProgressRow(data) : null
 }
 
 export async function getUserProgress(userId) {
   return withRetry(async () => {
-    const q = query(collection(db, 'user_progress'), where('userId', '==', userId))
-    const snap = await getDocs(q)
-    return snap.docs.map((item) => ({ id: item.id, ...item.data() }))
+    const { data, error } = await supabase
+      .from('lesson_progress')
+      .select('*')
+      .eq('user_id', userId)
+
+    if (error) throw error
+    return (data || []).map(mapProgressRow)
   })
 }
 
-export function subscribeToUserProgress(userId, callback, onError) {
-  const q = query(collection(db, 'user_progress'), where('userId', '==', userId))
+const activeProgressChannels = new Map()
 
-  return onSnapshot(
-    q,
-    (snap) => {
-      callback(snap.docs.map((item) => ({ id: item.id, ...item.data() })))
-    },
-    onError,
-  )
+export function subscribeToUserProgress(userId, callback, onError) {
+  if (!userId) return () => {}
+
+  if (activeProgressChannels.has(userId)) {
+    const entry = activeProgressChannels.get(userId)
+    entry.refCount++
+    entry.callbacks.add(callback)
+
+    getUserProgress(userId)
+      .then(callback)
+      .catch(onError)
+
+    return () => {
+      entry.callbacks.delete(callback)
+      entry.refCount--
+      if (entry.refCount <= 0) {
+        supabase.removeChannel(entry.channel)
+        activeProgressChannels.delete(userId)
+      }
+    }
+  }
+
+  const callbacks = new Set([callback])
+  const channel = supabase
+    .channel(`progress-${userId}`)
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'lesson_progress', filter: `user_id=eq.${userId}` },
+      async () => {
+        try {
+          const rows = await getUserProgress(userId)
+          for (const cb of callbacks) cb(rows)
+        } catch (err) {
+          onError?.(err)
+        }
+      }
+    )
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') {
+        getUserProgress(userId)
+          .then((rows) => { for (const cb of callbacks) cb(rows) })
+          .catch(onError)
+      }
+    })
+
+  activeProgressChannels.set(userId, { channel, callbacks, refCount: 1 })
+
+  return () => {
+    const entry = activeProgressChannels.get(userId)
+    if (!entry) return
+    entry.callbacks.delete(callback)
+    entry.refCount--
+    if (entry.refCount <= 0) {
+      supabase.removeChannel(entry.channel)
+      activeProgressChannels.delete(userId)
+    }
+  }
 }
 
 export function isModuleComplete(completedLessons, completedQuizzes, moduleId) {
@@ -97,41 +155,36 @@ export async function completeLesson(userId, lessonId) {
     if (!lesson) throw new Error('Aula não encontrada.')
 
     const user = await getUserProfile(userId)
-    console.log('[completeLesson] getUserProfile OK')
 
     const existing = await getLessonProgress(userId, lessonId)
-    console.log('[completeLesson] getLessonProgress OK', existing)
     if (existing?.completed) {
       await visitLesson(userId, lesson)
       return { alreadyCompleted: true, xpEarned: 0 }
     }
 
-    const progressRef = doc(db, 'user_progress', progressDocId(userId, lessonId))
-    await setDoc(progressRef, {
-      userId,
-      courseId: lesson.courseId,
-      moduleId: lesson.moduleId || `${lesson.courseId}-main`,
-      lessonId,
-      completed: true,
-      completedAt: serverTimestamp(),
-      progressPercentage: 100,
-      timeSpent: lesson.duration || 15,
-    })
-    console.log('[completeLesson] setDoc user_progress OK')
+    const { error: progressError } = await supabase
+      .from('lesson_progress')
+      .upsert({
+        user_id: userId,
+        course_id: lesson.courseId,
+        module_id: lesson.moduleId || `${lesson.courseId}-main`,
+        lesson_id: lessonId,
+        completed: true,
+        completed_at: new Date().toISOString(),
+        progress_percentage: 100,
+        time_spent: lesson.duration || 15,
+      }, { onConflict: 'user_id,lesson_id' })
+
+    if (progressError) throw progressError
 
     let xpEarned = XP_LESSON
     await addXpToUser(userId, XP_LESSON)
-    console.log('[completeLesson] addXpToUser OK')
     await addStudyTime(userId, lesson.duration || 15)
-    console.log('[completeLesson] addStudyTime OK')
     const streakResult = await updateUserStreak(userId)
-    console.log('[completeLesson] updateUserStreak OK')
     if (streakResult?.bonusXp) xpEarned += streakResult.bonusXp
 
     const completedLessons = await addCompletedLesson(userId, lessonId)
-    console.log('[completeLesson] addCompletedLesson OK, completedCount:', completedLessons?.length)
     await visitLesson(userId, lesson)
-    console.log('[completeLesson] visitLesson OK')
 
     const userAfterLesson = await getUserProfile(userId)
     const completedQuizzes = userAfterLesson?.completedQuizzes || []
@@ -142,7 +195,6 @@ export async function completeLesson(userId, lessonId) {
       if (moduleComplete) {
         xpEarned += XP_MODULE
         await addXpToUser(userId, XP_MODULE)
-        console.log('[completeLesson] module bonus XP OK')
       }
     }
 
@@ -152,13 +204,7 @@ export async function completeLesson(userId, lessonId) {
       await addXpToUser(userId, XP_COURSE)
       const course = staticCourses.find((item) => item.id === lesson.courseId)
       await addCompletedCourse(userId, lesson.courseId, course?.title || lesson.courseId)
-      console.log('[completeLesson] course bonus XP OK')
     }
-
-    const newlyUnlocked = await checkAndUnlockAchievements(userId)
-    console.log('[completeLesson] checkAndUnlockAchievements OK', newlyUnlocked.length, 'unlocked')
-    const updatedUser = await getUserProfile(userId)
-    console.log('[completeLesson] final getUserProfile OK')
 
     return {
       alreadyCompleted: false,
@@ -166,70 +212,34 @@ export async function completeLesson(userId, lessonId) {
       moduleComplete,
       courseComplete,
       streakResult,
-      newlyUnlocked,
-      shareData: {
-        name: updatedUser?.name || user?.name || 'Aluno',
-        title: `Aula: ${lesson.title}`,
-        xpEarned,
-        streak: updatedUser?.streak || streakResult?.streak || 0,
-        level: updatedUser?.level || 1,
-        badge: newlyUnlocked[0]?.title || null,
-        tagline: 'Aprendendo a estruturar a Web como um dev real',
-      },
     }
   })
 }
 
 export async function completeExercise(userId, exerciseTitle) {
   return withRetry(async () => {
-    const user = await getUserProfile(userId)
     let xpEarned = XP_EXERCISE
     await addXpToUser(userId, XP_EXERCISE)
     const streakResult = await updateUserStreak(userId)
     if (streakResult?.bonusXp) xpEarned += streakResult.bonusXp
     await incrementCompletedExercises(userId)
-    const newlyUnlocked = await checkAndUnlockAchievements(userId)
-    const updatedUser = await getUserProfile(userId)
 
     return {
       xpEarned,
-      newlyUnlocked,
-      shareData: {
-        name: updatedUser?.name || user?.name || 'Aluno',
-        title: `Exercício: ${exerciseTitle}`,
-        xpEarned,
-        streak: updatedUser?.streak || 0,
-        level: updatedUser?.level || 1,
-        badge: newlyUnlocked[0]?.title || 'Estruturador de Conteúdo',
-        tagline: 'Aprendendo a estruturar a Web como um dev real',
-      },
     }
   })
 }
 
 export async function completeProject(userId, projectTitle) {
   return withRetry(async () => {
-    const user = await getUserProfile(userId)
     let xpEarned = XP_PROJECT
     await addXpToUser(userId, XP_PROJECT)
     const streakResult = await updateUserStreak(userId)
     if (streakResult?.bonusXp) xpEarned += streakResult.bonusXp
     await incrementCompletedProjects(userId)
-    const newlyUnlocked = await checkAndUnlockAchievements(userId)
-    const updatedUser = await getUserProfile(userId)
 
     return {
       xpEarned,
-      newlyUnlocked,
-      shareData: {
-        name: updatedUser?.name || user?.name || 'Aluno',
-        title: `Projeto: ${projectTitle}`,
-        xpEarned,
-        streak: updatedUser?.streak || 0,
-        level: updatedUser?.level || 1,
-        badge: newlyUnlocked[0]?.title || 'Construtor de Projetos',
-        tagline: 'Construindo projetos reais na WebStart',
-      },
     }
   })
 }

@@ -60,5 +60,90 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == uid;
       allow read: if request.auth != null && isAdmin();
     }
+
+    // ─── Feed / Projetos dos Alunos ───────────────────────────────
+
+    function isSafeUrl(value) {
+      return value is string
+        && value.size() >= 8
+        && value.size() <= 2048
+        && value.matches('https?://.*');
+    }
+
+    function hasValidTags(tags) {
+      return tags is list
+        && tags.size() <= 8
+        && (tags.size() == 0
+            || tags.join(',').matches('^[^,]{2,24}(,[^,]{2,24})*$'));
+    }
+
+    function hasAtLeastOneLink(data) {
+      return ('projectUrl' in data ? isSafeUrl(data.projectUrl) : false)
+        || ('githubUrl' in data ? isSafeUrl(data.githubUrl) : false);
+    }
+
+    function isValidProjectContent(data) {
+      return data.title is string
+        && data.title.size() >= 3 && data.title.size() <= 120
+        && data.description is string
+        && data.description.size() >= 10 && data.description.size() <= 2000
+        && 'tags' in data && hasValidTags(data.tags)
+        && hasAtLeastOneLink(data);
+    }
+
+    match /community_projects/{projectId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.authorId == request.auth.uid
+        && isValidProjectContent(request.resource.data)
+        && request.resource.data.likeCount == 0
+        && request.resource.data.commentCount == 0;
+      allow update: if request.auth != null
+        && request.resource.data.authorId == resource.data.authorId
+        && request.resource.data.createdAt == resource.data.createdAt
+        && (
+          // Author editing project content
+          (resource.data.authorId == request.auth.uid
+           && isValidProjectContent(request.resource.data))
+          // Any authenticated user updating like/comment counts only
+          || (request.resource.data.title == resource.data.title
+              && request.resource.data.description == resource.data.description
+              && request.resource.data.tags == resource.data.tags)
+        );
+      allow delete: if request.auth != null
+        && resource.data.authorId == request.auth.uid;
+    }
+
+    match /project_likes/{likeId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && likeId == request.resource.data.projectId + '_' + request.auth.uid
+        && request.resource.data.userId == request.auth.uid
+        && exists(/databases/$(database)/documents/community_projects/$(request.resource.data.projectId));
+      allow update: if false;
+      allow delete: if request.auth != null
+        && resource.data.userId == request.auth.uid;
+    }
+
+    function isValidComment(data) {
+      return data.content is string
+        && data.content.size() >= 1
+        && data.content.size() <= 1000;
+    }
+
+    match /project_comments/{commentId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.authorId == request.auth.uid
+        && isValidComment(request.resource.data)
+        && exists(/databases/$(database)/documents/community_projects/$(request.resource.data.projectId));
+      allow update: if request.auth != null
+        && resource.data.authorId == request.auth.uid
+        && request.resource.data.authorId == resource.data.authorId
+        && request.resource.data.projectId == resource.data.projectId
+        && isValidComment(request.resource.data);
+      allow delete: if request.auth != null
+        && (resource.data.authorId == request.auth.uid || isAdmin());
+    }
   }
 }

@@ -19,7 +19,7 @@ export function useUser() {
 
     setLoading(true)
     const unsubscribe = subscribeToUser(
-      user.uid,
+      user.id,
       (data) => {
         setProfile(data)
         setLoading(false)

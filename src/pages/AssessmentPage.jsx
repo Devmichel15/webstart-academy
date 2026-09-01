@@ -51,7 +51,7 @@ export default function AssessmentPage() {
       setRoadmapResult(generatedRoadmap)
 
       if (user?.uid) {
-        await saveFullLearningProfile(user.uid, {
+        await saveFullLearningProfile(user.id, {
           assessment: answers,
           roadmap: generatedRoadmap,
           source,
@@ -71,7 +71,7 @@ export default function AssessmentPage() {
   const handleStartJourney = async () => {
     if (user?.uid) {
       try {
-        await updateUserProfile(user.uid, { firstStepsDone: true })
+        await updateUserProfile(user.id, { firstStepsDone: true })
       } catch (err) {
         console.error('[AssessmentPage] Error updating firstStepsDone:', err)
       }

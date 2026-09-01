@@ -10,7 +10,6 @@ import {
   Map,
   Sparkles,
   Target,
-  Trophy,
   Rocket,
 } from 'lucide-react'
 import { Header } from '../components/layout/Header'
@@ -41,7 +40,6 @@ export default function Dashboard() {
     totalLessons,
     studyHours,
     streak,
-    achievements,
     getCourseProgress,
     isLessonCompleted,
     loading,
@@ -64,8 +62,6 @@ export default function Dashboard() {
       </div>
     )
   }
-
-  const unlockedAchievements = achievements.filter((item) => item.unlocked)
 
   const stats = [
     { label: 'Progresso geral', value: `${progressPercent}%`, icon: 'progress' },
@@ -128,7 +124,7 @@ export default function Dashboard() {
           </div>
         )}
         <div>
-          <p className="text-xl font-black">{name || 'Aluno WebStart'}</p>
+          <p className="text-xl font-black">{(name || '').trim() || 'Aluno WebStart'}</p>
           <p className="text-sm font-semibold text-secondary">
             Nível {level} · {xp} XP · {journeyProgress?.completedCount || 0} trilha(s) concluída(s)
           </p>
@@ -249,31 +245,6 @@ export default function Dashboard() {
           </div>
         </section>
       )}
-
-      <section className="mt-8">
-        <div className="mb-4 flex items-center gap-2">
-          <Trophy className="text-brand-500" size={20} />
-          <h2 className="text-lg font-black">Conquistas</h2>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {achievements.map((achievement) => (
-            <div
-              key={achievement.id}
-              className={`rounded-xl border-3 p-4 ${
-                achievement.unlocked
-                  ? 'border-strong bg-accent-soft'
-                  : 'border opacity-50'
-              }`}
-            >
-              <p className="font-bold">{achievement.title}</p>
-              <p className="text-sm text-secondary">{achievement.description}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-3 text-sm font-semibold text-secondary">
-          {unlockedAchievements.length}/{achievements.length} desbloqueadas
-        </p>
-      </section>
     </div>
     </>
   )

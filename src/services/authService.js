@@ -1,132 +1,76 @@
-// ARCHIVE: authService.js
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  getRedirectResult,
-  signOut,
-} from "firebase/auth";
-import { auth } from "../firebase/firebase.js";
-import { createUserProfile, updateLastLogin } from "./userService.js";
-import { withRetry } from "../utils/retry.js";
-
-const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: "select_account" }); // Melhora UX
+import { supabase } from '../lib/supabase.js'
 
 function mapAuthError(error) {
   const messages = {
-    "auth/email-already-in-use": "Este email já está registrado.",
-    "auth/invalid-email": "Email inválido.",
-    "auth/weak-password": "A senha deve ter pelo menos 6 caracteres.",
-    "auth/user-not-found": "Usuário não encontrado.",
-    "auth/wrong-password": "Senha incorreta.",
-    "auth/invalid-credential": "Credenciais inválidas.",
-    "auth/popup-closed-by-user": "Login com Google cancelado.",
-    "auth/too-many-requests": "Muitas tentativas. Tente novamente mais tarde.",
-    "auth/redirect-cancelled-by-user": "Login cancelado.",
-    "auth/redirect-operation-pending": "Redirecionamento em andamento.",
-  };
-  return messages[error.code] || error.message || "Erro de autenticação.";
+    'auth/email-already-in-use': 'Este email já está registrado.',
+    'auth/invalid-email': 'Email inválido.',
+    'auth/weak-password': 'A senha deve ter pelo menos 6 caracteres.',
+    'auth/user-not-found': 'Usuário não encontrado.',
+    'auth/wrong-password': 'Senha incorreta.',
+    'auth/invalid-credential': 'Credenciais inválidas.',
+    'auth/popup-closed-by-user': 'Login com Google cancelado.',
+    'auth/too-many-requests': 'Muitas tentativas. Tente novamente mais tarde.',
+    'auth/redirect-cancelled-by-user': 'Login cancelado.',
+    'auth/redirect-operation-pending': 'Redirecionamento em andamento.',
+    'AuthApiError': error.message || 'Erro de autenticação.',
+  }
+  return messages[error.code] || error.message || 'Erro de autenticação.'
 }
 
 export async function registerWithEmail({ name, email, password }) {
-  try {
-    const credential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
-    await createUserProfile(credential.user, {
-      name,
-      provider: "email",
-    });
-    return credential.user;
-  } catch (error) {
-    throw new Error(mapAuthError(error));
-  }
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { name, provider: 'email' },
+    },
+  })
+  if (error) throw new Error(mapAuthError(error))
+  return data.user
 }
 
 export async function loginWithEmail(email, password) {
-  return withRetry(async () => {
-    try {
-      const credential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      await updateLastLogin(credential.user.uid);
-      return credential.user;
-    } catch (error) {
-      throw new Error(mapAuthError(error));
-    }
-  });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
+  if (error) throw new Error(mapAuthError(error))
+  return data.user
 }
 
-/**
- * Inicia o login com Google via Redirect
- */
 export async function loginWithGoogle() {
-  return withRetry(async () => {
-    try {
-      const credential = await signInWithPopup(auth, googleProvider);
-      const user = credential.user;
-
-      await createUserProfile(user, {
-        name: user.displayName,
-        provider: "google",
-      });
-
-      return user;
-    } catch (error) {
-      throw new Error(mapAuthError(error));
-    }
-  });
-}
-
-/**
- * Nova função: deve ser chamada após o redirecionamento voltar
- */
-export async function handleRedirectResult() {
-  return withRetry(async () => {
-    try {
-      const result = await getRedirectResult(auth);
-
-      if (!result) return null; // Nenhum redirecionamento pendente
-
-      const user = result.user;
-
-      await createUserProfile(user, {
-        name: user.displayName,
-        provider: "google",
-      });
-
-      await updateLastLogin(user.uid);
-
-      return user;
-    } catch (error) {
-      // Ignora erro "no redirect result" (comum na primeira carga)
-      if (error.code === "auth/no-redirect-result") {
-        return null;
-      }
-      throw new Error(mapAuthError(error));
-    }
-  });
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/`,
+    },
+  })
+  if (error) throw new Error(mapAuthError(error))
+  return data
 }
 
 export async function logoutUser() {
-  await signOut(auth);
+  const { error } = await supabase.auth.signOut()
+  if (error) throw error
 }
 
 export async function resetPassword(email) {
-  return withRetry(async () => {
-    try {
-      await sendPasswordResetEmail(auth, email);
-    } catch (error) {
-      throw new Error(mapAuthError(error));
-    }
-  });
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/login`,
+  })
+  if (error) throw new Error(mapAuthError(error))
 }
 
-export { onAuthStateChanged } from "firebase/auth";
+export function onAuthStateChanged(callback) {
+  const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    (event, session) => {
+      callback(session?.user || null)
+    }
+  )
+  return () => subscription.unsubscribe
+}
+
+export async function getCurrentUser() {
+  const { data: { user } } = await supabase.auth.getUser()
+  return user
+}

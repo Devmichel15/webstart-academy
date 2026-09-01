@@ -24,7 +24,7 @@ export function LearningProfileGuard() {
     }
 
     let isMounted = true
-    isAssessmentCompleted(user.uid)
+    isAssessmentCompleted(user.id)
       .then((res) => {
         if (isMounted) {
           setCompleted(res)

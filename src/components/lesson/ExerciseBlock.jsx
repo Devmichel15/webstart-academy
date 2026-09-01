@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Lightbulb, Sparkles } from 'lucide-react'
 import { Button } from '../ui/Button'
 import { CodeLab } from '../lab/CodeLab'
-import { ShareButtons } from '../share/ShareButtons'
 import { AITutor } from '../ai/AITutor'
 import { useProgress } from '../../hooks/useProgress'
 
@@ -10,28 +9,14 @@ export function ExerciseBlock({ exercise, onComplete }) {
   const [showHint, setShowHint] = useState(false)
   const [done, setDone] = useState(false)
   const [showAI, setShowAI] = useState(false)
-  const [shareData, setShareData] = useState(null)
-  const { completeExercise, name, level, streak } = useProgress()
+  const { completeExercise } = useProgress()
 
   if (!exercise) return null
 
   const handleComplete = async () => {
     setDone(true)
     const title = exercise.title || exercise.prompt?.slice(0, 60) || 'Exercício Prático'
-    const result = await completeExercise(title)
-    if (result?.shareData) {
-      setShareData(result.shareData)
-    } else {
-      setShareData({
-        name: name || 'Aluno',
-        title: `Exercício: ${title}`,
-        xpEarned: 120,
-        streak,
-        level,
-        badge: 'Estruturador de Conteúdo',
-        tagline: 'Aprendendo a estruturar a Web como um dev real',
-      })
-    }
+    await completeExercise(title)
     onComplete?.()
   }
 
@@ -57,13 +42,6 @@ export function ExerciseBlock({ exercise, onComplete }) {
           )}
           {done && <span className="self-center text-sm font-bold text-brand-600">Exercício concluído!</span>}
         </div>
-
-        {done && shareData && (
-          <div className="mt-4 border-t-2 border pt-4">
-            <p className="mb-2 text-sm font-bold text-secondary">Partilhar conquista</p>
-            <ShareButtons shareData={shareData} />
-          </div>
-        )}
 
         <div className="mt-4">
           <Button

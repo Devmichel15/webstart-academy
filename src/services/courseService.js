@@ -1,14 +1,4 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore'
-import { db } from '../firebase/firebase.js'
+import { supabase } from '../lib/supabase.js'
 import { trails as staticCourses } from '../data/trails.js'
 import { getLessonsByCourse } from '../data/lessons/index.js'
 import { getCache, setCache } from '../utils/cache.js'
@@ -34,16 +24,51 @@ function mapStaticCourses() {
   }))
 }
 
+function mapCourseRow(row) {
+  if (!row) return null
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    description: row.description,
+    thumbnail: row.thumbnail,
+    difficulty: row.difficulty,
+    estimatedHours: row.estimated_hours,
+    totalLessons: row.total_lessons,
+    modules: row.extra?.modules || [],
+    icon: row.icon,
+    color: row.color,
+    status: row.status,
+  }
+}
+
+function mapModuleRow(row) {
+  if (!row) return null
+  return {
+    id: row.id,
+    courseId: row.course_id,
+    title: row.title,
+    description: row.description,
+    order: row["order"],
+    lessons: row.extra?.lessons || [],
+    quiz: row.extra?.quiz || null,
+  }
+}
+
 export async function getCourses() {
   return withRetry(async () => {
-    const snap = await getDocs(query(collection(db, 'courses'), orderBy('title')))
-    if (snap.empty) {
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*')
+      .order('title')
+
+    if (error || !data || data.length === 0) {
       const fallback = mapStaticCourses()
       setCache(CACHE_KEY, fallback)
       return fallback
     }
 
-    const courses = snap.docs.map((item) => ({ id: item.id, ...item.data() }))
+    const courses = data.map(mapCourseRow)
     setCache(CACHE_KEY, courses)
     return courses
   }).catch(() => {
@@ -53,29 +78,45 @@ export async function getCourses() {
 }
 
 export function subscribeToCourses(callback, onError) {
-  const q = query(collection(db, 'courses'), orderBy('title'))
-
-  return onSnapshot(
-    q,
-    (snap) => {
-      if (snap.empty) {
-        const fallback = mapStaticCourses()
-        callback(fallback)
-        return
+  const channel = supabase
+    .channel('courses-changes')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'courses' },
+      async () => {
+        try {
+          const courses = await getCourses()
+          callback(courses)
+        } catch (err) {
+          onError?.(err)
+        }
       }
-      callback(snap.docs.map((item) => ({ id: item.id, ...item.data() })))
-    },
-    () => {
-      callback(getCache(CACHE_KEY) || mapStaticCourses())
-      onError?.()
-    },
-  )
+    )
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') {
+        getCourses()
+          .then(callback)
+          .catch(() => {
+            callback(getCache(CACHE_KEY) || mapStaticCourses())
+            onError?.()
+          })
+      }
+    })
+
+  return () => {
+    supabase.removeChannel(channel)
+  }
 }
 
 export async function getCourseById(courseId) {
   return withRetry(async () => {
-    const snap = await getDoc(doc(db, 'courses', courseId))
-    if (snap.exists()) return { id: snap.id, ...snap.data() }
+    const { data } = await supabase
+      .from('courses')
+      .select('*')
+      .eq('id', courseId)
+      .maybeSingle()
+
+    if (data) return mapCourseRow(data)
 
     const fallback = staticCourses.find((course) => course.id === courseId)
     if (fallback) {
@@ -95,15 +136,14 @@ export async function getCourseById(courseId) {
 
 export async function getModulesByCourse(courseId) {
   return withRetry(async () => {
-    const q = query(
-      collection(db, 'modules'),
-      where('courseId', '==', courseId),
-    )
-    const snap = await getDocs(q)
+    const { data } = await supabase
+      .from('modules')
+      .select('*')
+      .eq('course_id', courseId)
 
-    if (!snap.empty) {
-      return snap.docs
-        .map((item) => ({ id: item.id, ...item.data() }))
+    if (data && data.length > 0) {
+      return data
+        .map(mapModuleRow)
         .sort((a, b) => (a.order || 0) - (b.order || 0))
     }
 

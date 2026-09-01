@@ -5,7 +5,7 @@ import logoUrl from '../assets/logo-dark-bg.svg'
 const navLinks = [
   { label: 'Método', href: '#metodo' },
   { label: 'Trilhas', href: '#trilhas' },
-  { label: 'Comunidade', href: '#comunidade' },
+  { label: 'Feed', href: '#comunidade' },
   { label: 'Manifesto', href: '#manifesto' },
 ]
 

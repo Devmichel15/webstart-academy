@@ -6,7 +6,7 @@ const columns = [
     links: [
       { label: 'O método WebStart', href: '#metodo' },
       { label: 'Trilhas e cursos', href: '#trilhas' },
-      { label: 'Comunidade', href: '#comunidade' },
+      { label: 'Feed', href: '#comunidade' },
       { label: 'Sua jornada', href: '#jornada' },
       { label: 'Manifesto', href: '#manifesto' },
     ],

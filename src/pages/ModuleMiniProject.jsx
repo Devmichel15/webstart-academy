@@ -5,7 +5,6 @@ import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { CodeLab } from '../components/lab/CodeLab'
-import { ShareButtons } from '../components/share/ShareButtons'
 import { getModuleData } from '../data/trails.js'
 import { useProgress } from '../hooks/useProgress.js'
 import { useState } from 'react'
@@ -15,7 +14,6 @@ export default function ModuleMiniProject() {
   const mod = getModuleData(moduleId)
   const [showRubric, setShowRubric] = useState(false)
   const [done, setDone] = useState(false)
-  const [shareData, setShareData] = useState(null)
   const { completeProject } = useProgress()
 
   if (!mod || !mod.miniProject) {
@@ -33,8 +31,7 @@ export default function ModuleMiniProject() {
 
   const handleComplete = async () => {
     setDone(true)
-    const result = await completeProject(project.title)
-    if (result?.shareData) setShareData(result.shareData)
+    await completeProject(project.title)
   }
 
   return (
@@ -96,13 +93,6 @@ export default function ModuleMiniProject() {
                 </li>
               ))}
             </ul>
-          </div>
-        )}
-
-        {done && shareData && (
-          <div className="mt-4 border-t-2 border pt-4">
-            <p className="mb-2 text-sm font-bold text-secondary">Partilhar projeto</p>
-            <ShareButtons shareData={shareData} />
           </div>
         )}
       </Card>

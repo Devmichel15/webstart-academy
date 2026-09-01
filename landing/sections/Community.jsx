@@ -23,7 +23,7 @@ export function Community() {
         <div>
           <SectionHeader
             align="left"
-            eyebrow="comunidade"
+            eyebrow="feed"
             title={
               <>
                 Você não precisa <span className="text-accent">aprender sozinho.</span>

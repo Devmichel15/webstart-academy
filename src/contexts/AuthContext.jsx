@@ -1,11 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { auth } from '../firebase/firebase.js'
 import { onAuthStateChanged } from '../services/authService.js'
-import { createUserProfile, migrateFirstStepsDone } from '../services/userService.js'
+import { createUserProfile } from '../services/userService.js'
 
 const AuthContext = createContext(null)
-
-let migrationRan = false
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
@@ -13,25 +10,16 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    if (!migrationRan) {
-      migrationRan = true
-      migrateFirstStepsDone().catch((err) => {
-        console.warn('[migrateFirstStepsDone] skipped:', err.message)
-      })
-    }
-  }, [])
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(async (supabaseUser) => {
       try {
-        if (firebaseUser) {
-          const provider = firebaseUser.providerData[0]?.providerId?.includes('google') ? 'google' : 'email'
-          await createUserProfile(firebaseUser, {
-            name: firebaseUser.displayName,
+        if (supabaseUser) {
+          const provider = supabaseUser.app_metadata?.providers?.[0] === 'google' ? 'google' : 'email'
+          await createUserProfile(supabaseUser, {
+            name: supabaseUser.user_metadata?.name,
             provider,
           })
         }
-        setUser(firebaseUser)
+        setUser(supabaseUser)
         setError(null)
       } catch (err) {
         setError(err.message)

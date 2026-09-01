@@ -1,0 +1,37 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "community_projects",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "tags", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "community_projects",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "likeCount", "order": "DESCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "project_comments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "projectId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "project_likes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "projectId", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
