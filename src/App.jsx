@@ -1,42 +1,43 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { ThemeProvider } from './context/ThemeContext'
-import { AuthProvider } from './contexts/AuthContext.jsx'
-import { ToastProvider } from './contexts/ToastContext.jsx'
-import { ProgressProvider } from './contexts/ProgressContext.jsx'
-import { ProtectedRoute } from './components/auth/ProtectedRoute.jsx'
-import { FirstStepsGuard } from './components/auth/FirstStepsGuard.jsx'
-import { LearningProfileGuard } from './components/auth/LearningProfileGuard.jsx'
-import { AdminRoute } from './components/auth/AdminRoute.jsx'
-import { ToastContainer } from './components/ui/Toast.jsx'
-import { HomeGate } from './pages/PublicHome.jsx'
-import { AppLayout } from './components/layout/AppLayout'
-import Dashboard from './pages/Dashboard'
-import PrimeirosPassos from './pages/PrimeirosPassos'
-import AssessmentPage from './pages/AssessmentPage'
-import Journey from './pages/Journey'
-import CourseDetail from './pages/CourseDetail'
-import CourseCompletion from './pages/CourseCompletion'
-import ModuleDetail from './pages/ModuleDetail'
-import ModuleQuiz from './pages/ModuleQuiz'
-import ModuleLab from './pages/ModuleLab'
-import ModuleMiniProject from './pages/ModuleMiniProject'
-import Lesson from './pages/Lesson'
-import VideoLesson from './pages/VideoLesson'
-import Lab from './pages/Lab'
-import Materials from './pages/Materials'
-import CommunityPage from './pages/community/CommunityPage'
-import Profile from './pages/Profile'
-import EditProfile from './pages/EditProfile'
-import AIChat from './pages/AIChat'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import ForgotPassword from './pages/ForgotPassword'
-import Onboarding from './pages/Onboarding'
-import EmailPreferences from './pages/EmailPreferences'
-import AdminLayout from './pages/admin/AdminLayout'
-import AdminDashboard from './pages/admin/AdminDashboard'
-import AdminUsers from './pages/admin/AdminUsers'
-import AdminAnalytics from './pages/admin/AdminAnalytics'
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { ToastProvider } from "./contexts/ToastContext.jsx";
+import { ProgressProvider } from "./contexts/ProgressContext.jsx";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute.jsx";
+import { FirstStepsGuard } from "./components/auth/FirstStepsGuard.jsx";
+import { LearningProfileGuard } from "./components/auth/LearningProfileGuard.jsx";
+import { AdminRoute } from "./components/auth/AdminRoute.jsx";
+import { ToastContainer } from "./components/ui/Toast.jsx";
+import { HomeGate } from "./pages/PublicHome.jsx";
+import { AppLayout } from "./components/layout/AppLayout";
+import Dashboard from "./pages/Dashboard";
+import PrimeirosPassos from "./pages/PrimeirosPassos";
+import AssessmentPage from "./pages/AssessmentPage";
+import Journey from "./pages/Journey";
+import CourseDetail from "./pages/CourseDetail";
+import CourseCompletion from "./pages/CourseCompletion";
+import ModuleDetail from "./pages/ModuleDetail";
+import ModuleQuiz from "./pages/ModuleQuiz";
+import ModuleLab from "./pages/ModuleLab";
+import ModuleMiniProject from "./pages/ModuleMiniProject";
+import Lesson from "./pages/Lesson";
+import VideoLesson from "./pages/VideoLesson";
+import Lab from "./pages/Lab";
+import Materials from "./pages/Materials";
+import CommunityPage from "./pages/community/CommunityPage";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
+import AIChat from "./pages/AIChat";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import Onboarding from "./pages/Onboarding";
+import EmailPreferences from "./pages/EmailPreferences";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import { InstallPrompt } from "./components/pwa/InstallPrompt.jsx";
 
 export default function App() {
   return (
@@ -46,12 +47,16 @@ export default function App() {
           <ProgressProvider>
             <BrowserRouter>
               <ToastContainer />
+              <InstallPrompt />
               <Routes>
                 <Route path="/onboarding" element={<Onboarding />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/registro" element={<Register />} />
                 <Route path="/recuperar-senha" element={<ForgotPassword />} />
-                <Route path="/email-preferences" element={<EmailPreferences />} />
+                <Route
+                  path="/email-preferences"
+                  element={<EmailPreferences />}
+                />
 
                 {/* Fullscreen Protected Route (No AppLayout / No Sidebar / 100% Viewport) */}
                 <Route
@@ -74,18 +79,42 @@ export default function App() {
                     }
                   >
                     <Route element={<LearningProfileGuard />}>
-                      <Route path="primeiros-passos" element={<PrimeirosPassos />} />
+                      <Route
+                        path="primeiros-passos"
+                        element={<PrimeirosPassos />}
+                      />
                       <Route index element={<Dashboard />} />
                       <Route element={<FirstStepsGuard />}>
                         <Route path="trilhas" element={<Journey />} />
-                        <Route path="trilhas/:courseId" element={<CourseDetail />} />
-                        <Route path="trilhas/:courseId/conclusao" element={<CourseCompletion />} />
-                        <Route path="trilhas/:courseId/modulo/:moduleId" element={<ModuleDetail />} />
-                        <Route path="trilhas/:courseId/modulo/:moduleId/quiz" element={<ModuleQuiz />} />
-                        <Route path="trilhas/:courseId/modulo/:moduleId/lab" element={<ModuleLab />} />
-                        <Route path="trilhas/:courseId/modulo/:moduleId/mini-projeto" element={<ModuleMiniProject />} />
+                        <Route
+                          path="trilhas/:courseId"
+                          element={<CourseDetail />}
+                        />
+                        <Route
+                          path="trilhas/:courseId/conclusao"
+                          element={<CourseCompletion />}
+                        />
+                        <Route
+                          path="trilhas/:courseId/modulo/:moduleId"
+                          element={<ModuleDetail />}
+                        />
+                        <Route
+                          path="trilhas/:courseId/modulo/:moduleId/quiz"
+                          element={<ModuleQuiz />}
+                        />
+                        <Route
+                          path="trilhas/:courseId/modulo/:moduleId/lab"
+                          element={<ModuleLab />}
+                        />
+                        <Route
+                          path="trilhas/:courseId/modulo/:moduleId/mini-projeto"
+                          element={<ModuleMiniProject />}
+                        />
                         <Route path="aula/:lessonId" element={<Lesson />} />
-                        <Route path="video-aula/:lessonId" element={<VideoLesson />} />
+                        <Route
+                          path="video-aula/:lessonId"
+                          element={<VideoLesson />}
+                        />
                         <Route path="laboratorio" element={<Lab />} />
                         <Route path="materiais" element={<Materials />} />
                         <Route path="feed" element={<CommunityPage />} />
@@ -109,7 +138,10 @@ export default function App() {
                   <Route path="admin/analytics" element={<AdminAnalytics />} />
                 </Route>
 
-                <Route path="comunidade" element={<Navigate to="/feed" replace />} />
+                <Route
+                  path="comunidade"
+                  element={<Navigate to="/feed" replace />}
+                />
 
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
@@ -118,5 +150,5 @@ export default function App() {
         </AuthProvider>
       </ToastProvider>
     </ThemeProvider>
-  )
+  );
 }
