@@ -20,6 +20,7 @@ import {
   getRecommendedTrail,
 } from '../services/trailProgressService.js'
 import { getLevelFromXp, XP_LESSON } from '../utils/xp.js'
+import { durationToMinutes } from '../utils/duration.js'
 import {
   calculateTrailCompletionRate,
   calculateAverageStartedTrailProgress,
@@ -142,7 +143,7 @@ export function ProgressProvider({ children }) {
 
   const remainingMinutes = accessibleLessons
     .filter((lesson) => !completedLessons.includes(lesson.id))
-    .reduce((sum, lesson) => sum + (lesson.duration || 0), 0)
+    .reduce((sum, lesson) => sum + durationToMinutes(lesson.duration, 0), 0)
 
   const recommendedLesson = accessibleLessons.find((lesson) => !completedLessons.includes(lesson.id))
 
