@@ -1,35 +1,40 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { onAuthStateChanged } from '../services/authService.js'
-import { createUserProfile } from '../services/userService.js'
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { onAuthStateChanged } from "../services/authService.js";
+import { createUserProfile } from "../services/userService.js";
 
-const AuthContext = createContext(null)
+const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(async (supabaseUser) => {
+      setUser(supabaseUser);
+      setError(null);
+
       try {
         if (supabaseUser) {
-          const provider = supabaseUser.app_metadata?.providers?.[0] === 'google' ? 'google' : 'email'
+          const provider =
+            supabaseUser.app_metadata?.providers?.[0] === "google"
+              ? "google"
+              : "email";
           await createUserProfile(supabaseUser, {
             name: supabaseUser.user_metadata?.name,
             provider,
-          })
+          });
         }
-        setUser(supabaseUser)
-        setError(null)
       } catch (err) {
-        setError(err.message)
+        console.error("[AuthContext] profile sync error:", err);
+        setError(err.message);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    })
+    });
 
-    return unsubscribe
-  }, [])
+    return unsubscribe;
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -39,13 +44,14 @@ export function AuthProvider({ children }) {
       isAuthenticated: Boolean(user),
     }),
     [user, loading, error],
-  )
+  );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuthContext() {
-  const context = useContext(AuthContext)
-  if (!context) throw new Error('useAuthContext must be used within AuthProvider')
-  return context
+  const context = useContext(AuthContext);
+  if (!context)
+    throw new Error("useAuthContext must be used within AuthProvider");
+  return context;
 }
