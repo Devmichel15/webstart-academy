@@ -38,6 +38,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import { InstallPrompt } from "./components/pwa/InstallPrompt.jsx";
+import InstallApp from "./pages/InstallApp.jsx";
 
 export default function App() {
   return (
@@ -79,6 +80,7 @@ export default function App() {
                     }
                   >
                     <Route element={<LearningProfileGuard />}>
+                      <Route path="instalar-app" element={<InstallApp />} />
                       <Route
                         path="primeiros-passos"
                         element={<PrimeirosPassos />}
