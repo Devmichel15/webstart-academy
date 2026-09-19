@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth.js'
 import { useUser } from '../../hooks/useUser.js'
 import { getNavItems } from '../../data/navItems.js'
 import { UserBadge } from './Sidebar.jsx'
+import { InstallNavItem } from '../pwa/InstallNavItem.jsx'
 
 export function MobileNavDrawer({ isOpen, onClose }) {
   const drawerRef = useRef(null)
@@ -109,24 +110,38 @@ export function MobileNavDrawer({ isOpen, onClose }) {
             </div>
 
             <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
-              {navItems.map(({ to, label, icon: Icon }) => (
-                <NavLink
-                  key={to}
-                  to={to}
-                  end={to === '/'}
-                  onClick={onClose}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 rounded-lg border-3 px-3 py-2.5 text-sm font-bold transition-all ${
-                      isActive
-                        ? 'border-strong bg-brand-500 text-white shadow-[3px_3px_0_0_#064e3b] dark:shadow-[3px_3px_0_0_#34d399]'
-                        : 'border-transparent text-primary hover:border-strong hover:bg-surface-hover'
-                    }`
-                  }
-                >
-                  <Icon size={18} />
-                  {label}
-                </NavLink>
-              ))}
+              {navItems.map((item) => {
+                const { to, label, icon: Icon } = item
+                if (to === '/instalar-app') {
+                  return (
+                    <InstallNavItem
+                      key={to}
+                      to={to}
+                      label={label}
+                      icon={Icon}
+                      onClick={onClose}
+                    />
+                  )
+                }
+                return (
+                  <NavLink
+                    key={to}
+                    to={to}
+                    end={to === '/'}
+                    onClick={onClose}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 rounded-lg border-3 px-3 py-2.5 text-sm font-bold transition-all ${
+                        isActive
+                          ? 'border-strong bg-brand-500 text-white shadow-[3px_3px_0_0_#064e3b] dark:shadow-[3px_3px_0_0_#34d399]'
+                          : 'border-transparent text-primary hover:border-strong hover:bg-surface-hover'
+                      }`
+                    }
+                  >
+                    <Icon size={18} />
+                    {label}
+                  </NavLink>
+                )
+              })}
             </nav>
 
             <div className="px-3 pb-4">

@@ -1,4 +1,5 @@
 import {
+  CheckCircle2,
   Download,
   Globe,
   HelpCircle,
@@ -10,6 +11,7 @@ import {
 import { SEO } from "../components/seo/SEO.jsx";
 import { Header } from "../components/layout/Header.jsx";
 import { Card } from "../components/ui/Card.jsx";
+import { useInstall } from "../contexts/InstallContext.jsx";
 
 const androidSteps = [
   "Abre a Webstart no Chrome.",
@@ -47,19 +49,75 @@ function StepList({ steps }) {
 }
 
 function InstallAction() {
-  const handleInstall = () => {
-    window.dispatchEvent(new Event("webstart:install"));
+  const { canPrompt, installed, isIos, supports, graceElapsed, install } =
+    useInstall();
+
+  const scrollToGuide = () => {
+    document
+      .getElementById("guia-manual")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  if (installed) {
+    return (
+      <span className="inline-flex items-center gap-2 rounded-2xl bg-brand-500/10 px-5 py-3 font-black text-brand-700 dark:text-brand-300">
+        <CheckCircle2 size={19} />
+        App já instalada
+      </span>
+    );
+  }
+
+  if (canPrompt) {
+    const handleInstall = () => {
+      install();
+    };
+    return (
+      <button
+        type="button"
+        onClick={handleInstall}
+        className="brutal-btn inline-flex items-center justify-center gap-2 bg-accent px-5 py-3 font-black text-white"
+      >
+        <Download size={19} />
+        Instalar agora
+      </button>
+    );
+  }
+
+  const fallbackMessage = isIos
+    ? "No iPhone, a instalação é feita pelo Safari. Segue os passos manuais abaixo."
+    : !supports
+      ? "Este navegador não oferece instalação com um toque. Usa os passos manuais abaixo."
+      : graceElapsed
+        ? "Não foi possível abrir a janela de instalação automaticamente. Usa os passos manuais abaixo."
+        : null;
+
+  if (!fallbackMessage) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="brutal-btn inline-flex items-center justify-center gap-2 bg-accent px-5 py-3 font-black text-white opacity-60"
+      >
+        <Download size={19} />
+        A preparar instalação...
+      </button>
+    );
+  }
+
   return (
-    <button
-      type="button"
-      onClick={handleInstall}
-      className="brutal-btn inline-flex items-center justify-center gap-2 bg-accent px-5 py-3 font-black text-white"
-    >
-      <Download size={19} />
-      Instalar agora
-    </button>
+    <span className="flex flex-col items-start gap-3">
+      <span className="text-sm font-semibold leading-6 text-secondary">
+        {fallbackMessage}
+      </span>
+      <button
+        type="button"
+        onClick={scrollToGuide}
+        className="brutal-btn inline-flex items-center justify-center gap-2 bg-accent px-5 py-3 font-black text-white"
+      >
+        <Download size={19} />
+        Ver passos manuais
+      </button>
+    </span>
   );
 }
 
@@ -98,10 +156,13 @@ export default function InstallApp() {
           </div>
         </section>
 
-        <div className="mb-4 flex items-center gap-2">
+        <section
+          id="guia-manual"
+          className="mb-4 flex items-center gap-2 scroll-mt-24"
+        >
           <Home size={21} className="text-accent" />
           <h2 className="text-xl font-black">Escolhe o teu aparelho</h2>
-        </div>
+        </section>
 
         <section className="grid gap-5 lg:grid-cols-3">
           <Card>

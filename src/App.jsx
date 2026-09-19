@@ -3,6 +3,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { ToastProvider } from "./contexts/ToastContext.jsx";
 import { ProgressProvider } from "./contexts/ProgressContext.jsx";
+import { InstallProvider } from "./contexts/InstallContext.jsx";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute.jsx";
 import { FirstStepsGuard } from "./components/auth/FirstStepsGuard.jsx";
 import { LearningProfileGuard } from "./components/auth/LearningProfileGuard.jsx";
@@ -24,10 +25,9 @@ import Lesson from "./pages/Lesson";
 import VideoLesson from "./pages/VideoLesson";
 import Lab from "./pages/Lab";
 import Materials from "./pages/Materials";
-import CommunityPage from "./pages/community/CommunityPage";
 import Profile from "./pages/Profile";
-import EditProfile from "./pages/EditProfile";
 import AIChat from "./pages/AIChat";
+import PublicProfile from "./pages/PublicProfile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -46,10 +46,12 @@ export default function App() {
       <ToastProvider>
         <AuthProvider>
           <ProgressProvider>
-            <BrowserRouter>
+            <InstallProvider>
+              <BrowserRouter>
               <ToastContainer />
               <InstallPrompt />
               <Routes>
+                <Route path="/u/:username" element={<PublicProfile />} />
                 <Route path="/onboarding" element={<Onboarding />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/registro" element={<Register />} />
@@ -119,9 +121,7 @@ export default function App() {
                         />
                         <Route path="laboratorio" element={<Lab />} />
                         <Route path="materiais" element={<Materials />} />
-                        <Route path="feed" element={<CommunityPage />} />
                         <Route path="perfil" element={<Profile />} />
-                        <Route path="editar-perfil" element={<EditProfile />} />
                         <Route path="chat" element={<AIChat />} />
                       </Route>
                     </Route>
@@ -140,14 +140,10 @@ export default function App() {
                   <Route path="admin/analytics" element={<AdminAnalytics />} />
                 </Route>
 
-                <Route
-                  path="comunidade"
-                  element={<Navigate to="/feed" replace />}
-                />
-
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </BrowserRouter>
+            </InstallProvider>
           </ProgressProvider>
         </AuthProvider>
       </ToastProvider>

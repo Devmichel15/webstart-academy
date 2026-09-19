@@ -1,77 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Download, Share2, X } from "lucide-react";
+import { useInstall } from "../../contexts/InstallContext.jsx";
 
 const DISMISSED_KEY = "webstart-pwa-install-dismissed";
 
-function isIosDevice() {
-  return (
-    /iphone|ipad|ipod/i.test(window.navigator.userAgent) ||
-    (window.navigator.platform === "MacIntel" &&
-      window.navigator.maxTouchPoints > 1)
-  );
-}
-
-function isStandalone() {
-  return (
-    window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true
-  );
-}
-
 export function InstallPrompt() {
-  const [installEvent, setInstallEvent] = useState(null);
-  const [showIosPrompt, setShowIosPrompt] = useState(
-    () => isIosDevice() && !isStandalone(),
-  );
+  const { canPrompt, installed, isIos, install } = useInstall();
   const [dismissed, setDismissed] = useState(
-    () => isStandalone() || localStorage.getItem(DISMISSED_KEY) === "true",
+    () => localStorage.getItem(DISMISSED_KEY) === "true",
   );
-
-  useEffect(() => {
-    if (isStandalone() || localStorage.getItem(DISMISSED_KEY) === "true")
-      return undefined;
-
-    const handleBeforeInstallPrompt = (event) => {
-      event.preventDefault();
-      setInstallEvent(event);
-    };
-    const handleAppInstalled = () => {
-      setInstallEvent(null);
-      setShowIosPrompt(false);
-    };
-    const handleInstallRequest = () => {
-      if (!installEvent) return;
-      installEvent.prompt();
-      setInstallEvent(null);
-    };
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    window.addEventListener("appinstalled", handleAppInstalled);
-    window.addEventListener("webstart:install", handleInstallRequest);
-    return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt,
-      );
-      window.removeEventListener("appinstalled", handleAppInstalled);
-      window.removeEventListener("webstart:install", handleInstallRequest);
-    };
-  }, [installEvent]);
 
   const dismiss = () => {
     localStorage.setItem(DISMISSED_KEY, "true");
     setDismissed(true);
-    setInstallEvent(null);
-    setShowIosPrompt(false);
   };
 
-  const install = async () => {
-    if (!installEvent) return;
-    await installEvent.prompt();
-    setInstallEvent(null);
-  };
+  if (dismissed || installed) return null;
 
-  if (dismissed || (!installEvent && !showIosPrompt)) return null;
+  const showIosPrompt = isIos && !canPrompt;
+  if (!canPrompt && !showIosPrompt) return null;
 
   return (
     <aside className="fixed inset-x-3 bottom-4 z-50 mx-auto max-w-md border-3 border-primary bg-surface p-4 text-primary shadow-brutal md:inset-x-auto md:right-6">
@@ -84,7 +31,11 @@ export function InstallPrompt() {
         <X size={18} />
       </button>
       <div className="flex items-start gap-3 pr-5">
-        <img src="/pwa-192.svg" alt="" className="h-12 w-12 shrink-0" />
+        <img
+          src="/icons/icon-192.png"
+          alt=""
+          className="h-12 w-12 shrink-0 rounded-lg"
+        />
         <div>
           <p className="font-bold">Leva a Webstart contigo</p>
           {showIosPrompt ? (
@@ -104,7 +55,7 @@ export function InstallPrompt() {
           )}
         </div>
       </div>
-      {installEvent && (
+      {canPrompt && (
         <button
           type="button"
           onClick={install}
