@@ -46,6 +46,7 @@ export default defineConfig(({ command, mode }) => {
       tailwindcss(),
       VitePWA({
         registerType: "autoUpdate",
+        cleanupOutdatedCaches: true,
         includeAssets: ["offline.html", "icons/*.png"],
         manifest: {
           name: "Webstart",
@@ -79,6 +80,9 @@ export default defineConfig(({ command, mode }) => {
           skipWaiting: true,
           clientsClaim: true,
           navigateFallback: "/offline.html",
+          navigateFallbackDenylist: [
+            /^\/(?:login|registro|recuperar-senha|onboarding|email-preferences)(?:\/|$)/,
+          ],
           maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
           globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
           runtimeCaching: [
