@@ -14,8 +14,9 @@ const DRY = process.argv.includes('--dry-run');
 const BATCH = 500;
 
 // ── env local (fora do Vite, nunca no bundle) ──
+// MIGRATION_ENV_FILE aponta para outro ficheiro (ex: staging) — safe para não tocar produção.
 function loadEnvLocal() {
-  const p = path.join(ROOT, 'migration', '.env.local');
+  const p = process.env.MIGRATION_ENV_FILE || path.join(ROOT, 'migration', '.env.local');
   if (!fs.existsSync(p)) {
     console.error(`✗ ${p} não encontrado.\n  Crie com:\n    SUPABASE_URL=https://<proj>.supabase.co\n    SUPABASE_SERVICE_ROLE_KEY=<service_role>`);
     process.exit(1);

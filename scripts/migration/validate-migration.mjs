@@ -8,7 +8,7 @@ const NORM = path.join(ROOT, 'migration', 'normalized');
 const CONTENT = path.join(NORM, 'content');
 
 function loadEnvLocal() {
-  const p = path.join(ROOT, 'migration', '.env.local');
+  const p = process.env.MIGRATION_ENV_FILE || path.join(ROOT, 'migration', '.env.local');
   const env = {};
   for (const line of fs.readFileSync(p, 'utf8').split(/\r?\n/)) {
     const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+)\s*$/);

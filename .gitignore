@@ -29,10 +29,21 @@ dist-ssr
 # Firebase service account keys
 firebase/serviceAccountKey.json
 firebase/*-firebase-adminsdk-*.json
+firebase-service.json
+supabase-service.json
+cache.json
+config.json
 
 # Migration backups & reports (dados de usuários — nunca commitar)
 migration/backups/
 migration/normalized/
 migration/reports/
 migration/.env.local
+migration/.env.staging
+migration/firebase-hash-params.json
+migration/*.auth-export.json
+migration/auth_export.json
+
+# Supabase CLI local project metadata
+supabase/.temp/
 
