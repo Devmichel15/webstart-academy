@@ -7,6 +7,12 @@ const OFFLINE_MESSAGE =
   "Estás sem ligação. Verifica a tua internet e tenta novamente.";
 const SERVER_UNREACHABLE_MESSAGE =
   "Não foi possível contactar o servidor. Tenta novamente em instantes.";
+const PUBLIC_APP_URL = (
+  import.meta.env.DEV
+    ? window.location.origin
+    : import.meta.env.VITE_PUBLIC_APP_URL ||
+      "https://webstart-academy.onrender.com"
+).replace(/\/$/, "");
 
 function isNetworkFailure(error) {
   if (!error || typeof error !== "object") return false;
@@ -92,7 +98,7 @@ export async function loginWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${window.location.origin}/`,
+      redirectTo: `${PUBLIC_APP_URL}/`,
     },
   });
   if (error) throw new Error(mapAuthError(error, "oauth"));
@@ -106,7 +112,7 @@ export async function logoutUser() {
 
 export async function resetPassword(email) {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/login`,
+    redirectTo: `${PUBLIC_APP_URL}/login`,
   });
   if (error) throw new Error(mapAuthError(error, "password-reset"));
 }
