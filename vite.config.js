@@ -64,6 +64,8 @@ export default defineConfig({
         ],
       },
       workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
         navigateFallback: "/offline.html",
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
         globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
@@ -71,29 +73,35 @@ export default defineConfig({
           {
             urlPattern: ({ url }) =>
               url.hostname.includes("supabase.co") &&
-              url.pathname.includes("/auth/"),
+              url.pathname.startsWith("/auth/v1/"),
             handler: "NetworkOnly",
           },
           {
             urlPattern: ({ request }) =>
-              ["script", "style", "image", "font"].includes(
-                request.destination,
-              ),
-            handler: "StaleWhileRevalidate",
-            options: { cacheName: "webstart-static-assets" },
+              request.method !== "GET" && request.method !== "HEAD",
+            handler: "NetworkOnly",
           },
           {
             urlPattern: ({ url, request }) =>
               request.method === "GET" &&
               (url.pathname.startsWith("/api/") ||
                 (url.hostname.includes("supabase.co") &&
-                  url.pathname.startsWith("/rest/v1/"))),
+                  (url.pathname.startsWith("/rest/v1/") ||
+                    url.pathname.startsWith("/functions/v1/")))),
             handler: "NetworkFirst",
             options: {
               cacheName: "webstart-api-cache",
               networkTimeoutSeconds: 10,
               expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 },
             },
+          },
+          {
+            urlPattern: ({ request }) =>
+              ["script", "style", "image", "font"].includes(
+                request.destination,
+              ),
+            handler: "CacheFirst",
+            options: { cacheName: "webstart-static-assets" },
           },
         ],
       },
