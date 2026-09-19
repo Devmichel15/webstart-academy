@@ -160,6 +160,7 @@ try {
     if (existing.has(r.email)) { report.skippedExisting++; continue; }
     if (!RUN) { report.inserted++; r.hasHash ? report.withHash++ : report.google++; continue; }
     try {
+      await client.query('savepoint sp_user');
       const ures = await client.query(
         `insert into auth.users
           (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
@@ -177,14 +178,17 @@ try {
           JSON.stringify(r.app_meta), JSON.stringify(r.user_meta), r.created_at, r.last_sign_in_at]
       );
       const uid = ures.rows[0].id;
+      // auth.identities.email é GENERATED (lower(identity_data->>'email')) — não inserir
       await client.query(
-        `insert into auth.identities (id, user_id, provider, provider_id, identity_data, email, created_at, updated_at)
-         values ($1, $2, $3, $4, $5::jsonb, $6, now(), now())`,
-        [r.identity.id, uid, r.identity.provider, r.identity.provider_id, JSON.stringify(r.identity.identity_data), r.email]
+        `insert into auth.identities (id, user_id, provider, provider_id, identity_data, created_at, updated_at)
+         values ($1, $2, $3, $4, $5::jsonb, now(), now())`,
+        [r.identity.id, uid, r.identity.provider, r.identity.provider_id, JSON.stringify(r.identity.identity_data)]
       );
+      await client.query('release savepoint sp_user');
       report.inserted++;
       r.hasHash ? report.withHash++ : report.google++;
     } catch (e) {
+      await client.query('rollback to savepoint sp_user').catch(() => {});
       report.errors.push({ email: r.email, error: String(e.message).slice(0, 200) });
     }
   }

@@ -28,15 +28,17 @@ const GUARD_TABLES = {
 };
 
 function envLocal() {
+  const p = process.env.MIGRATION_ENV_FILE || path.join(ROOT, 'migration', '.env.local');
+  if (!fs.existsSync(p)) { console.error(`✗ ${p} não encontrado.`); process.exit(1); }
   const env = {};
-  for (const line of fs.readFileSync(path.join(ROOT, 'migration', '.env.local'), 'utf8').split(/\r?\n/)) {
+  for (const line of fs.readFileSync(p, 'utf8').split(/\r?\n/)) {
     const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
     if (m) env[m[1]] = m[2].replace(/^["']|["']$/g, '');
   }
   return env;
 }
 const ENV = envLocal();
-if (!ENV.DATABASE_URL) { console.error('✗ DATABASE_URL ausente em migration/.env.local'); process.exit(1); }
+if (!ENV.DATABASE_URL) { console.error(`✗ DATABASE_URL ausente em ${process.env.MIGRATION_ENV_FILE || 'migration/.env.local'}`); process.exit(1); }
 
 const client = new pg.Client({
   connectionString: ENV.DATABASE_URL,

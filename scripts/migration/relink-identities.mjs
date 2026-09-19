@@ -18,7 +18,7 @@ const limitIdx = process.argv.indexOf('--limit');
 const LIMIT = limitIdx > -1 ? Number(process.argv[limitIdx + 1]) : Infinity;
 
 function loadEnvLocal() {
-  const p = path.join(ROOT, 'migration', '.env.local');
+  const p = process.env.MIGRATION_ENV_FILE || path.join(ROOT, 'migration', '.env.local');
   if (!fs.existsSync(p)) {
     console.error(`✗ ${p} não encontrado.`);
     process.exit(1);
@@ -38,7 +38,7 @@ const ENV = loadEnvLocal();
 const admin = createClient(ENV.SUPABASE_URL, ENV.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 const DB = createClient(ENV.SUPABASE_URL, ENV.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 
-console.log(RUN ? `=== RE-LINK (produção — ${ENV.SUPABASE_URL}) ===` : '=== RE-LINK (DRY-RUN — nada será escrito) ===');
+console.log(RUN ? `=== RE-LINK (RUN — ${ENV.SUPABASE_URL}) ===` : '=== RE-LINK (DRY-RUN — nada será escrito) ===');
 
 // ── lista todos os auth.users paginado ──
 const users = [];
