@@ -1,39 +1,94 @@
-import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from "@tailwindcss/vite"
+import { fileURLToPath, URL } from "node:url";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import { VitePWA } from "vite-plugin-pwa";
 
 // https://vite.dev/config/
 export default defineConfig({
   server: {
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (req.url === '/landing' || req.url?.startsWith('/landing?')) {
-          res.statusCode = 301
-          res.setHeader('Location', '/landing/')
-          res.end()
-          return
+        if (req.url === "/landing" || req.url?.startsWith("/landing?")) {
+          res.statusCode = 301;
+          res.setHeader("Location", "/landing/");
+          res.end();
+          return;
         }
-        next()
-      })
+        next();
+      });
     },
     headers: {
       "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
     },
     proxy: {
-      '/api/hf': {
-        target: 'https://router.huggingface.co',
+      "/api/hf": {
+        target: "https://router.huggingface.co",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/hf/, ''),
+        rewrite: (path) => path.replace(/^\/api\/hf/, ""),
       },
     },
   },
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: ["offline.html", "pwa-*.svg"],
+      manifest: {
+        name: "Webstart",
+        short_name: "Webstart",
+        start_url: "/",
+        display: "standalone",
+        background_color: "#f8fffb",
+        theme_color: "#10B981",
+        icons: [
+          { src: "/pwa-192.svg", sizes: "192x192", type: "image/svg+xml" },
+          { src: "/pwa-512.svg", sizes: "512x512", type: "image/svg+xml" },
+          {
+            src: "/pwa-maskable.svg",
+            sizes: "512x512",
+            type: "image/svg+xml",
+            purpose: "maskable",
+          },
+        ],
+      },
+      workbox: {
+        navigateFallback: "/offline.html",
+        maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
+        globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) =>
+              ["script", "style", "image", "font"].includes(
+                request.destination,
+              ),
+            handler: "StaleWhileRevalidate",
+            options: { cacheName: "webstart-static-assets" },
+          },
+          {
+            urlPattern: ({ url, request }) =>
+              request.method === "GET" &&
+              (url.pathname.startsWith("/api/") ||
+                url.hostname.includes("supabase.co")),
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "webstart-api-cache",
+              networkTimeoutSeconds: 10,
+              expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 },
+            },
+          },
+        ],
+      },
+    }),
+  ],
   build: {
     rollupOptions: {
       input: {
-        main: fileURLToPath(new URL('./index.html', import.meta.url)),
-        landing: fileURLToPath(new URL('./landing/index.html', import.meta.url)),
+        main: fileURLToPath(new URL("./index.html", import.meta.url)),
+        landing: fileURLToPath(
+          new URL("./landing/index.html", import.meta.url),
+        ),
       },
     },
   },
