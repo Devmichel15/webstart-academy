@@ -3,6 +3,7 @@ import { allLessons, allVideoLessons } from '../data/lessons/index.js'
 import { trails as staticCourses } from '../data/trails.js'
 import { getModuleData } from '../data/trails.js'
 import { withRetry } from '../utils/retry.js'
+import { durationToMinutes } from '../utils/duration.js'
 import { XP_COURSE, XP_EXERCISE, XP_LESSON, XP_MODULE, XP_PROJECT } from '../utils/xp.js'
 import {
   addCompletedCourse,
@@ -162,6 +163,8 @@ export async function completeLesson(userId, lessonId) {
       return { alreadyCompleted: true, xpEarned: 0 }
     }
 
+    const minutes = durationToMinutes(lesson.duration, 15)
+
     const { error: progressError } = await supabase
       .from('lesson_progress')
       .upsert({
@@ -172,14 +175,14 @@ export async function completeLesson(userId, lessonId) {
         completed: true,
         completed_at: new Date().toISOString(),
         progress_percentage: 100,
-        time_spent: lesson.duration || 15,
+        time_spent: minutes,
       }, { onConflict: 'user_id,lesson_id' })
 
     if (progressError) throw progressError
 
     let xpEarned = XP_LESSON
     await addXpToUser(userId, XP_LESSON)
-    await addStudyTime(userId, lesson.duration || 15)
+    await addStudyTime(userId, minutes)
     const streakResult = await updateUserStreak(userId)
     if (streakResult?.bonusXp) xpEarned += streakResult.bonusXp
 
