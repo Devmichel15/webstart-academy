@@ -14,13 +14,14 @@ import {
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
 
 const baseNavItems = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/trilhas', label: 'Trilhas', icon: BookOpen },
-  { to: '/laboratorio', label: 'Laboratório', icon: Beaker },
-  { to: '/chat', label: 'Tutor IA', icon: Bot },
-  { to: '/materiais', label: 'Materiais', icon: GraduationCap },
-  { to: '/perfil', label: 'Perfil', icon: Award },
-]
+  { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/trilhas", label: "Trilhas", icon: BookOpen },
+  { to: "/laboratorio", label: "Laboratório", icon: Beaker },
+  { to: "/chat", label: "Tutor IA", icon: Bot },
+  { to: "/materiais", label: "Materiais", icon: GraduationCap },
+  { to: "/perfil", label: "Perfil", icon: Award },
+  { to: "/instalar-app", label: "Instalar app", icon: Download },
+];
 
 function getAdminItems(profile, fbUser) {
   const isAdmin = profile?.role === "admin" || fbUser?.email === ADMIN_EMAIL;
