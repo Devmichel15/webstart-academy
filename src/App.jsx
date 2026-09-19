@@ -3,6 +3,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { ToastProvider } from "./contexts/ToastContext.jsx";
 import { ProgressProvider } from "./contexts/ProgressContext.jsx";
+import { InstallProvider } from "./contexts/InstallContext.jsx";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute.jsx";
 import { FirstStepsGuard } from "./components/auth/FirstStepsGuard.jsx";
 import { LearningProfileGuard } from "./components/auth/LearningProfileGuard.jsx";
@@ -45,7 +46,8 @@ export default function App() {
       <ToastProvider>
         <AuthProvider>
           <ProgressProvider>
-            <BrowserRouter>
+            <InstallProvider>
+              <BrowserRouter>
               <ToastContainer />
               <InstallPrompt />
               <Routes>
@@ -141,6 +143,7 @@ export default function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </BrowserRouter>
+            </InstallProvider>
           </ProgressProvider>
         </AuthProvider>
       </ToastProvider>

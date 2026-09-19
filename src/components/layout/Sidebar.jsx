@@ -6,6 +6,7 @@ import { useUser } from '../../hooks/useUser.js'
 import { logoutUser } from '../../services/authService.js'
 import { useToast } from '../../contexts/ToastContext.jsx'
 import { getNavItems } from '../../data/navItems.js'
+import { InstallNavItem } from '../pwa/InstallNavItem.jsx'
 
 export function UserBadge() {
   const { user } = useAuth()
@@ -70,23 +71,36 @@ export function Sidebar() {
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-2">
-        {navItems.map(({ to, label, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/'}
-            className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg border-3 px-3 py-2.5 text-sm font-bold transition-all ${
-                isActive
-                  ? 'border-strong bg-brand-500 text-white shadow-[3px_3px_0_0_#064e3b] dark:shadow-[3px_3px_0_0_#34d399]'
-                  : 'border-transparent text-primary hover:border-strong hover:bg-surface-hover'
-              }`
-            }
-          >
-            <Icon size={18} />
-            {label}
-          </NavLink>
-        ))}
+        {navItems.map((item) => {
+          const { to, label, icon: Icon } = item
+          if (to === '/instalar-app') {
+            return (
+              <InstallNavItem
+                key={to}
+                to={to}
+                label={label}
+                icon={Icon}
+              />
+            )
+          }
+          return (
+            <NavLink
+              key={to}
+              to={to}
+              end={to === '/'}
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-lg border-3 px-3 py-2.5 text-sm font-bold transition-all ${
+                  isActive
+                    ? 'border-strong bg-brand-500 text-white shadow-[3px_3px_0_0_#064e3b] dark:shadow-[3px_3px_0_0_#34d399]'
+                    : 'border-transparent text-primary hover:border-strong hover:bg-surface-hover'
+                }`
+              }
+            >
+              <Icon size={18} />
+              {label}
+            </NavLink>
+          )
+        })}
       </nav>
 
       <div className="px-2 pb-4">
