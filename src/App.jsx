@@ -1,42 +1,43 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { ThemeProvider } from './context/ThemeContext'
-import { AuthProvider } from './contexts/AuthContext.jsx'
-import { ToastProvider } from './contexts/ToastContext.jsx'
-import { ProgressProvider } from './contexts/ProgressContext.jsx'
-import { ProtectedRoute } from './components/auth/ProtectedRoute.jsx'
-import { FirstStepsGuard } from './components/auth/FirstStepsGuard.jsx'
-import { LearningProfileGuard } from './components/auth/LearningProfileGuard.jsx'
-import { AdminRoute } from './components/auth/AdminRoute.jsx'
-import { ToastContainer } from './components/ui/Toast.jsx'
-import { HomeGate } from './pages/PublicHome.jsx'
-import { AppLayout } from './components/layout/AppLayout'
-import Dashboard from './pages/Dashboard'
-import PrimeirosPassos from './pages/PrimeirosPassos'
-import AssessmentPage from './pages/AssessmentPage'
-import Journey from './pages/Journey'
-import CourseDetail from './pages/CourseDetail'
-import CourseCompletion from './pages/CourseCompletion'
-import ModuleDetail from './pages/ModuleDetail'
-import ModuleQuiz from './pages/ModuleQuiz'
-import ModuleLab from './pages/ModuleLab'
-import ModuleMiniProject from './pages/ModuleMiniProject'
-import Lesson from './pages/Lesson'
-import VideoLesson from './pages/VideoLesson'
-import Lab from './pages/Lab'
-import Materials from './pages/Materials'
-import Profile from './pages/Profile'
-import AIChat from './pages/AIChat'
-import PublicProfile from './pages/PublicProfile'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import ForgotPassword from './pages/ForgotPassword'
-import Onboarding from './pages/Onboarding'
-import EmailPreferences from './pages/EmailPreferences'
-import AdminLayout from './pages/admin/AdminLayout'
-import AdminDashboard from './pages/admin/AdminDashboard'
-import AdminUsers from './pages/admin/AdminUsers'
-import AdminAnalytics from './pages/admin/AdminAnalytics'
-import { InstallPrompt } from './components/pwa/InstallPrompt.jsx'
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { ToastProvider } from "./contexts/ToastContext.jsx";
+import { ProgressProvider } from "./contexts/ProgressContext.jsx";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute.jsx";
+import { FirstStepsGuard } from "./components/auth/FirstStepsGuard.jsx";
+import { LearningProfileGuard } from "./components/auth/LearningProfileGuard.jsx";
+import { AdminRoute } from "./components/auth/AdminRoute.jsx";
+import { ToastContainer } from "./components/ui/Toast.jsx";
+import { HomeGate } from "./pages/PublicHome.jsx";
+import { AppLayout } from "./components/layout/AppLayout";
+import Dashboard from "./pages/Dashboard";
+import PrimeirosPassos from "./pages/PrimeirosPassos";
+import AssessmentPage from "./pages/AssessmentPage";
+import Journey from "./pages/Journey";
+import CourseDetail from "./pages/CourseDetail";
+import CourseCompletion from "./pages/CourseCompletion";
+import ModuleDetail from "./pages/ModuleDetail";
+import ModuleQuiz from "./pages/ModuleQuiz";
+import ModuleLab from "./pages/ModuleLab";
+import ModuleMiniProject from "./pages/ModuleMiniProject";
+import Lesson from "./pages/Lesson";
+import VideoLesson from "./pages/VideoLesson";
+import Lab from "./pages/Lab";
+import Materials from "./pages/Materials";
+import Profile from "./pages/Profile";
+import AIChat from "./pages/AIChat";
+import PublicProfile from "./pages/PublicProfile";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import Onboarding from "./pages/Onboarding";
+import EmailPreferences from "./pages/EmailPreferences";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import { InstallPrompt } from "./components/pwa/InstallPrompt.jsx";
+import InstallApp from "./pages/InstallApp.jsx";
 
 export default function App() {
   return (
@@ -79,6 +80,7 @@ export default function App() {
                     }
                   >
                     <Route element={<LearningProfileGuard />}>
+                      <Route path="instalar-app" element={<InstallApp />} />
                       <Route
                         path="primeiros-passos"
                         element={<PrimeirosPassos />}
