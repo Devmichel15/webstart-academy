@@ -69,6 +69,12 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
         runtimeCaching: [
           {
+            urlPattern: ({ url }) =>
+              url.hostname.includes("supabase.co") &&
+              url.pathname.includes("/auth/"),
+            handler: "NetworkOnly",
+          },
+          {
             urlPattern: ({ request }) =>
               ["script", "style", "image", "font"].includes(
                 request.destination,
@@ -80,7 +86,8 @@ export default defineConfig({
             urlPattern: ({ url, request }) =>
               request.method === "GET" &&
               (url.pathname.startsWith("/api/") ||
-                url.hostname.includes("supabase.co")),
+                (url.hostname.includes("supabase.co") &&
+                  url.pathname.startsWith("/rest/v1/"))),
             handler: "NetworkFirst",
             options: {
               cacheName: "webstart-api-cache",

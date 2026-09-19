@@ -1,6 +1,35 @@
 import { supabase } from '../lib/supabase.js'
 
+const NETWORK_FAILURE_PATTERN =
+  /failed to fetch|networkerror|network request failed|fetch failed|load failed/i
+
+const OFFLINE_MESSAGE =
+  'Estás sem ligação. Verifica a tua internet e tenta novamente.'
+const SERVER_UNREACHABLE_MESSAGE =
+  'Não foi possível contactar o servidor. Tenta novamente em instantes.'
+
+function isNetworkFailure(error) {
+  if (!error || typeof error !== 'object') return false
+  if (error instanceof TypeError || error?.name === 'TypeError') return true
+  if (/AuthRetryableFetchError|AuthRetryableFetch/i.test(error?.name || '')) {
+    return true
+  }
+  return NETWORK_FAILURE_PATTERN.test(String(error?.message || ''))
+}
+
+function isBackendRejection(error) {
+  if (error?.status !== undefined || error?.code !== undefined) return true
+  const msg = String(error?.message || '')
+  return msg && !NETWORK_FAILURE_PATTERN.test(msg)
+}
+
 function mapAuthError(error) {
+  if (isNetworkFailure(error)) {
+    const online =
+      typeof navigator !== 'undefined' ? navigator.onLine !== false : true
+    return online ? SERVER_UNREACHABLE_MESSAGE : OFFLINE_MESSAGE
+  }
+
   const messages = {
     'auth/email-already-in-use': 'Este email já está registrado.',
     'auth/invalid-email': 'Email inválido.',
@@ -13,8 +42,22 @@ function mapAuthError(error) {
     'auth/redirect-cancelled-by-user': 'Login cancelado.',
     'auth/redirect-operation-pending': 'Redirecionamento em andamento.',
     'AuthApiError': error.message || 'Erro de autenticação.',
+    'invalid_credentials': 'Email ou senha incorretos.',
   }
-  return messages[error.code] || error.message || 'Erro de autenticação.'
+
+  const msg = String(error?.message || '')
+  if (/\binvalid login credentials\b/i.test(msg)) {
+    return 'Email ou senha incorretos.'
+  }
+  if (/\buser already registered\b/i.test(msg)) {
+    return 'Este email já está registrado.'
+  }
+
+  if (isBackendRejection(error)) {
+    return messages[error?.code] || error?.message || 'Erro de autenticação.'
+  }
+
+  return SERVER_UNREACHABLE_MESSAGE
 }
 
 export async function registerWithEmail({ name, email, password }) {
