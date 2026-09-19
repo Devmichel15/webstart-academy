@@ -36,6 +36,7 @@ import AdminLayout from './pages/admin/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminAnalytics from './pages/admin/AdminAnalytics'
+import { InstallPrompt } from './components/pwa/InstallPrompt.jsx'
 
 export default function App() {
   return (
@@ -45,13 +46,17 @@ export default function App() {
           <ProgressProvider>
             <BrowserRouter>
               <ToastContainer />
+              <InstallPrompt />
               <Routes>
                 <Route path="/u/:username" element={<PublicProfile />} />
                 <Route path="/onboarding" element={<Onboarding />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/registro" element={<Register />} />
                 <Route path="/recuperar-senha" element={<ForgotPassword />} />
-                <Route path="/email-preferences" element={<EmailPreferences />} />
+                <Route
+                  path="/email-preferences"
+                  element={<EmailPreferences />}
+                />
 
                 {/* Fullscreen Protected Route (No AppLayout / No Sidebar / 100% Viewport) */}
                 <Route
@@ -74,18 +79,42 @@ export default function App() {
                     }
                   >
                     <Route element={<LearningProfileGuard />}>
-                      <Route path="primeiros-passos" element={<PrimeirosPassos />} />
+                      <Route
+                        path="primeiros-passos"
+                        element={<PrimeirosPassos />}
+                      />
                       <Route index element={<Dashboard />} />
                       <Route element={<FirstStepsGuard />}>
                         <Route path="trilhas" element={<Journey />} />
-                        <Route path="trilhas/:courseId" element={<CourseDetail />} />
-                        <Route path="trilhas/:courseId/conclusao" element={<CourseCompletion />} />
-                        <Route path="trilhas/:courseId/modulo/:moduleId" element={<ModuleDetail />} />
-                        <Route path="trilhas/:courseId/modulo/:moduleId/quiz" element={<ModuleQuiz />} />
-                        <Route path="trilhas/:courseId/modulo/:moduleId/lab" element={<ModuleLab />} />
-                        <Route path="trilhas/:courseId/modulo/:moduleId/mini-projeto" element={<ModuleMiniProject />} />
+                        <Route
+                          path="trilhas/:courseId"
+                          element={<CourseDetail />}
+                        />
+                        <Route
+                          path="trilhas/:courseId/conclusao"
+                          element={<CourseCompletion />}
+                        />
+                        <Route
+                          path="trilhas/:courseId/modulo/:moduleId"
+                          element={<ModuleDetail />}
+                        />
+                        <Route
+                          path="trilhas/:courseId/modulo/:moduleId/quiz"
+                          element={<ModuleQuiz />}
+                        />
+                        <Route
+                          path="trilhas/:courseId/modulo/:moduleId/lab"
+                          element={<ModuleLab />}
+                        />
+                        <Route
+                          path="trilhas/:courseId/modulo/:moduleId/mini-projeto"
+                          element={<ModuleMiniProject />}
+                        />
                         <Route path="aula/:lessonId" element={<Lesson />} />
-                        <Route path="video-aula/:lessonId" element={<VideoLesson />} />
+                        <Route
+                          path="video-aula/:lessonId"
+                          element={<VideoLesson />}
+                        />
                         <Route path="laboratorio" element={<Lab />} />
                         <Route path="materiais" element={<Materials />} />
                         <Route path="perfil" element={<Profile />} />
@@ -114,5 +143,5 @@ export default function App() {
         </AuthProvider>
       </ToastProvider>
     </ThemeProvider>
-  )
+  );
 }
