@@ -27,7 +27,6 @@ import Lab from "./pages/Lab";
 import Materials from "./pages/Materials";
 import Profile from "./pages/Profile";
 import AIChat from "./pages/AIChat";
-import PublicProfile from "./pages/PublicProfile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -51,7 +50,6 @@ export default function App() {
               <ToastContainer />
               <InstallPrompt />
               <Routes>
-                <Route path="/u/:username" element={<PublicProfile />} />
                 <Route path="/onboarding" element={<Onboarding />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/registro" element={<Register />} />
