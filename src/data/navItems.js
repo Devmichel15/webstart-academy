@@ -4,13 +4,14 @@ import {
   Beaker,
   BookOpen,
   Bot,
+  Download,
   GraduationCap,
   LayoutDashboard,
   Shield,
   Users,
-} from 'lucide-react'
+} from "lucide-react";
 
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
 
 const baseNavItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -22,16 +23,16 @@ const baseNavItems = [
 ]
 
 function getAdminItems(profile, fbUser) {
-  const isAdmin = profile?.role === 'admin' || fbUser?.email === ADMIN_EMAIL
-  if (!isAdmin) return []
+  const isAdmin = profile?.role === "admin" || fbUser?.email === ADMIN_EMAIL;
+  if (!isAdmin) return [];
   return [
-    { to: '/admin', label: 'Admin', icon: Shield },
-    { to: '/admin/users', label: 'Utilizadores', icon: Users },
-    { to: '/admin/analytics', label: 'Análises', icon: BarChart3 },
-  ]
+    { to: "/admin", label: "Admin", icon: Shield },
+    { to: "/admin/users", label: "Utilizadores", icon: Users },
+    { to: "/admin/analytics", label: "Análises", icon: BarChart3 },
+  ];
 }
 
 export function getNavItems(profile, fbUser) {
-  const adminItems = getAdminItems(profile, fbUser)
-  return [...adminItems, ...baseNavItems]
+  const adminItems = getAdminItems(profile, fbUser);
+  return [...adminItems, ...baseNavItems];
 }

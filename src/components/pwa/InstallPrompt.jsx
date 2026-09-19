@@ -39,17 +39,24 @@ export function InstallPrompt() {
       setInstallEvent(null);
       setShowIosPrompt(false);
     };
+    const handleInstallRequest = () => {
+      if (!installEvent) return;
+      installEvent.prompt();
+      setInstallEvent(null);
+    };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     window.addEventListener("appinstalled", handleAppInstalled);
+    window.addEventListener("webstart:install", handleInstallRequest);
     return () => {
       window.removeEventListener(
         "beforeinstallprompt",
         handleBeforeInstallPrompt,
       );
       window.removeEventListener("appinstalled", handleAppInstalled);
+      window.removeEventListener("webstart:install", handleInstallRequest);
     };
-  }, []);
+  }, [installEvent]);
 
   const dismiss = () => {
     localStorage.setItem(DISMISSED_KEY, "true");
