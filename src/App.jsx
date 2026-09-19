@@ -1,11 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { ToastProvider } from "./contexts/ToastContext.jsx";
@@ -45,70 +38,6 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import { InstallPrompt } from "./components/pwa/InstallPrompt.jsx";
 import InstallApp from "./pages/InstallApp.jsx";
-import { supabase } from "./lib/supabase.js";
-
-function AuthCallback() {
-  const location = useLocation();
-  const [status, setStatus] = useState(() =>
-    new URLSearchParams(window.location.search).has("code")
-      ? "loading"
-      : "idle",
-  );
-  const [errorMessage, setErrorMessage] = useState("");
-  const exchangedCodeRef = useRef(null);
-
-  useEffect(() => {
-    const code = new URLSearchParams(location.search).get("code");
-    if (!code || exchangedCodeRef.current === code) return undefined;
-    exchangedCodeRef.current = code;
-    const exchangeCode = async () => {
-      const { error } = await supabase.auth.exchangeCodeForSession(
-        window.location.href,
-      );
-      const url = new URL(window.location.href);
-      url.searchParams.delete("code");
-      url.searchParams.delete("error");
-      url.searchParams.delete("error_code");
-      url.searchParams.delete("error_description");
-      window.history.replaceState(
-        {},
-        document.title,
-        `${url.pathname}${url.search}${url.hash}`,
-      );
-
-      if (error) {
-        console.error("[AuthCallback] code exchange failed:", error);
-        setErrorMessage(
-          "Não foi possível concluir o login com Google. Tenta novamente.",
-        );
-        setStatus("error");
-        return;
-      }
-      setStatus("done");
-    };
-
-    exchangeCode();
-    return undefined;
-  }, [location.search]);
-
-  if (status === "loading") {
-    return (
-      <div className="fixed inset-0 z-100 flex items-center justify-center bg-canvas text-primary">
-        A concluir o login...
-      </div>
-    );
-  }
-
-  if (status === "error") {
-    return (
-      <div className="fixed inset-0 z-100 flex items-center justify-center bg-canvas p-6 text-center text-primary">
-        <p role="alert">{errorMessage}</p>
-      </div>
-    );
-  }
-
-  return null;
-}
 
 export default function App() {
   return (
@@ -120,7 +49,6 @@ export default function App() {
               <BrowserRouter>
                 <ToastContainer />
                 <InstallPrompt />
-                <AuthCallback />
                 <Routes>
                   <Route path="/onboarding" element={<Onboarding />} />
                   <Route path="/login" element={<Login />} />

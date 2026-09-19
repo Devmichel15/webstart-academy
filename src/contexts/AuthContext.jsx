@@ -10,9 +10,22 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(async (supabaseUser) => {
+    const unsubscribe = onAuthStateChanged(async (supabaseUser, event) => {
       setUser(supabaseUser);
       setError(null);
+
+      if (supabaseUser && event === "SIGNED_IN") {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("code");
+        url.searchParams.delete("error");
+        url.searchParams.delete("error_code");
+        url.searchParams.delete("error_description");
+        window.history.replaceState(
+          {},
+          document.title,
+          `${url.pathname}${url.search}${url.hash}`,
+        );
+      }
 
       try {
         if (supabaseUser) {
