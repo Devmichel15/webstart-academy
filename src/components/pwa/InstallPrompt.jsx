@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { Download, Share2, X } from "lucide-react";
-import { useInstall } from "../../contexts/InstallContext.jsx";
-
-const DISMISSED_KEY = "webstart-pwa-install-dismissed";
+import {
+  INSTALL_DISMISSED_KEY,
+  useInstall,
+} from "../../contexts/InstallContext.jsx";
 
 export function InstallPrompt() {
   const { canPrompt, installed, isIos, install } = useInstall();
   const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem(DISMISSED_KEY) === "true",
+    () => localStorage.getItem(INSTALL_DISMISSED_KEY) === "true",
   );
 
   const dismiss = () => {
-    localStorage.setItem(DISMISSED_KEY, "true");
+    localStorage.setItem(INSTALL_DISMISSED_KEY, "true");
     setDismissed(true);
   };
 

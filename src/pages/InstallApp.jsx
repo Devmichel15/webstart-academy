@@ -121,7 +121,24 @@ function InstallAction() {
   );
 }
 
+function DeviceBadge({ active }) {
+  if (!active) return null;
+  return (
+    <span className="ml-auto rounded-full bg-accent px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-white">
+      O teu dispositivo
+    </span>
+  );
+}
+
 export default function InstallApp() {
+  const { device } = useInstall();
+  const androidCardClass = device.android
+    ? "border-3 border-accent"
+    : "";
+  const iosCardClass = device.ios ? "border-3 border-accent" : "";
+  const desktopCardClass = device.desktop
+    ? "border-3 border-accent"
+    : "";
   return (
     <>
       <SEO
@@ -165,7 +182,7 @@ export default function InstallApp() {
         </section>
 
         <section className="grid gap-5 lg:grid-cols-3">
-          <Card>
+          <Card className={androidCardClass}>
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center border-2 border-strong bg-brand-100 text-brand-800">
                 <Smartphone size={22} />
@@ -174,6 +191,7 @@ export default function InstallApp() {
                 <h3 className="font-black">Android</h3>
                 <p className="text-xs font-semibold text-secondary">Chrome</p>
               </div>
+              <DeviceBadge active={device.android} />
             </div>
             <StepList steps={androidSteps} />
             <div className="mt-5 flex items-start gap-2 border-t-2 border pt-4 text-xs leading-5 text-secondary">
@@ -182,7 +200,7 @@ export default function InstallApp() {
             </div>
           </Card>
 
-          <Card>
+          <Card className={iosCardClass}>
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center border-2 border-strong bg-brand-100 text-brand-800">
                 <Share2 size={22} />
@@ -191,6 +209,7 @@ export default function InstallApp() {
                 <h3 className="font-black">iPhone ou iPad</h3>
                 <p className="text-xs font-semibold text-secondary">Safari</p>
               </div>
+              <DeviceBadge active={device.ios} />
             </div>
             <StepList steps={iosSteps} />
             <div className="mt-5 flex items-start gap-2 border-t-2 border pt-4 text-xs leading-5 text-secondary">
@@ -199,7 +218,7 @@ export default function InstallApp() {
             </div>
           </Card>
 
-          <Card>
+          <Card className={desktopCardClass}>
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center border-2 border-strong bg-brand-100 text-brand-800">
                 <Globe size={22} />
@@ -210,6 +229,7 @@ export default function InstallApp() {
                   Chrome ou Edge
                 </p>
               </div>
+              <DeviceBadge active={device.desktop} />
             </div>
             <StepList steps={computerSteps} />
             <div className="mt-5 flex items-start gap-2 border-t-2 border pt-4 text-xs leading-5 text-secondary">
