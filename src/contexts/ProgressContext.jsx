@@ -229,9 +229,12 @@ export function ProgressProvider({ children }) {
     try {
       await visitLessonService(user.id, lesson)
     } catch (err) {
-      showError(err.message || 'Erro ao registrar acesso à aula.')
+      // Chamada automática de "abertura de aula" (mount de Lesson/VideoLesson):
+      // se o perfil ainda não foi criado (corrida com createUserProfile), não
+      // deve disparar toasts em série antes de qualquer ação do utilizador.
+      console.warn('[ProgressContext] visitLesson skipped:', err?.message || err)
     }
-  }, [user, showError])
+  }, [user])
 
   const isLessonCompleted = useCallback(
     (lessonId) => isLessonCompletedService(completedLessons, lessonId),

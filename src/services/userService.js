@@ -66,18 +66,6 @@ export async function createUserProfile(user, extra = {}) {
     }
   }
 
-  if (!profile && user.email) {
-    const migratedProfile = await findMigratedProfileByEmail(user.email);
-    if (migratedProfile && migratedProfile.id !== user.id) {
-      const { error } = await supabase
-        .from("profiles")
-        .update({ auth_user_id: user.id })
-        .eq("id", migratedProfile.id);
-      if (error) throw error;
-      profile = migratedProfile;
-    }
-  }
-
   if (profile) {
     await touchProfile(user, profile);
     return profile;
@@ -215,6 +203,9 @@ export async function getUserProfile(uid) {
 
 const activeUserChannels = new Map();
 
+const PROFILE_RETRY_ATTEMPTS = 4;
+const PROFILE_RETRY_DELAY_MS = 500;
+
 export function subscribeToUser(uid, callback) {
   if (!uid) return () => {};
 
@@ -225,9 +216,7 @@ export function subscribeToUser(uid, callback) {
     entry.refCount++;
     entry.callbacks.add(mappedCallback);
 
-    getUserProfileRow(uid).then((data) => {
-      if (data) mappedCallback(data);
-    });
+    readProfileWithRetry(uid).then(mappedCallback);
 
     return () => unsubscribeUser(uid, mappedCallback);
   }
@@ -249,10 +238,8 @@ export function subscribeToUser(uid, callback) {
     )
     .subscribe((status) => {
       if (status === "SUBSCRIBED") {
-        getUserProfileRow(uid).then((data) => {
-          if (data) {
-            for (const cb of callbacks) cb(data);
-          }
+        readProfileWithRetry(uid).then((data) => {
+          for (const cb of callbacks) cb(data);
         });
       }
     });
@@ -303,6 +290,21 @@ async function getUserProfileRow(uid) {
     .maybeSingle();
   if (error) throw error;
   return data;
+}
+
+async function readProfileWithRetry(uid) {
+  for (let attempt = 0; attempt < PROFILE_RETRY_ATTEMPTS; attempt += 1) {
+    try {
+      const row = await getUserProfileRow(uid);
+      if (row) return row;
+    } catch {
+      // leitura transiente com erro → tenta de novo dentro do orçamento
+    }
+    if (attempt < PROFILE_RETRY_ATTEMPTS - 1) {
+      await new Promise((resolve) => setTimeout(resolve, PROFILE_RETRY_DELAY_MS));
+    }
+  }
+  return null;
 }
 
 export async function resolveProfileId(uid) {
@@ -403,10 +405,16 @@ export async function addCompletedQuiz(uid, moduleId) {
 }
 
 export async function updateCurrentLesson(uid, { courseId, lessonId }) {
-  await updateUserProfile(uid, {
-    currentCourse: courseId,
-    currentLesson: lessonId,
-  });
+  const profile = await getUserProfileRow(uid);
+  if (!profile) throw new Error("Perfil do utilizador não encontrado.");
+  if (profile.current_course === courseId && profile.current_lesson === lessonId) {
+    return;
+  }
+  const { error } = await supabase
+    .from("profiles")
+    .update({ current_course: courseId, current_lesson: lessonId })
+    .eq("id", profile.id);
+  if (error) throw error;
 }
 
 export async function addCompletedLesson(uid, lessonId) {

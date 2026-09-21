@@ -1,20 +1,32 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
 
 const ToastContext = createContext(null)
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([])
+  const activeErrors = useRef(new Set())
 
   const removeToast = useCallback((id) => {
     setToasts((current) => current.filter((toast) => toast.id !== id))
   }, [])
 
-  const showToast = useCallback((message, type = 'info') => {
-    const id = crypto.randomUUID()
-    setToasts((current) => [...current, { id, message, type }])
+  const showToast = useCallback(
+    (message, type = 'info') => {
+      if (type === 'error') {
+        if (activeErrors.current.has(message)) return
+        activeErrors.current.add(message)
+      }
 
-    setTimeout(() => removeToast(id), 4000)
-  }, [removeToast])
+      const id = crypto.randomUUID()
+      setToasts((current) => [...current, { id, message, type }])
+
+      setTimeout(() => {
+        removeToast(id)
+        if (type === 'error') activeErrors.current.delete(message)
+      }, 4000)
+    },
+    [removeToast],
+  )
 
   const value = useMemo(
     () => ({
