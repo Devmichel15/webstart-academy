@@ -34,3 +34,4 @@ export function InstallNavItem({ to, label, icon: Icon, onClick }) {
     </NavLink>
   );
 }
+

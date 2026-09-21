@@ -46,8 +46,19 @@ export default defineConfig(({ command, mode }) => {
       tailwindcss(),
       VitePWA({
         registerType: "autoUpdate",
-        cleanupOutdatedCaches: true,
+        strategies: "injectManifest",
+        srcDir: "public",
+        filename: "sw.js",
         includeAssets: ["offline.html", "icons/*.png"],
+        injectManifest: {
+          globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
+          globIgnores: ["**/*.map", "workbox-*.js"],
+          maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
+        },
+        workbox: {
+          navigateFallback: "/index.html",
+          navigateFallbackDenylist: [/^\/api/, /^\/auth/],
+        },
         manifest: {
           name: "Webstart",
           short_name: "Webstart",
@@ -73,51 +84,6 @@ export default defineConfig(({ command, mode }) => {
               sizes: "512x512",
               type: "image/png",
               purpose: "maskable",
-            },
-          ],
-        },
-        workbox: {
-          skipWaiting: true,
-          clientsClaim: true,
-          navigateFallback: "/offline.html",
-          navigateFallbackDenylist: [
-            /^\/(?:login|registro|recuperar-senha|onboarding|email-preferences)(?:\/|$)/,
-          ],
-          maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
-          globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
-          runtimeCaching: [
-            {
-              urlPattern: ({ url }) =>
-                url.hostname.includes("supabase.co") &&
-                url.pathname.startsWith("/auth/v1/"),
-              handler: "NetworkOnly",
-            },
-            {
-              urlPattern: ({ request }) =>
-                request.method !== "GET" && request.method !== "HEAD",
-              handler: "NetworkOnly",
-            },
-            {
-              urlPattern: ({ url, request }) =>
-                request.method === "GET" &&
-                (url.pathname.startsWith("/api/") ||
-                  (url.hostname.includes("supabase.co") &&
-                    (url.pathname.startsWith("/rest/v1/") ||
-                      url.pathname.startsWith("/functions/v1/")))),
-              handler: "NetworkFirst",
-              options: {
-                cacheName: "webstart-api-cache",
-                networkTimeoutSeconds: 10,
-                expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 },
-              },
-            },
-            {
-              urlPattern: ({ request }) =>
-                ["script", "style", "image", "font"].includes(
-                  request.destination,
-                ),
-              handler: "CacheFirst",
-              options: { cacheName: "webstart-static-assets" },
             },
           ],
         },
