@@ -8,6 +8,7 @@ import {
   GraduationCap,
   LayoutDashboard,
   Shield,
+  Trophy,
   Users,
 } from "lucide-react";
 
@@ -20,6 +21,7 @@ const baseNavItems = [
   { to: "/chat", label: "Tutor IA", icon: Bot },
   { to: "/materiais", label: "Materiais", icon: GraduationCap },
   { to: "/perfil", label: "Perfil", icon: Award },
+  { to: "/ranking", label: "Classificação", icon: Trophy },
   { to: "/instalar-app", label: "Instalar app", icon: Download },
 ];
 

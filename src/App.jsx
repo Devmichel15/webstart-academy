@@ -38,6 +38,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import { InstallPrompt } from "./components/pwa/InstallPrompt.jsx";
 import InstallApp from "./pages/InstallApp.jsx";
+import Ranking from "./pages/Ranking.jsx";
 
 export default function App() {
   return (
@@ -88,6 +89,7 @@ export default function App() {
                           path="primeiros-passos"
                           element={<PrimeirosPassos />}
                         />
+                        <Route path="ranking" element={<Ranking />} />
                         <Route index element={<Dashboard />} />
                         <Route element={<FirstStepsGuard />}>
                           <Route path="trilhas" element={<Journey />} />
