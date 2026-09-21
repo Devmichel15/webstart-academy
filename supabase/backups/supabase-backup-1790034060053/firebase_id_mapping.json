@@ -1,0 +1,1616 @@
+[
+  {
+    "firebase_doc_path": "users/0tOMcJv4TjhpiGt3MiAaWdzwEFy2",
+    "supabase_table": "profiles",
+    "supabase_id": "fbeba462-7815-5828-8750-d113bcf00ce0",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/1N4es75L4zSoj0dXyxVXnXLF6Zf1",
+    "supabase_table": "profiles",
+    "supabase_id": "cc830fd8-4a7b-500a-8ffc-29c57104c376",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/2SthBzIZsxe219qvQKGwcPHe9ud2",
+    "supabase_table": "profiles",
+    "supabase_id": "f7a8e196-9669-5637-b547-70d02af1abed",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/32f10KS0Aoadkbui4J84PusnmbD2",
+    "supabase_table": "profiles",
+    "supabase_id": "e574764a-18db-59f0-aa17-d1abe7f30cd7",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/4lVjATGJOHSCDwygX2a3y1avhoF2",
+    "supabase_table": "profiles",
+    "supabase_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/6E3AThaVy6fIoXA2dxu6yQXqcau2",
+    "supabase_table": "profiles",
+    "supabase_id": "1032d019-cc19-54d3-9b0d-4ff6e2cf28c8",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/6PFevsOOE2cnMabZPZlLNUBUtqy1",
+    "supabase_table": "profiles",
+    "supabase_id": "1e6c3ef9-f4c8-5246-9fa3-34313028bfd3",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/7Q5mtJejYpYWXrJRO9Do1tTymgs1",
+    "supabase_table": "profiles",
+    "supabase_id": "0835d59e-38a0-5689-aff6-069eb34ee034",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/8EmmsqVBnAM2saJc2lT8JSWR7a03",
+    "supabase_table": "profiles",
+    "supabase_id": "13354b77-b218-5675-9326-b63e6eae2c29",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/8kh0KfiOlBcGFkqgjWJhpqFfokE2",
+    "supabase_table": "profiles",
+    "supabase_id": "a88057e5-074a-5233-b889-8aa928a7eeaf",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/95iR2CfvsKQUsGrw4IccUZwP8q13",
+    "supabase_table": "profiles",
+    "supabase_id": "fb7d997e-7389-5e6e-ab25-f517baddef28",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/9aB3AdMFgaXp0pzEhbQv0F4D7MI3",
+    "supabase_table": "profiles",
+    "supabase_id": "4868a6e3-8571-52f7-aa52-3089721db727",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/9g1arqVloDSqgMtCsstrwpLExzJ2",
+    "supabase_table": "profiles",
+    "supabase_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/9gxi90Oq6vVaYC9fZfXtq7yDVN02",
+    "supabase_table": "profiles",
+    "supabase_id": "c4998012-4770-5ec1-be39-54e2c953840c",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/9yr3d1SUFfYARPIu3Gl9UVw4G2m1",
+    "supabase_table": "profiles",
+    "supabase_id": "5dd945f1-fc4b-5a7d-93ab-3f8810e5937c",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/ALWnvNOeS9PrW6Y2uFQdr7QVRis2",
+    "supabase_table": "profiles",
+    "supabase_id": "152b0cea-0bf7-5b50-bba7-383ebbee522c",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12",
+    "supabase_table": "profiles",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/AxY1fzZJ5OhQsK8glAcl3IKHLBe2",
+    "supabase_table": "profiles",
+    "supabase_id": "f6164730-ba8c-595a-b6ce-40d54c7bdb4a",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/BAYru1R45xeErVcbNDHKAKmiJtn1",
+    "supabase_table": "profiles",
+    "supabase_id": "363c09eb-e076-5b13-acb6-600fb7c5f8a2",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/BHJZF2YLqAbRZzOF78xfBDqUhco1",
+    "supabase_table": "profiles",
+    "supabase_id": "d23f0b4c-e067-5bb0-bd21-e4e4c6e4c807",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/Bo67wZl01af1EiU1xYyZ7CpZd4E3",
+    "supabase_table": "profiles",
+    "supabase_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/CNtN4kVf9GbT4gM5M7Dijy8HDBB2",
+    "supabase_table": "profiles",
+    "supabase_id": "dcc4a542-2aee-5c53-b2bb-450f4cc87e9a",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/D4y3mMaHeEYPKXYM8bXdbleZq6e2",
+    "supabase_table": "profiles",
+    "supabase_id": "2bb5a356-d683-5eeb-8a7a-f8aedf2b3d1e",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/EwXIXZIh22X8xvtZmSxy6gNpDVw2",
+    "supabase_table": "profiles",
+    "supabase_id": "ada1506c-6d0e-511f-ac49-1f3076b61d6c",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/FsGAgtTEKsPOrK4Gz6CCsSsuNxA2",
+    "supabase_table": "profiles",
+    "supabase_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/GcY7CTfDkqW19jPUpOd484L1wtp1",
+    "supabase_table": "profiles",
+    "supabase_id": "9ca73af8-5033-5fcc-a7ce-026a74bc4ad1",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/IH0OFTDBf8TrAZxX2hnjP9h7gnP2",
+    "supabase_table": "profiles",
+    "supabase_id": "10810a27-dc75-574f-b325-1ac0d0701098",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/IlOOBPjhXOeCF5L1B00i6pnJG303",
+    "supabase_table": "profiles",
+    "supabase_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/JvdmJg3NopVW0AOmn9ahJfzdY7y2",
+    "supabase_table": "profiles",
+    "supabase_id": "3eed2023-3e22-583f-ae74-77febfd9e9ea",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/KytTVPeI43SA1pGzq0rxUkwgf9i1",
+    "supabase_table": "profiles",
+    "supabase_id": "c432c785-2cce-59e4-bca8-3e272681850a",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/LY9Qt63mLnZZkLhSNmo85JY5c6v2",
+    "supabase_table": "profiles",
+    "supabase_id": "21ebf32f-d6c8-570d-a989-33a20ea6964f",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/LmmmqGdq5VZnF9rfNOAV8zTo5WD3",
+    "supabase_table": "profiles",
+    "supabase_id": "a3e90175-9138-5133-ad59-1a36e51609e7",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/MYxwfnm85Khm6P5UaIMMmx29BUI2",
+    "supabase_table": "profiles",
+    "supabase_id": "0d70576b-b859-52f8-a113-970558248a30",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/N5CMnWaIb9hGrwtuvY1w2crZyIV2",
+    "supabase_table": "profiles",
+    "supabase_id": "5a8b8613-21e4-5f7c-894f-5a4c00dc45f3",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/NAtXGpJERcgWPYNsb7Z1OQ8rpys1",
+    "supabase_table": "profiles",
+    "supabase_id": "774ce45a-20b3-5629-a3ed-4e7c3e9c6778",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/NxOcVpZpGdavbkI4UyVrwE9TwoI2",
+    "supabase_table": "profiles",
+    "supabase_id": "76493183-8740-50f8-88e2-213ae650f415",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/O9Kl9RpXSwfjvRa5NbBAY3i6glr1",
+    "supabase_table": "profiles",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/PrOM2iTagQhwEO8DTJpwsLgDPq42",
+    "supabase_table": "profiles",
+    "supabase_id": "ac401e4d-3c4f-5137-bad5-ff9c614cc92e",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/R7JFPsbAbgO70HhvatcuHIXLxkM2",
+    "supabase_table": "profiles",
+    "supabase_id": "f8e1d6ec-af92-5749-8722-773368949b7e",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/VLuCEgLXPSSdqHEGJA0XyvnpBHA3",
+    "supabase_table": "profiles",
+    "supabase_id": "005ef699-039d-5f27-851b-bb2cd484e4f0",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/VUOZqwGrv6PQCiEpFJdOjfaS21G3",
+    "supabase_table": "profiles",
+    "supabase_id": "8d8ad1bd-2fd7-500c-9adf-4e53f6f3c6d9",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/VoQ1wnpGHFMhjTNFx7gyRUvyN842",
+    "supabase_table": "profiles",
+    "supabase_id": "b661d925-fa45-5dd0-9356-61f58c931bec",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/WBEdbCAQFOTWovn0imVkLRVTWVE2",
+    "supabase_table": "profiles",
+    "supabase_id": "5a6ea665-8ee5-5de2-9e73-4872eae985bb",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/WmMCHWaghwPqyiVIjq3gIZJ2R2g1",
+    "supabase_table": "profiles",
+    "supabase_id": "ad4565d0-d0bc-5129-ad57-a7e308f40f42",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/XHDP21cn62QXHDDVco78mR5f9112",
+    "supabase_table": "profiles",
+    "supabase_id": "9d668fff-45ac-5076-b968-b3561bee0291",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/YI0reCnjItRnGAMAAyMaLDFGA7w2",
+    "supabase_table": "profiles",
+    "supabase_id": "3c41a0be-bada-50b4-9929-87e3b23e9411",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/YKfI30HnCkOQBKfPNgdHX4PhZaG2",
+    "supabase_table": "profiles",
+    "supabase_id": "44e50e3e-1d01-54e5-bac9-0cc11e755519",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/YM5VJlIUxdQricji2OH31UPrwBR2",
+    "supabase_table": "profiles",
+    "supabase_id": "dd3d815b-b434-5c8d-ac7d-d9c32167fce8",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/etPcKiRub3dg1X62xnAiLXoIz502",
+    "supabase_table": "profiles",
+    "supabase_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/f6VFR20kSQOIrIGTFTcOySAEHiV2",
+    "supabase_table": "profiles",
+    "supabase_id": "27c6ea04-42a4-5e19-8e7c-123a5bf3b68e",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/gHeL1pE6ncTlqKAC2bCCPodQ0283",
+    "supabase_table": "profiles",
+    "supabase_id": "2a1f35a0-3cd3-5bb0-8b26-2414e2c0e044",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/gMxP2I1EafaQBaaGOQ8t6N0Lo072",
+    "supabase_table": "profiles",
+    "supabase_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/gXPgYzmRddhnKOvhyrtTF7ygU3E3",
+    "supabase_table": "profiles",
+    "supabase_id": "f71cb18c-3762-592f-89e3-da017b808312",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/gYAn7NWwtXgyx0yIgz6KdIncN232",
+    "supabase_table": "profiles",
+    "supabase_id": "d9ee1cc7-d965-51a8-a6a6-ea74ef61dd53",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/hXN1gL4mC0WEeQhf4qLh4xYeRhD3",
+    "supabase_table": "profiles",
+    "supabase_id": "faafc8c9-771a-5af7-8f2a-736ef5aab5e0",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/hXOmDOoRDmXsw3smJ9U9fr8iJtu1",
+    "supabase_table": "profiles",
+    "supabase_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/i9r6Hol6QmbqGjP1GntUxbh8HHg2",
+    "supabase_table": "profiles",
+    "supabase_id": "c7167d12-46bf-5f3a-95cb-51eb1c31d2b9",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/kGuFj9ceTINASKJiCLupFYzSWUu1",
+    "supabase_table": "profiles",
+    "supabase_id": "c8fad752-ec43-5ffa-9a94-a23bd12b3ef8",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/lRBlppLYfiO6X8CiPiUoZIgAxvm1",
+    "supabase_table": "profiles",
+    "supabase_id": "79d288e2-4669-5479-92c5-0b56637eb242",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/lS9EjUea6FZ9ZwKD4WNdWp1Euvk2",
+    "supabase_table": "profiles",
+    "supabase_id": "dd13a665-7d56-5a9d-b23a-d7b26dc75509",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/mBvtmhEP5ZfwpEp2p4TXMrwtVWw1",
+    "supabase_table": "profiles",
+    "supabase_id": "3c8efb8a-259d-52dd-b435-f16dff4ac2ec",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/mCUmOVlFTwPCtBhvbYa1RhSvE6G2",
+    "supabase_table": "profiles",
+    "supabase_id": "a6bb29fe-7f51-59ce-9a3d-d1158b31fbca",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/mZyp6L8RFzYMX8s2kG8CbrBCVBs2",
+    "supabase_table": "profiles",
+    "supabase_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/nNQk6Pg9DncWU9MVAMWD2L0iK2o1",
+    "supabase_table": "profiles",
+    "supabase_id": "3af0924f-093a-5a99-9487-aedd3d8312f0",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/nWTFB3tWWiV1iKVW3i0wIZu9PR02",
+    "supabase_table": "profiles",
+    "supabase_id": "a27306b2-7779-5561-bf43-614019dd6d8d",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/nnenGnK0KgU1QcoNGGITDyT9imH2",
+    "supabase_table": "profiles",
+    "supabase_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/o3lAHNYXe8Z4ZVLf0iNBKU6BzAk2",
+    "supabase_table": "profiles",
+    "supabase_id": "8e23468e-5caf-56b6-a7d0-5875eaf4da82",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/oEoqIb1r1qbfJwmno7OCwRqr9GB3",
+    "supabase_table": "profiles",
+    "supabase_id": "1b819ea5-f88e-5e06-ba49-d5e9666d9fbb",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/oRSX8TfNEINZZVOn7Zr6ToAUXeC3",
+    "supabase_table": "profiles",
+    "supabase_id": "7e51428c-ccc8-5999-9509-abcec3527307",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/pHbdVq2Vj8RHPFwroGBSiqSC3dk1",
+    "supabase_table": "profiles",
+    "supabase_id": "0c63c892-b6f8-5183-8b9d-23eed0f96705",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/qyY9Mrx7Mzb6emsEIHk3OcDlF143",
+    "supabase_table": "profiles",
+    "supabase_id": "1c066af9-b615-5eff-a157-174c5eb762c7",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/rBpm2wa88qTnO84hlDCmOnlScQc2",
+    "supabase_table": "profiles",
+    "supabase_id": "20380ab4-5164-5049-b5cc-6fa4745d3420",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/rbmFHw7EvEVLITx6EX5PWaPHSlB2",
+    "supabase_table": "profiles",
+    "supabase_id": "60ca24a7-f0b1-5307-8ddc-40596060bbea",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/smxFMO1Nu6fBk5fBCxoWc9zuTQG2",
+    "supabase_table": "profiles",
+    "supabase_id": "a88b302e-4919-5f0c-bb88-96322f437330",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/tuH8GB5YgiRkc3TTZNVlfxspNxM2",
+    "supabase_table": "profiles",
+    "supabase_id": "831c20c2-00a4-5d41-bbd0-dc2dccc7c58c",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/u11EP6G5RqZtY1QoIS00BLIWkJI2",
+    "supabase_table": "profiles",
+    "supabase_id": "97c71c11-1268-5f40-92b1-7e1adcd243f0",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/uf1d7PXlyeQ0a9WddtrNSRi2N8e2",
+    "supabase_table": "profiles",
+    "supabase_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/wNIWDzUW8iX5NSHq5tlJXlnVhUy2",
+    "supabase_table": "profiles",
+    "supabase_id": "10d93b87-3f01-57a6-a363-6f2b15287666",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/wZho1dKJM4R5DbISz1I0cD4cHRB2",
+    "supabase_table": "profiles",
+    "supabase_id": "ab768c6c-166c-52aa-aa7d-153ca2e9641b",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/ybwZpGpefUbdFxjX46RV4eesSgR2",
+    "supabase_table": "profiles",
+    "supabase_id": "4fca858f-c5a9-53bb-8c0e-2b901b3da485",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "users/zAY3svQzxuR7jvgsBV5jvUWEjZD2",
+    "supabase_table": "profiles",
+    "supabase_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/0tOMcJv4TjhpiGt3MiAaWdzwEFy2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "fbeba462-7815-5828-8750-d113bcf00ce0|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/4lVjATGJOHSCDwygX2a3y1avhoF2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/4lVjATGJOHSCDwygX2a3y1avhoF2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/4lVjATGJOHSCDwygX2a3y1avhoF2_graduate",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254|graduate",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/4lVjATGJOHSCDwygX2a3y1avhoF2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/4lVjATGJOHSCDwygX2a3y1avhoF2_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/4lVjATGJOHSCDwygX2a3y1avhoF2_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/4lVjATGJOHSCDwygX2a3y1avhoF2_streak-3",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254|streak-3",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/4lVjATGJOHSCDwygX2a3y1avhoF2_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/4lVjATGJOHSCDwygX2a3y1avhoF2_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/6PFevsOOE2cnMabZPZlLNUBUtqy1_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1e6c3ef9-f4c8-5246-9fa3-34313028bfd3|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/6PFevsOOE2cnMabZPZlLNUBUtqy1_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1e6c3ef9-f4c8-5246-9fa3-34313028bfd3|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/6PFevsOOE2cnMabZPZlLNUBUtqy1_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1e6c3ef9-f4c8-5246-9fa3-34313028bfd3|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/6PFevsOOE2cnMabZPZlLNUBUtqy1_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1e6c3ef9-f4c8-5246-9fa3-34313028bfd3|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/7Q5mtJejYpYWXrJRO9Do1tTymgs1_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "0835d59e-38a0-5689-aff6-069eb34ee034|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/7Q5mtJejYpYWXrJRO9Do1tTymgs1_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "0835d59e-38a0-5689-aff6-069eb34ee034|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/7Q5mtJejYpYWXrJRO9Do1tTymgs1_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "0835d59e-38a0-5689-aff6-069eb34ee034|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/7Q5mtJejYpYWXrJRO9Do1tTymgs1_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "0835d59e-38a0-5689-aff6-069eb34ee034|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/7Q5mtJejYpYWXrJRO9Do1tTymgs1_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "0835d59e-38a0-5689-aff6-069eb34ee034|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/7Q5mtJejYpYWXrJRO9Do1tTymgs1_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "0835d59e-38a0-5689-aff6-069eb34ee034|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/7Q5mtJejYpYWXrJRO9Do1tTymgs1_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "0835d59e-38a0-5689-aff6-069eb34ee034|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/8EmmsqVBnAM2saJc2lT8JSWR7a03_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "13354b77-b218-5675-9326-b63e6eae2c29|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/8EmmsqVBnAM2saJc2lT8JSWR7a03_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "13354b77-b218-5675-9326-b63e6eae2c29|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/8EmmsqVBnAM2saJc2lT8JSWR7a03_graduate",
+    "supabase_table": "user_achievements",
+    "supabase_id": "13354b77-b218-5675-9326-b63e6eae2c29|graduate",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/8EmmsqVBnAM2saJc2lT8JSWR7a03_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "13354b77-b218-5675-9326-b63e6eae2c29|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/8EmmsqVBnAM2saJc2lT8JSWR7a03_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "13354b77-b218-5675-9326-b63e6eae2c29|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/8EmmsqVBnAM2saJc2lT8JSWR7a03_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "13354b77-b218-5675-9326-b63e6eae2c29|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/8EmmsqVBnAM2saJc2lT8JSWR7a03_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "13354b77-b218-5675-9326-b63e6eae2c29|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/8EmmsqVBnAM2saJc2lT8JSWR7a03_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "13354b77-b218-5675-9326-b63e6eae2c29|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9aB3AdMFgaXp0pzEhbQv0F4D7MI3_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "4868a6e3-8571-52f7-aa52-3089721db727|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9aB3AdMFgaXp0pzEhbQv0F4D7MI3_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "4868a6e3-8571-52f7-aa52-3089721db727|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9g1arqVloDSqgMtCsstrwpLExzJ2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9g1arqVloDSqgMtCsstrwpLExzJ2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9g1arqVloDSqgMtCsstrwpLExzJ2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9g1arqVloDSqgMtCsstrwpLExzJ2_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9g1arqVloDSqgMtCsstrwpLExzJ2_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9g1arqVloDSqgMtCsstrwpLExzJ2_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9g1arqVloDSqgMtCsstrwpLExzJ2_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9gxi90Oq6vVaYC9fZfXtq7yDVN02_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "c4998012-4770-5ec1-be39-54e2c953840c|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9gxi90Oq6vVaYC9fZfXtq7yDVN02_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "c4998012-4770-5ec1-be39-54e2c953840c|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9gxi90Oq6vVaYC9fZfXtq7yDVN02_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "c4998012-4770-5ec1-be39-54e2c953840c|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9yr3d1SUFfYARPIu3Gl9UVw4G2m1_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "5dd945f1-fc4b-5a7d-93ab-3f8810e5937c|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9yr3d1SUFfYARPIu3Gl9UVw4G2m1_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "5dd945f1-fc4b-5a7d-93ab-3f8810e5937c|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/9yr3d1SUFfYARPIu3Gl9UVw4G2m1_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "5dd945f1-fc4b-5a7d-93ab-3f8810e5937c|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_graduate",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|graduate",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_project-builder",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|project-builder",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_streak-3",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|streak-3",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_streak-7",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|streak-7",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/AY8ZfkeSv9Y5dbtJbrUNtgvC2y12_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/BHJZF2YLqAbRZzOF78xfBDqUhco1_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "d23f0b4c-e067-5bb0-bd21-e4e4c6e4c807|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/BHJZF2YLqAbRZzOF78xfBDqUhco1_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "d23f0b4c-e067-5bb0-bd21-e4e4c6e4c807|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/BHJZF2YLqAbRZzOF78xfBDqUhco1_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "d23f0b4c-e067-5bb0-bd21-e4e4c6e4c807|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/Bo67wZl01af1EiU1xYyZ7CpZd4E3_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/Bo67wZl01af1EiU1xYyZ7CpZd4E3_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/Bo67wZl01af1EiU1xYyZ7CpZd4E3_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/Bo67wZl01af1EiU1xYyZ7CpZd4E3_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/Bo67wZl01af1EiU1xYyZ7CpZd4E3_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/Bo67wZl01af1EiU1xYyZ7CpZd4E3_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/Bo67wZl01af1EiU1xYyZ7CpZd4E3_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/EwXIXZIh22X8xvtZmSxy6gNpDVw2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ada1506c-6d0e-511f-ac49-1f3076b61d6c|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/EwXIXZIh22X8xvtZmSxy6gNpDVw2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ada1506c-6d0e-511f-ac49-1f3076b61d6c|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/EwXIXZIh22X8xvtZmSxy6gNpDVw2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ada1506c-6d0e-511f-ac49-1f3076b61d6c|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/EwXIXZIh22X8xvtZmSxy6gNpDVw2_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ada1506c-6d0e-511f-ac49-1f3076b61d6c|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/FsGAgtTEKsPOrK4Gz6CCsSsuNxA2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/FsGAgtTEKsPOrK4Gz6CCsSsuNxA2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/FsGAgtTEKsPOrK4Gz6CCsSsuNxA2_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/FsGAgtTEKsPOrK4Gz6CCsSsuNxA2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/FsGAgtTEKsPOrK4Gz6CCsSsuNxA2_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/FsGAgtTEKsPOrK4Gz6CCsSsuNxA2_project-builder",
+    "supabase_table": "user_achievements",
+    "supabase_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb|project-builder",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/FsGAgtTEKsPOrK4Gz6CCsSsuNxA2_streak-3",
+    "supabase_table": "user_achievements",
+    "supabase_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb|streak-3",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/FsGAgtTEKsPOrK4Gz6CCsSsuNxA2_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/FsGAgtTEKsPOrK4Gz6CCsSsuNxA2_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/IlOOBPjhXOeCF5L1B00i6pnJG303_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "507cee61-16a2-5c11-bb31-b5733ae10210|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/IlOOBPjhXOeCF5L1B00i6pnJG303_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "507cee61-16a2-5c11-bb31-b5733ae10210|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/IlOOBPjhXOeCF5L1B00i6pnJG303_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "507cee61-16a2-5c11-bb31-b5733ae10210|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/IlOOBPjhXOeCF5L1B00i6pnJG303_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "507cee61-16a2-5c11-bb31-b5733ae10210|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/IlOOBPjhXOeCF5L1B00i6pnJG303_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "507cee61-16a2-5c11-bb31-b5733ae10210|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/IlOOBPjhXOeCF5L1B00i6pnJG303_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "507cee61-16a2-5c11-bb31-b5733ae10210|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/IlOOBPjhXOeCF5L1B00i6pnJG303_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "507cee61-16a2-5c11-bb31-b5733ae10210|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/IlOOBPjhXOeCF5L1B00i6pnJG303_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "507cee61-16a2-5c11-bb31-b5733ae10210|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/O9Kl9RpXSwfjvRa5NbBAY3i6glr1_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/O9Kl9RpXSwfjvRa5NbBAY3i6glr1_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/O9Kl9RpXSwfjvRa5NbBAY3i6glr1_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/O9Kl9RpXSwfjvRa5NbBAY3i6glr1_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/O9Kl9RpXSwfjvRa5NbBAY3i6glr1_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/O9Kl9RpXSwfjvRa5NbBAY3i6glr1_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/O9Kl9RpXSwfjvRa5NbBAY3i6glr1_streak-3",
+    "supabase_table": "user_achievements",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962|streak-3",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/O9Kl9RpXSwfjvRa5NbBAY3i6glr1_streak-7",
+    "supabase_table": "user_achievements",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962|streak-7",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/O9Kl9RpXSwfjvRa5NbBAY3i6glr1_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/O9Kl9RpXSwfjvRa5NbBAY3i6glr1_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "6e9737ac-157b-5834-8522-23ab46398962|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/VLuCEgLXPSSdqHEGJA0XyvnpBHA3_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "005ef699-039d-5f27-851b-bb2cd484e4f0|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/VLuCEgLXPSSdqHEGJA0XyvnpBHA3_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "005ef699-039d-5f27-851b-bb2cd484e4f0|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/VLuCEgLXPSSdqHEGJA0XyvnpBHA3_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "005ef699-039d-5f27-851b-bb2cd484e4f0|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/VLuCEgLXPSSdqHEGJA0XyvnpBHA3_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "005ef699-039d-5f27-851b-bb2cd484e4f0|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/VLuCEgLXPSSdqHEGJA0XyvnpBHA3_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "005ef699-039d-5f27-851b-bb2cd484e4f0|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/VUOZqwGrv6PQCiEpFJdOjfaS21G3_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "8d8ad1bd-2fd7-500c-9adf-4e53f6f3c6d9|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/WmMCHWaghwPqyiVIjq3gIZJ2R2g1_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ad4565d0-d0bc-5129-ad57-a7e308f40f42|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/WmMCHWaghwPqyiVIjq3gIZJ2R2g1_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ad4565d0-d0bc-5129-ad57-a7e308f40f42|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/WmMCHWaghwPqyiVIjq3gIZJ2R2g1_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ad4565d0-d0bc-5129-ad57-a7e308f40f42|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/WmMCHWaghwPqyiVIjq3gIZJ2R2g1_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ad4565d0-d0bc-5129-ad57-a7e308f40f42|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/etPcKiRub3dg1X62xnAiLXoIz502_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/etPcKiRub3dg1X62xnAiLXoIz502_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/etPcKiRub3dg1X62xnAiLXoIz502_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/etPcKiRub3dg1X62xnAiLXoIz502_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/etPcKiRub3dg1X62xnAiLXoIz502_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/etPcKiRub3dg1X62xnAiLXoIz502_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/etPcKiRub3dg1X62xnAiLXoIz502_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/f6VFR20kSQOIrIGTFTcOySAEHiV2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "27c6ea04-42a4-5e19-8e7c-123a5bf3b68e|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/f6VFR20kSQOIrIGTFTcOySAEHiV2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "27c6ea04-42a4-5e19-8e7c-123a5bf3b68e|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/f6VFR20kSQOIrIGTFTcOySAEHiV2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "27c6ea04-42a4-5e19-8e7c-123a5bf3b68e|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/f6VFR20kSQOIrIGTFTcOySAEHiV2_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "27c6ea04-42a4-5e19-8e7c-123a5bf3b68e|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gHeL1pE6ncTlqKAC2bCCPodQ0283_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "2a1f35a0-3cd3-5bb0-8b26-2414e2c0e044|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gMxP2I1EafaQBaaGOQ8t6N0Lo072_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gMxP2I1EafaQBaaGOQ8t6N0Lo072_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gMxP2I1EafaQBaaGOQ8t6N0Lo072_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gMxP2I1EafaQBaaGOQ8t6N0Lo072_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gMxP2I1EafaQBaaGOQ8t6N0Lo072_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gXPgYzmRddhnKOvhyrtTF7ygU3E3_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "f71cb18c-3762-592f-89e3-da017b808312|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gXPgYzmRddhnKOvhyrtTF7ygU3E3_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "f71cb18c-3762-592f-89e3-da017b808312|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gXPgYzmRddhnKOvhyrtTF7ygU3E3_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "f71cb18c-3762-592f-89e3-da017b808312|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gXPgYzmRddhnKOvhyrtTF7ygU3E3_streak-3",
+    "supabase_table": "user_achievements",
+    "supabase_id": "f71cb18c-3762-592f-89e3-da017b808312|streak-3",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/gXPgYzmRddhnKOvhyrtTF7ygU3E3_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "f71cb18c-3762-592f-89e3-da017b808312|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/hXN1gL4mC0WEeQhf4qLh4xYeRhD3_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "faafc8c9-771a-5af7-8f2a-736ef5aab5e0|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/hXN1gL4mC0WEeQhf4qLh4xYeRhD3_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "faafc8c9-771a-5af7-8f2a-736ef5aab5e0|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/hXN1gL4mC0WEeQhf4qLh4xYeRhD3_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "faafc8c9-771a-5af7-8f2a-736ef5aab5e0|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/hXOmDOoRDmXsw3smJ9U9fr8iJtu1_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/hXOmDOoRDmXsw3smJ9U9fr8iJtu1_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/hXOmDOoRDmXsw3smJ9U9fr8iJtu1_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/hXOmDOoRDmXsw3smJ9U9fr8iJtu1_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/hXOmDOoRDmXsw3smJ9U9fr8iJtu1_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/hXOmDOoRDmXsw3smJ9U9fr8iJtu1_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/hXOmDOoRDmXsw3smJ9U9fr8iJtu1_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/lRBlppLYfiO6X8CiPiUoZIgAxvm1_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "79d288e2-4669-5479-92c5-0b56637eb242|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/lRBlppLYfiO6X8CiPiUoZIgAxvm1_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "79d288e2-4669-5479-92c5-0b56637eb242|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/lRBlppLYfiO6X8CiPiUoZIgAxvm1_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "79d288e2-4669-5479-92c5-0b56637eb242|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/mBvtmhEP5ZfwpEp2p4TXMrwtVWw1_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "3c8efb8a-259d-52dd-b435-f16dff4ac2ec|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/mCUmOVlFTwPCtBhvbYa1RhSvE6G2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a6bb29fe-7f51-59ce-9a3d-d1158b31fbca|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/mCUmOVlFTwPCtBhvbYa1RhSvE6G2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a6bb29fe-7f51-59ce-9a3d-d1158b31fbca|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/mCUmOVlFTwPCtBhvbYa1RhSvE6G2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a6bb29fe-7f51-59ce-9a3d-d1158b31fbca|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/mZyp6L8RFzYMX8s2kG8CbrBCVBs2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/mZyp6L8RFzYMX8s2kG8CbrBCVBs2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/mZyp6L8RFzYMX8s2kG8CbrBCVBs2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/mZyp6L8RFzYMX8s2kG8CbrBCVBs2_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/mZyp6L8RFzYMX8s2kG8CbrBCVBs2_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nNQk6Pg9DncWU9MVAMWD2L0iK2o1_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "3af0924f-093a-5a99-9487-aedd3d8312f0|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nNQk6Pg9DncWU9MVAMWD2L0iK2o1_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "3af0924f-093a-5a99-9487-aedd3d8312f0|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nNQk6Pg9DncWU9MVAMWD2L0iK2o1_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "3af0924f-093a-5a99-9487-aedd3d8312f0|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nWTFB3tWWiV1iKVW3i0wIZu9PR02_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "a27306b2-7779-5561-bf43-614019dd6d8d|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nnenGnK0KgU1QcoNGGITDyT9imH2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nnenGnK0KgU1QcoNGGITDyT9imH2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nnenGnK0KgU1QcoNGGITDyT9imH2_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nnenGnK0KgU1QcoNGGITDyT9imH2_graduate",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169|graduate",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nnenGnK0KgU1QcoNGGITDyT9imH2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nnenGnK0KgU1QcoNGGITDyT9imH2_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nnenGnK0KgU1QcoNGGITDyT9imH2_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nnenGnK0KgU1QcoNGGITDyT9imH2_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/nnenGnK0KgU1QcoNGGITDyT9imH2_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/oEoqIb1r1qbfJwmno7OCwRqr9GB3_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1b819ea5-f88e-5e06-ba49-d5e9666d9fbb|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/oEoqIb1r1qbfJwmno7OCwRqr9GB3_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1b819ea5-f88e-5e06-ba49-d5e9666d9fbb|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/oEoqIb1r1qbfJwmno7OCwRqr9GB3_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "1b819ea5-f88e-5e06-ba49-d5e9666d9fbb|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/oRSX8TfNEINZZVOn7Zr6ToAUXeC3_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "7e51428c-ccc8-5999-9509-abcec3527307|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/rbmFHw7EvEVLITx6EX5PWaPHSlB2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "60ca24a7-f0b1-5307-8ddc-40596060bbea|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/rbmFHw7EvEVLITx6EX5PWaPHSlB2_first-website",
+    "supabase_table": "user_achievements",
+    "supabase_id": "60ca24a7-f0b1-5307-8ddc-40596060bbea|first-website",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/tuH8GB5YgiRkc3TTZNVlfxspNxM2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "831c20c2-00a4-5d41-bbd0-dc2dccc7c58c|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/tuH8GB5YgiRkc3TTZNVlfxspNxM2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "831c20c2-00a4-5d41-bbd0-dc2dccc7c58c|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/tuH8GB5YgiRkc3TTZNVlfxspNxM2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "831c20c2-00a4-5d41-bbd0-dc2dccc7c58c|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/uf1d7PXlyeQ0a9WddtrNSRi2N8e2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/uf1d7PXlyeQ0a9WddtrNSRi2N8e2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/uf1d7PXlyeQ0a9WddtrNSRi2N8e2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/uf1d7PXlyeQ0a9WddtrNSRi2N8e2_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/uf1d7PXlyeQ0a9WddtrNSRi2N8e2_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/wZho1dKJM4R5DbISz1I0cD4cHRB2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ab768c6c-166c-52aa-aa7d-153ca2e9641b|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/wZho1dKJM4R5DbISz1I0cD4cHRB2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ab768c6c-166c-52aa-aa7d-153ca2e9641b|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/wZho1dKJM4R5DbISz1I0cD4cHRB2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "ab768c6c-166c-52aa-aa7d-153ca2e9641b|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/zAY3svQzxuR7jvgsBV5jvUWEjZD2_css-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff|css-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/zAY3svQzxuR7jvgsBV5jvUWEjZD2_first-lesson",
+    "supabase_table": "user_achievements",
+    "supabase_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff|first-lesson",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/zAY3svQzxuR7jvgsBV5jvUWEjZD2_html-hero",
+    "supabase_table": "user_achievements",
+    "supabase_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff|html-hero",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/zAY3svQzxuR7jvgsBV5jvUWEjZD2_list-master",
+    "supabase_table": "user_achievements",
+    "supabase_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff|list-master",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/zAY3svQzxuR7jvgsBV5jvUWEjZD2_semantic-pro",
+    "supabase_table": "user_achievements",
+    "supabase_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff|semantic-pro",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/zAY3svQzxuR7jvgsBV5jvUWEjZD2_xp-2000",
+    "supabase_table": "user_achievements",
+    "supabase_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff|xp-2000",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  },
+  {
+    "firebase_doc_path": "user_achievements/zAY3svQzxuR7jvgsBV5jvUWEjZD2_xp-500",
+    "supabase_table": "user_achievements",
+    "supabase_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff|xp-500",
+    "migrated_at": "2026-08-21T23:28:41.745939+00:00"
+  }
+]
