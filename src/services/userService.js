@@ -1,9 +1,9 @@
-import { supabase } from '../lib/supabase.js'
+import { supabase } from "../lib/supabase.js";
 
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
 
 function mapProfileRow(row) {
-  if (!row) return null
+  if (!row) return null;
   return {
     id: row.id,
     legacyFirebaseUid: row.legacy_firebase_uid || null,
@@ -33,382 +33,451 @@ function mapProfileRow(row) {
     twitterUrl: row.twitter_url || null,
     instagramUrl: row.instagram_url || null,
     websiteUrl: row.website_url || null,
-  }
+  };
 }
 
 export async function createUserProfile(user, extra = {}) {
-  let profile = await loadProfile(user.id)
+  let profile = await loadProfile(user.id);
+
+  if (user.email && isEmptyProfile(profile, user.id)) {
+    const migratedProfile = await findMigratedProfileByEmail(user.email);
+    if (migratedProfile && migratedProfile.id !== user.id) {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ auth_user_id: user.id })
+        .eq("id", migratedProfile.id);
+      if (error) throw error;
+      profile = migratedProfile;
+    }
+  }
 
   // B1 — re-link de identidade: quando o perfil atual é vazio/inexistente e existe
   // histórico migrado (id = uuidv5(NS, firebase_uid)), copia-o para este auth.uid.
   // A função é idempotente e não-destrutiva (ver supabase/migrations/009).
-  if (isEmptyProfile(profile)) {
+  if (isEmptyProfile(profile, user.id)) {
     try {
-      await supabase.rpc('link_legacy_profile', {
+      await supabase.rpc("link_legacy_profile", {
         p_auth_uid: user.id,
         p_firebase_uid: getLegacyFirebaseUid(user),
-      })
-      profile = await loadProfile(user.id)
+      });
+      profile = await loadProfile(user.id);
     } catch (err) {
-      console.error('[createUserProfile] link_legacy_profile error:', err)
+      console.error("[createUserProfile] link_legacy_profile error:", err);
+    }
+  }
+
+  if (!profile && user.email) {
+    const migratedProfile = await findMigratedProfileByEmail(user.email);
+    if (migratedProfile && migratedProfile.id !== user.id) {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ auth_user_id: user.id })
+        .eq("id", migratedProfile.id);
+      if (error) throw error;
+      profile = migratedProfile;
     }
   }
 
   if (profile) {
-    await touchProfile(user, profile)
-    return profile
+    await touchProfile(user, profile);
+    return profile;
   }
 
   // nenhum perfil ainda (novo cadastro GoTrue, sem histórico Firebase)
-  const name = (extra.name || user.user_metadata?.name || '').trim() || 'Aluno WebStart'
-  const isAdmin = ADMIN_EMAIL && user.email === ADMIN_EMAIL
+  const name =
+    (extra.name || user.user_metadata?.name || "").trim() || "Aluno WebStart";
+  const isAdmin = ADMIN_EMAIL && user.email === ADMIN_EMAIL;
 
   const profileData = {
     id: user.id,
     name,
     username: extra.username || generateUniqueUsername(name, user.id),
-    email: user.email || '',
-    provider: extra.provider || 'email',
-    role: isAdmin ? 'admin' : 'student',
+    email: user.email || "",
+    provider: extra.provider || "email",
+    role: isAdmin ? "admin" : "student",
     xp: 0,
     level: 1,
     streak: 0,
     is_public: true,
     first_steps_done: false,
     ...mapExtraToProfile(extra),
-  }
+  };
 
   // vínculo real com Firebase (cadastros "bridge" entre os dois sistemas)
-  const legacyFirebaseUid = getLegacyFirebaseUid(user)
-  if (legacyFirebaseUid) profileData.legacy_firebase_uid = legacyFirebaseUid
+  const legacyFirebaseUid = getLegacyFirebaseUid(user);
+  if (legacyFirebaseUid) profileData.legacy_firebase_uid = legacyFirebaseUid;
 
-  const { error: insertError } = await supabase.from('profiles').insert(profileData)
+  const { error: insertError } = await supabase
+    .from("profiles")
+    .insert(profileData);
   if (insertError) {
-    console.error('[createUserProfile] insert error:', insertError)
-    throw insertError
+    console.error("[createUserProfile] insert error:", insertError);
+    throw insertError;
   }
 
-  return profileData
+  return profileData;
 }
 
 function getLegacyFirebaseUid(user) {
-  return user?.user_metadata?.legacy_firebase_uid || user?.app_metadata?.legacy_firebase_uid || null
+  return (
+    user?.user_metadata?.legacy_firebase_uid ||
+    user?.app_metadata?.legacy_firebase_uid ||
+    null
+  );
 }
 
-function isEmptyProfile(row) {
-  if (!row) return true
-  const lessons = Array.isArray(row.completed_lessons) ? row.completed_lessons.length : 0
-  const courses = Array.isArray(row.completed_courses) ? row.completed_courses.length : 0
-  const xp = row.xp || 0
-  return xp === 0 && lessons === 0 && courses === 0 && !row.legacy_firebase_uid
+function isEmptyProfile(row, authUid = null) {
+  if (!row) return true;
+  const lessons = Array.isArray(row.completed_lessons)
+    ? row.completed_lessons.length
+    : 0;
+  const courses = Array.isArray(row.completed_courses)
+    ? row.completed_courses.length
+    : 0;
+  const xp = row.xp || 0;
+  const syntheticLegacyUid = authUid && row.legacy_firebase_uid === authUid;
+  return (
+    xp === 0 &&
+    lessons === 0 &&
+    courses === 0 &&
+    (!row.legacy_firebase_uid || syntheticLegacyUid)
+  );
 }
 
 async function loadProfile(uid) {
   const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', uid)
-    .maybeSingle()
+    .from("profiles")
+    .select("*")
+    .or(`id.eq.${uid},auth_user_id.eq.${uid}`)
+    .maybeSingle();
   if (error) {
-    console.error('[createUserProfile] lookup error:', error)
-    throw error
+    console.error("[createUserProfile] lookup error:", error);
+    throw error;
   }
-  return data || null
+  return data || null;
+}
+
+async function findMigratedProfileByEmail(email) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .ilike("email", email.trim())
+    .not("legacy_firebase_uid", "is", null)
+    .order("xp", { ascending: false })
+    .limit(1);
+
+  if (error) throw error;
+  return data?.[0] || null;
 }
 
 async function touchProfile(user, profile) {
-  const updates = { last_login: new Date().toISOString() }
-  const isAdmin = ADMIN_EMAIL && user.email === ADMIN_EMAIL
-  if (isAdmin && profile.role !== 'admin') updates.role = 'admin'
-  const { error } = await supabase.from('profiles').update(updates).eq('id', user.id)
-  if (error) console.error('[createUserProfile] update error:', error)
-  return profile
+  const updates = { last_login: new Date().toISOString() };
+  const isAdmin = ADMIN_EMAIL && user.email === ADMIN_EMAIL;
+  if (isAdmin && profile.role !== "admin") updates.role = "admin";
+  const { error } = await supabase
+    .from("profiles")
+    .update(updates)
+    .eq("id", profile.id);
+  if (error) console.error("[createUserProfile] update error:", error);
+  return profile;
 }
 
 function mapExtraToProfile(extra) {
-  const mapped = {}
-  if (extra.username) mapped.username = extra.username
-  return mapped
+  const mapped = {};
+  if (extra.username) mapped.username = extra.username;
+  return mapped;
 }
 
 function generateUniqueUsername(name, uid) {
-  const base = (name || 'aluno')
+  const base = (name || "aluno")
     .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]/g, '')
-    .slice(0, 16)
-  const suffix = uid.slice(0, 6)
-  return `${base}${suffix}`
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "")
+    .slice(0, 16);
+  const suffix = uid.slice(0, 6);
+  return `${base}${suffix}`;
 }
 
 export async function getUserProfile(uid) {
   const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', uid)
-    .maybeSingle()
+    .from("profiles")
+    .select("*")
+    .or(`id.eq.${uid},auth_user_id.eq.${uid}`)
+    .maybeSingle();
 
   if (error) {
-    console.error(`[getUserProfile] error for uid ${uid}:`, error)
-    return null
+    console.error(`[getUserProfile] error for uid ${uid}:`, error);
+    return null;
   }
-  return data ? mapProfileRow(data) : null
+  return data ? mapProfileRow(data) : null;
 }
 
-const activeUserChannels = new Map()
+const activeUserChannels = new Map();
 
 export function subscribeToUser(uid, callback) {
-  if (!uid) return () => {}
+  if (!uid) return () => {};
 
-  const mappedCallback = (row) => callback(mapProfileRow(row))
+  const mappedCallback = (row) => callback(mapProfileRow(row));
 
   if (activeUserChannels.has(uid)) {
-    const entry = activeUserChannels.get(uid)
-    entry.refCount++
-    entry.callbacks.add(mappedCallback)
+    const entry = activeUserChannels.get(uid);
+    entry.refCount++;
+    entry.callbacks.add(mappedCallback);
 
-    supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', uid)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (data) mappedCallback(data)
-      })
+    getUserProfileRow(uid).then((data) => {
+      if (data) mappedCallback(data);
+    });
 
-    return () => unsubscribeUser(uid, mappedCallback)
+    return () => unsubscribeUser(uid, mappedCallback);
   }
 
-  const callbacks = new Set([mappedCallback])
+  const callbacks = new Set([mappedCallback]);
   const channel = supabase
     .channel(`user-${uid}`)
     .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${uid}` },
+      "postgres_changes",
+      { event: "*", schema: "public", table: "profiles" },
       (payload) => {
-        if (payload.new) {
-          for (const cb of callbacks) cb(payload.new)
+        if (
+          payload.new &&
+          (payload.new.id === uid || payload.new.auth_user_id === uid)
+        ) {
+          for (const cb of callbacks) cb(payload.new);
         }
-      }
+      },
     )
     .subscribe((status) => {
-      if (status === 'SUBSCRIBED') {
-        supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', uid)
-          .maybeSingle()
-          .then(({ data }) => {
-            if (data) {
-              for (const cb of callbacks) cb(data)
-            }
-          })
+      if (status === "SUBSCRIBED") {
+        getUserProfileRow(uid).then((data) => {
+          if (data) {
+            for (const cb of callbacks) cb(data);
+          }
+        });
       }
-    })
+    });
 
-  activeUserChannels.set(uid, { channel, callbacks, refCount: 1 })
+  activeUserChannels.set(uid, { channel, callbacks, refCount: 1 });
 
-  return () => unsubscribeUser(uid, mappedCallback)
+  return () => unsubscribeUser(uid, mappedCallback);
 }
 
 function unsubscribeUser(uid, callback) {
-  if (!activeUserChannels.has(uid)) return
+  if (!activeUserChannels.has(uid)) return;
 
-  const entry = activeUserChannels.get(uid)
-  entry.callbacks.delete(callback)
-  entry.refCount--
+  const entry = activeUserChannels.get(uid);
+  entry.callbacks.delete(callback);
+  entry.refCount--;
 
   if (entry.refCount <= 0) {
-    supabase.removeChannel(entry.channel)
-    activeUserChannels.delete(uid)
+    supabase.removeChannel(entry.channel);
+    activeUserChannels.delete(uid);
   }
 }
 
 export async function updateLastLogin(uid) {
+  const profile = await getUserProfileRow(uid);
+  if (!profile) return;
   await supabase
-    .from('profiles')
+    .from("profiles")
     .update({ last_login: new Date().toISOString() })
-    .eq('id', uid)
+    .eq("id", profile.id);
 }
 
 export async function updateUserProfile(uid, data) {
-  const supabaseData = mapJsToSql(data)
-  supabaseData.id = uid
+  const supabaseData = mapJsToSql(data);
+  const profile = await getUserProfileRow(uid);
+  if (!profile) throw new Error("Perfil do utilizador não encontrado.");
   const { error } = await supabase
-    .from('profiles')
-    .upsert(supabaseData, { onConflict: 'id' })
-  if (error) throw error
+    .from("profiles")
+    .update(supabaseData)
+    .eq("id", profile.id);
+  if (error) throw error;
+}
+
+async function getUserProfileRow(uid) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .or(`id.eq.${uid},auth_user_id.eq.${uid}`)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function resolveProfileId(uid) {
+  const profile = await getUserProfileRow(uid);
+  return profile?.id || uid;
 }
 
 function mapJsToSql(data) {
-  const mapped = {}
+  const mapped = {};
   const fieldMap = {
-    lastStudyDate: 'last_study_date',
-    completedLessons: 'completed_lessons',
-    completedCourses: 'completed_courses',
-    completedExercises: 'completed_exercises',
-    completedProjects: 'completed_projects',
-    completedQuizzes: 'completed_quizzes',
-    currentCourse: 'current_course',
-    currentLesson: 'current_lesson',
-    totalStudyTime: 'total_study_time',
-    isPublic: 'is_public',
-    firstStepsDone: 'first_steps_done',
-    lastReactivationEmail: 'last_reactivation_email',
-    welcomeEmailSent: 'welcome_email_sent',
-    welcomeEmailSentAt: 'welcome_email_sent_at',
-    photoURL: 'photo_url',
-    githubUrl: 'github_url',
-    portfolioUrl: 'portfolio_url',
-    linkedinUrl: 'linkedin_url',
-    twitterUrl: 'twitter_url',
-    instagramUrl: 'instagram_url',
-    websiteUrl: 'website_url',
-  }
+    lastStudyDate: "last_study_date",
+    completedLessons: "completed_lessons",
+    completedCourses: "completed_courses",
+    completedExercises: "completed_exercises",
+    completedProjects: "completed_projects",
+    completedQuizzes: "completed_quizzes",
+    currentCourse: "current_course",
+    currentLesson: "current_lesson",
+    totalStudyTime: "total_study_time",
+    isPublic: "is_public",
+    firstStepsDone: "first_steps_done",
+    lastReactivationEmail: "last_reactivation_email",
+    welcomeEmailSent: "welcome_email_sent",
+    welcomeEmailSentAt: "welcome_email_sent_at",
+    photoURL: "photo_url",
+    githubUrl: "github_url",
+    portfolioUrl: "portfolio_url",
+    linkedinUrl: "linkedin_url",
+    twitterUrl: "twitter_url",
+    instagramUrl: "instagram_url",
+    websiteUrl: "website_url",
+  };
 
   for (const [key, value] of Object.entries(data)) {
-    const sqlKey = fieldMap[key] || key
-    mapped[sqlKey] = value
+    const sqlKey = fieldMap[key] || key;
+    mapped[sqlKey] = value;
   }
-  return mapped
+  return mapped;
 }
 
 export async function addXpToUser(uid, amount) {
-  const user = await getUserProfile(uid)
-  if (!user) return null
-  const xp = (user.xp || 0) + amount
-  const level = getLevelFromXp(xp)
-  await updateUserProfile(uid, { xp, level })
-  return { xp, level }
+  const user = await getUserProfile(uid);
+  if (!user) return null;
+  const xp = (user.xp || 0) + amount;
+  const level = getLevelFromXp(xp);
+  await updateUserProfile(uid, { xp, level });
+  return { xp, level };
 }
 
 export async function updateUserStreak(uid) {
-  const user = await getUserProfile(uid)
-  if (!user) return null
-  const today = getTodayKey()
+  const user = await getUserProfile(uid);
+  if (!user) return null;
+  const today = getTodayKey();
   const { streak, broke, bonusXp, penaltyXp } = computeStreakUpdate(
     user.lastStudyDate,
-    user.streak
-  )
+    user.streak,
+  );
 
-  let xp = user.xp || 0
-  if (broke && penaltyXp) xp = Math.max(0, xp - penaltyXp)
-  if (bonusXp) xp += bonusXp
+  let xp = user.xp || 0;
+  if (broke && penaltyXp) xp = Math.max(0, xp - penaltyXp);
+  if (bonusXp) xp += bonusXp;
 
-  const level = getLevelFromXp(xp)
+  const level = getLevelFromXp(xp);
   await updateUserProfile(uid, {
     streak,
     lastStudyDate: today,
     xp,
     level,
-  })
-  return { streak, broke, bonusXp, penaltyXp, xp, level }
+  });
+  return { streak, broke, bonusXp, penaltyXp, xp, level };
 }
 
 export async function incrementCompletedExercises(uid) {
-  const user = await getUserProfile(uid)
-  if (!user) return null
-  const count = (user.completedExercises || 0) + 1
-  await updateUserProfile(uid, { completedExercises: count })
-  return count
+  const user = await getUserProfile(uid);
+  if (!user) return null;
+  const count = (user.completedExercises || 0) + 1;
+  await updateUserProfile(uid, { completedExercises: count });
+  return count;
 }
 
 export async function incrementCompletedProjects(uid) {
-  const user = await getUserProfile(uid)
-  if (!user) return null
-  const count = (user.completedProjects || 0) + 1
-  await updateUserProfile(uid, { completedProjects: count })
-  return count
+  const user = await getUserProfile(uid);
+  if (!user) return null;
+  const count = (user.completedProjects || 0) + 1;
+  await updateUserProfile(uid, { completedProjects: count });
+  return count;
 }
 
 export async function addCompletedQuiz(uid, moduleId) {
-  const user = await getUserProfile(uid)
-  if (!user) return null
-  const completedQuizzes = user.completedQuizzes || []
-  if (completedQuizzes.includes(moduleId)) return completedQuizzes
+  const user = await getUserProfile(uid);
+  if (!user) return null;
+  const completedQuizzes = user.completedQuizzes || [];
+  if (completedQuizzes.includes(moduleId)) return completedQuizzes;
   await updateUserProfile(uid, {
     completedQuizzes: [...completedQuizzes, moduleId],
-  })
-  return [...completedQuizzes, moduleId]
+  });
+  return [...completedQuizzes, moduleId];
 }
 
 export async function updateCurrentLesson(uid, { courseId, lessonId }) {
   await updateUserProfile(uid, {
     currentCourse: courseId,
     currentLesson: lessonId,
-  })
+  });
 }
 
 export async function addCompletedLesson(uid, lessonId) {
-  const user = await getUserProfile(uid)
-  if (!user) return null
-  const completedLessons = user.completedLessons || []
-  if (completedLessons.includes(lessonId)) return user
+  const user = await getUserProfile(uid);
+  if (!user) return null;
+  const completedLessons = user.completedLessons || [];
+  if (completedLessons.includes(lessonId)) return user;
   await updateUserProfile(uid, {
     completedLessons: [...completedLessons, lessonId],
-  })
-  return [...completedLessons, lessonId]
+  });
+  return [...completedLessons, lessonId];
 }
 
 export async function addCompletedCourse(uid, courseId) {
-  const user = await getUserProfile(uid)
-  if (!user) return null
-  const completedCourses = user.completedCourses || []
-  if (completedCourses.includes(courseId)) return user
+  const user = await getUserProfile(uid);
+  if (!user) return null;
+  const completedCourses = user.completedCourses || [];
+  if (completedCourses.includes(courseId)) return user;
   await updateUserProfile(uid, {
     completedCourses: [...completedCourses, courseId],
-  })
+  });
 }
 
 export async function addStudyTime(uid, minutes) {
-  const user = await getUserProfile(uid)
-  if (!user) return
+  const user = await getUserProfile(uid);
+  if (!user) return;
   await updateUserProfile(uid, {
     totalStudyTime: (user.totalStudyTime || 0) + minutes,
-  })
+  });
 }
 
 export async function ensureUsername(uid) {
-  const user = await getUserProfile(uid)
-  if (!user) return null
-  if (user.username) return user.username
-  const username = generateUniqueUsername(user.name, uid)
-  await updateUserProfile(uid, { username })
-  return username
+  const user = await getUserProfile(uid);
+  if (!user) return null;
+  if (user.username) return user.username;
+  const username = generateUniqueUsername(user.name, uid);
+  await updateUserProfile(uid, { username });
+  return username;
 }
 
 function getLevelFromXp(xp) {
-  if (xp >= 5000) return 10
-  if (xp >= 3000) return 9
-  if (xp >= 2000) return 8
-  if (xp >= 1500) return 7
-  if (xp >= 1000) return 6
-  if (xp >= 700) return 5
-  if (xp >= 400) return 4
-  if (xp >= 200) return 3
-  if (xp >= 50) return 2
-  return 1
+  if (xp >= 5000) return 10;
+  if (xp >= 3000) return 9;
+  if (xp >= 2000) return 8;
+  if (xp >= 1500) return 7;
+  if (xp >= 1000) return 6;
+  if (xp >= 700) return 5;
+  if (xp >= 400) return 4;
+  if (xp >= 200) return 3;
+  if (xp >= 50) return 2;
+  return 1;
 }
 
 function getTodayKey() {
-  return new Date().toISOString().split('T')[0]
+  return new Date().toISOString().split("T")[0];
 }
 
 function computeStreakUpdate(lastStudyDate, currentStreak) {
-  const today = getTodayKey()
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0]
+  const today = getTodayKey();
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
 
   if (lastStudyDate === today) {
-    return { streak: currentStreak, broke: false, bonusXp: 0, penaltyXp: 0 }
+    return { streak: currentStreak, broke: false, bonusXp: 0, penaltyXp: 0 };
   }
 
   if (lastStudyDate === yesterday) {
-    const newStreak = currentStreak + 1
-    const bonusXp = newStreak >= 7 ? 50 : newStreak >= 3 ? 20 : 10
-    return { streak: newStreak, broke: false, bonusXp, penaltyXp: 0 }
+    const newStreak = currentStreak + 1;
+    const bonusXp = newStreak >= 7 ? 50 : newStreak >= 3 ? 20 : 10;
+    return { streak: newStreak, broke: false, bonusXp, penaltyXp: 0 };
   }
 
-  const penaltyXp = currentStreak >= 7 ? 25 : currentStreak >= 3 ? 10 : 0
-  return { streak: 1, broke: true, bonusXp: 10, penaltyXp }
+  const penaltyXp = currentStreak >= 7 ? 25 : currentStreak >= 3 ? 10 : 0;
+  return { streak: 1, broke: true, bonusXp: 10, penaltyXp };
 }
