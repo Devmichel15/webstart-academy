@@ -1,0 +1,406 @@
+[
+  {
+    "id": "1772b10b-6e3c-4d2d-a9d3-3f4952ccbddc",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "crissleonel8@gmail.com",
+    "email_confirmed_at": "2026-09-22T22:44:39.356282Z",
+    "phone": "",
+    "confirmed_at": "2026-09-22T22:44:39.356282Z",
+    "last_sign_in_at": "2026-09-22T22:44:42.510719Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocLwdE2jq91imSkttGVFR4bt0u8lyOhaFUxuGS5FEDFHXd4Z3A=s96-c",
+      "email": "crissleonel8@gmail.com",
+      "email_verified": true,
+      "full_name": "Leonel Criss",
+      "iss": "https://accounts.google.com",
+      "name": "Leonel Criss",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocLwdE2jq91imSkttGVFR4bt0u8lyOhaFUxuGS5FEDFHXd4Z3A=s96-c",
+      "provider_id": "114183110424371177282",
+      "sub": "114183110424371177282"
+    },
+    "identities": null,
+    "created_at": "2026-09-22T22:44:39.317322Z",
+    "updated_at": "2026-09-22T22:44:42.545262Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "a0d2e688-1820-4246-adcc-5e8e3b616760",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "narcisosardinha43@gmail.com",
+    "email_confirmed_at": "2026-09-21T23:27:13.703598Z",
+    "phone": "",
+    "confirmed_at": "2026-09-21T23:27:13.703598Z",
+    "last_sign_in_at": "2026-09-21T23:27:17.515554Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocKl8lX8-56pxS4OZyyK9qMrQcyVbQz6nA1YiVNRT-FBZDb9QuU=s96-c",
+      "email": "narcisosardinha43@gmail.com",
+      "email_verified": true,
+      "full_name": "Narciso Sardinha",
+      "iss": "https://accounts.google.com",
+      "name": "Narciso Sardinha",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocKl8lX8-56pxS4OZyyK9qMrQcyVbQz6nA1YiVNRT-FBZDb9QuU=s96-c",
+      "provider_id": "103926596469152930618",
+      "sub": "103926596469152930618"
+    },
+    "identities": null,
+    "created_at": "2026-09-21T23:27:13.688458Z",
+    "updated_at": "2026-09-21T23:27:17.522024Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "3069f055-e7a1-4c20-a5db-44083008148c",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "cesarmichel512@gmail.com",
+    "email_confirmed_at": "2026-09-21T23:11:04.523297Z",
+    "phone": "",
+    "confirmed_at": "2026-09-21T23:11:04.523297Z",
+    "last_sign_in_at": "2026-09-21T23:11:05.471895Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocISlbpXWkkwuNPVEP6AlkYNw1kQtHxznzALu7kMAfNGDol_cA=s96-c",
+      "email": "cesarmichel512@gmail.com",
+      "email_verified": true,
+      "full_name": "Michel César",
+      "iss": "https://accounts.google.com",
+      "name": "Michel César",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocISlbpXWkkwuNPVEP6AlkYNw1kQtHxznzALu7kMAfNGDol_cA=s96-c",
+      "provider_id": "100024237115231852239",
+      "sub": "100024237115231852239"
+    },
+    "identities": null,
+    "created_at": "2026-09-21T23:11:04.5077Z",
+    "updated_at": "2026-09-22T00:09:46.8815Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "b99db770-1bf0-418b-8e50-72c69e8bb12c",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "gabriel.fagundes.souza.2209@gmail.com",
+    "email_confirmed_at": "2026-09-21T01:39:59.27022Z",
+    "phone": "",
+    "confirmed_at": "2026-09-21T01:39:59.27022Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocKKUoq89hmVwZUtVDeCFvsYqr3AV0WhSCswNjQQlnjjhe7w0eh-=s96-c",
+      "email": "gabriel.fagundes.souza.2209@gmail.com",
+      "email_verified": true,
+      "full_name": "gabriel Fagundes",
+      "iss": "https://accounts.google.com",
+      "name": "gabriel Fagundes",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocKKUoq89hmVwZUtVDeCFvsYqr3AV0WhSCswNjQQlnjjhe7w0eh-=s96-c",
+      "provider_id": "108903913703715115190",
+      "sub": "108903913703715115190"
+    },
+    "identities": null,
+    "created_at": "2026-09-21T01:39:59.257835Z",
+    "updated_at": "2026-09-21T01:39:59.271302Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "2abc9c8e-ddb2-4202-919b-19dfa5cafbf3",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "gabriel.fagundes.souza.2209@gmail.com.br",
+    "phone": "",
+    "confirmation_sent_at": "2026-09-21T01:15:12.360031Z",
+    "recovery_sent_at": "2026-09-21T01:15:28.548215Z",
+    "app_metadata": {
+      "provider": "email",
+      "providers": [
+        "email"
+      ]
+    },
+    "user_metadata": {
+      "email": "gabriel.fagundes.souza.2209@gmail.com.br",
+      "email_verified": false,
+      "name": "gabriel",
+      "phone_verified": false,
+      "provider": "email",
+      "sub": "2abc9c8e-ddb2-4202-919b-19dfa5cafbf3"
+    },
+    "identities": null,
+    "created_at": "2026-09-21T01:15:12.339869Z",
+    "updated_at": "2026-09-21T01:15:28.904417Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "2253f439-b88b-4b31-ab7d-36699b5da193",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "0001243225@senaimgaluno.com.br",
+    "email_confirmed_at": "2026-09-21T01:12:01.8153Z",
+    "phone": "",
+    "confirmed_at": "2026-09-21T01:12:01.8153Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocLN57JaRBx93p6ENCRwTOjytik8tTfROuJhsYQwiYA4pYFignM=s96-c",
+      "custom_claims": {
+        "hd": "senaimgaluno.com.br"
+      },
+      "email": "0001243225@senaimgaluno.com.br",
+      "email_verified": true,
+      "full_name": "GABRIEL FAGUNDES SOUZA",
+      "iss": "https://accounts.google.com",
+      "name": "GABRIEL FAGUNDES SOUZA",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocLN57JaRBx93p6ENCRwTOjytik8tTfROuJhsYQwiYA4pYFignM=s96-c",
+      "provider_id": "105651434053547251305",
+      "sub": "105651434053547251305"
+    },
+    "identities": null,
+    "created_at": "2026-09-21T01:12:01.778197Z",
+    "updated_at": "2026-09-21T01:30:06.61786Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "30ae3657-721e-4602-973d-cb4628fb4f32",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "santossolutionsinc@gmail.com",
+    "email_confirmed_at": "2026-09-20T19:26:04.424241Z",
+    "phone": "",
+    "confirmed_at": "2026-09-20T19:26:04.424241Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocI4MLxSRrVwjfNyKgpIm-F9SwD-DZHH4nT-TSRAPQOhlxVgDQ=s96-c",
+      "email": "santossolutionsinc@gmail.com",
+      "email_verified": true,
+      "full_name": "Maldiny Dos santos",
+      "iss": "https://accounts.google.com",
+      "name": "Maldiny Dos santos",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocI4MLxSRrVwjfNyKgpIm-F9SwD-DZHH4nT-TSRAPQOhlxVgDQ=s96-c",
+      "provider_id": "113377502935174482724",
+      "sub": "113377502935174482724"
+    },
+    "identities": null,
+    "created_at": "2026-09-20T19:26:04.412558Z",
+    "updated_at": "2026-09-20T19:26:04.425423Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "9d2c4d68-1ece-45ee-9f25-decbb1e50813",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "dossantosmaldiny37@gmail.com",
+    "email_confirmed_at": "2026-09-20T19:20:31.864364Z",
+    "phone": "",
+    "confirmed_at": "2026-09-20T19:20:31.864364Z",
+    "recovery_sent_at": "2026-09-20T19:24:17.151631Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocKjAhZ_5WwGwwtVd-7WodaAQNs4ndv68KCaOIOqEIX5YsIAPaA=s96-c",
+      "email": "dossantosmaldiny37@gmail.com",
+      "email_verified": true,
+      "full_name": "Maldiny Dos Santos",
+      "iss": "https://accounts.google.com",
+      "name": "Maldiny Dos Santos",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocKjAhZ_5WwGwwtVd-7WodaAQNs4ndv68KCaOIOqEIX5YsIAPaA=s96-c",
+      "provider_id": "117278241160716590325",
+      "sub": "117278241160716590325"
+    },
+    "identities": null,
+    "created_at": "2026-09-20T19:20:31.815318Z",
+    "updated_at": "2026-09-20T19:25:34.032946Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "4478b64f-23c9-426e-963b-07fed2df41e0",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "janeq999000@gmail.com",
+    "email_confirmed_at": "2026-09-20T13:49:20.063665Z",
+    "phone": "",
+    "confirmed_at": "2026-09-20T13:49:20.063665Z",
+    "last_sign_in_at": "2026-09-22T08:15:18.028003Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocLRCrhB-Y3SN9AQopYXyAKLq9G3rhFolXM5bCxV8BxLdVvTIns=s96-c",
+      "email": "janeq999000@gmail.com",
+      "email_verified": true,
+      "full_name": "Jane Garcia",
+      "iss": "https://accounts.google.com",
+      "name": "Jane Garcia",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocLRCrhB-Y3SN9AQopYXyAKLq9G3rhFolXM5bCxV8BxLdVvTIns=s96-c",
+      "provider_id": "109316222941549344074",
+      "sub": "109316222941549344074"
+    },
+    "identities": null,
+    "created_at": "2026-09-20T13:49:20.045354Z",
+    "updated_at": "2026-09-22T10:14:38.747302Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "7a02287c-6a3c-4e57-a5b7-48c47d3f3ac8",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "clesiolisboa19@gmail.com",
+    "email_confirmed_at": "2026-09-20T13:09:55.676219Z",
+    "phone": "",
+    "confirmed_at": "2026-09-20T13:09:55.676219Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocKR2ui9YP2zkJaskQW1FKiqubzkyXbFvWGumSach5x43I_URHf3=s96-c",
+      "email": "clesiolisboa19@gmail.com",
+      "email_verified": true,
+      "full_name": "Clésio Lisboa",
+      "iss": "https://accounts.google.com",
+      "name": "Clésio Lisboa",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocKR2ui9YP2zkJaskQW1FKiqubzkyXbFvWGumSach5x43I_URHf3=s96-c",
+      "provider_id": "102641235898065988284",
+      "sub": "102641235898065988284"
+    },
+    "identities": null,
+    "created_at": "2026-09-20T13:09:55.628041Z",
+    "updated_at": "2026-09-20T13:12:46.487313Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "30fe558e-edee-44ce-9d9a-14e765bcde70",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "sadracknvula2@gmail.com",
+    "email_confirmed_at": "2026-09-19T17:51:25.045621Z",
+    "phone": "",
+    "confirmed_at": "2026-09-19T17:51:25.045621Z",
+    "last_sign_in_at": "2026-09-19T17:51:25.053864Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocJz6_p6le6Zo0dCvVkuxHqyTxzLjP1CmbFkCEkxM2ozj3jbQg=s96-c",
+      "email": "sadracknvula2@gmail.com",
+      "email_verified": true,
+      "full_name": "Sadrack Nvula",
+      "iss": "https://accounts.google.com",
+      "name": "Sadrack Nvula",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocJz6_p6le6Zo0dCvVkuxHqyTxzLjP1CmbFkCEkxM2ozj3jbQg=s96-c",
+      "provider_id": "107063929171714149228",
+      "sub": "107063929171714149228"
+    },
+    "identities": null,
+    "created_at": "2026-09-19T17:51:25.011633Z",
+    "updated_at": "2026-09-19T17:51:25.090752Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "b449892c-7fe1-495c-8c7f-a57d8c8209bf",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "manueljoao@gmail.com",
+    "phone": "",
+    "confirmation_sent_at": "2026-09-19T15:47:24.719497Z",
+    "app_metadata": {
+      "provider": "email",
+      "providers": [
+        "email"
+      ]
+    },
+    "user_metadata": {
+      "email": "manueljoao@gmail.com",
+      "email_verified": false,
+      "name": "João manuel",
+      "phone_verified": false,
+      "provider": "email",
+      "sub": "b449892c-7fe1-495c-8c7f-a57d8c8209bf"
+    },
+    "identities": null,
+    "created_at": "2026-09-19T15:47:24.674105Z",
+    "updated_at": "2026-09-19T15:47:25.312989Z",
+    "is_anonymous": false
+  },
+  {
+    "id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "aud": "authenticated",
+    "role": "authenticated",
+    "email": "httpmichel15cesar@gmail.com",
+    "email_confirmed_at": "2026-08-25T20:17:17.097243Z",
+    "phone": "",
+    "confirmed_at": "2026-08-25T20:17:17.097243Z",
+    "last_sign_in_at": "2026-09-21T22:45:34.994464Z",
+    "app_metadata": {
+      "provider": "google",
+      "providers": [
+        "google"
+      ]
+    },
+    "user_metadata": {
+      "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocLFmKwjNljbsadA1B4sFArt0-7UqyLjH26JolrdXXG8IYdgxPE=s96-c",
+      "email": "httpmichel15cesar@gmail.com",
+      "email_verified": true,
+      "full_name": "Michel César",
+      "iss": "https://accounts.google.com",
+      "name": "Michel César",
+      "phone_verified": false,
+      "picture": "https://lh3.googleusercontent.com/a/ACg8ocLFmKwjNljbsadA1B4sFArt0-7UqyLjH26JolrdXXG8IYdgxPE=s96-c",
+      "provider_id": "103890230445520155678",
+      "sub": "103890230445520155678"
+    },
+    "identities": null,
+    "created_at": "2026-08-25T20:17:17.078216Z",
+    "updated_at": "2026-09-22T22:47:59.868832Z",
+    "is_anonymous": false
+  }
+]

@@ -1,0 +1,67 @@
+[
+  {
+    "user_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "course_id": "html-exercises",
+    "completed_at": null
+  },
+  {
+    "user_id": "13354b77-b218-5675-9326-b63e6eae2c29",
+    "course_id": "fundamentos-web",
+    "completed_at": null
+  },
+  {
+    "user_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c",
+    "course_id": "fundamentos-web",
+    "completed_at": null
+  },
+  {
+    "user_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce",
+    "course_id": "fundamentos-web",
+    "completed_at": null
+  },
+  {
+    "user_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "course_id": "fundamentos-web",
+    "completed_at": null
+  },
+  {
+    "user_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "course_id": "html-exercises",
+    "completed_at": null
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "course_id": "fundamentos-web",
+    "completed_at": null
+  },
+  {
+    "user_id": "ad4565d0-d0bc-5129-ad57-a7e308f40f42",
+    "course_id": "html-exercises",
+    "completed_at": null
+  },
+  {
+    "user_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2",
+    "course_id": "fundamentos-web",
+    "completed_at": null
+  },
+  {
+    "user_id": "27c6ea04-42a4-5e19-8e7c-123a5bf3b68e",
+    "course_id": "html-exercises",
+    "completed_at": null
+  },
+  {
+    "user_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d",
+    "course_id": "fundamentos-web",
+    "completed_at": null
+  },
+  {
+    "user_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "course_id": "fundamentos-web",
+    "completed_at": null
+  },
+  {
+    "user_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff",
+    "course_id": "fundamentos-web",
+    "completed_at": null
+  }
+]

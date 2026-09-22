@@ -1,0 +1,20 @@
+{
+  "backupDir": "C:\\Users\\LENOVO\\Desktop\\webstart\\supabase\\backups\\supabase-backup-1790118094989",
+  "at": "2026-09-22T23:01:39.859Z",
+  "target": "https://cawoavdletnngyhrtzao.supabase.co",
+  "durationMs": 4872,
+  "tables": {
+    "profiles": 116,
+    "lesson_progress": 526,
+    "quiz_completions": 0,
+    "course_completions": 13,
+    "user_achievements": 188,
+    "learning_profiles": 0,
+    "email_preferences": 81,
+    "identity_links": 5,
+    "community_projects": 1,
+    "project_likes": 1,
+    "project_comments": 1,
+    "auth_users": 13
+  }
+}

@@ -1,0 +1,942 @@
+[
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-17T22:57:17+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-09T20:07:54+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "first-website",
+    "earned_at": "2026-07-09T20:07:40+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "graduate",
+    "earned_at": "2026-07-29T23:35:25+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-17T22:57:16+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "list-master",
+    "earned_at": "2026-07-09T20:13:02+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "project-builder",
+    "earned_at": "2026-07-09T20:08:54+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-07-10T19:58:43+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "streak-3",
+    "earned_at": "2026-07-30T23:19:07+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "streak-7",
+    "earned_at": "2026-07-30T23:19:39+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-07-09T20:11:09+00:00"
+  },
+  {
+    "user_id": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-09T20:08:55+00:00"
+  },
+  {
+    "user_id": "fbeba462-7815-5828-8750-d113bcf00ce0",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-09T21:13:31+00:00"
+  },
+  {
+    "user_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-18T23:57:42+00:00"
+  },
+  {
+    "user_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-18T23:57:41+00:00"
+  },
+  {
+    "user_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "achievement_id": "graduate",
+    "earned_at": "2026-07-28T13:10:36+00:00"
+  },
+  {
+    "user_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-18T23:57:42+00:00"
+  },
+  {
+    "user_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "achievement_id": "list-master",
+    "earned_at": "2026-07-25T13:52:34+00:00"
+  },
+  {
+    "user_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-07-28T11:42:56+00:00"
+  },
+  {
+    "user_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "achievement_id": "streak-3",
+    "earned_at": "2026-08-05T11:41:50+00:00"
+  },
+  {
+    "user_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-07-25T18:10:50+00:00"
+  },
+  {
+    "user_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-18T23:57:43+00:00"
+  },
+  {
+    "user_id": "1e6c3ef9-f4c8-5246-9fa3-34313028bfd3",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-31T20:24:27+00:00"
+  },
+  {
+    "user_id": "1e6c3ef9-f4c8-5246-9fa3-34313028bfd3",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-31T20:24:26+00:00"
+  },
+  {
+    "user_id": "1e6c3ef9-f4c8-5246-9fa3-34313028bfd3",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-31T20:24:26+00:00"
+  },
+  {
+    "user_id": "1e6c3ef9-f4c8-5246-9fa3-34313028bfd3",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-31T20:24:38+00:00"
+  },
+  {
+    "user_id": "0835d59e-38a0-5689-aff6-069eb34ee034",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-24T18:56:18+00:00"
+  },
+  {
+    "user_id": "0835d59e-38a0-5689-aff6-069eb34ee034",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-24T18:56:17+00:00"
+  },
+  {
+    "user_id": "0835d59e-38a0-5689-aff6-069eb34ee034",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-24T18:56:17+00:00"
+  },
+  {
+    "user_id": "0835d59e-38a0-5689-aff6-069eb34ee034",
+    "achievement_id": "list-master",
+    "earned_at": "2026-07-24T19:02:08+00:00"
+  },
+  {
+    "user_id": "0835d59e-38a0-5689-aff6-069eb34ee034",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-08-07T09:33:05+00:00"
+  },
+  {
+    "user_id": "0835d59e-38a0-5689-aff6-069eb34ee034",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-08-17T13:01:26+00:00"
+  },
+  {
+    "user_id": "0835d59e-38a0-5689-aff6-069eb34ee034",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-24T18:57:51+00:00"
+  },
+  {
+    "user_id": "13354b77-b218-5675-9326-b63e6eae2c29",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-08T16:55:16+00:00"
+  },
+  {
+    "user_id": "13354b77-b218-5675-9326-b63e6eae2c29",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-08T16:55:15+00:00"
+  },
+  {
+    "user_id": "13354b77-b218-5675-9326-b63e6eae2c29",
+    "achievement_id": "graduate",
+    "earned_at": "2026-08-08T17:28:51+00:00"
+  },
+  {
+    "user_id": "13354b77-b218-5675-9326-b63e6eae2c29",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-08T16:55:15+00:00"
+  },
+  {
+    "user_id": "13354b77-b218-5675-9326-b63e6eae2c29",
+    "achievement_id": "list-master",
+    "earned_at": "2026-08-08T17:04:33+00:00"
+  },
+  {
+    "user_id": "13354b77-b218-5675-9326-b63e6eae2c29",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-08-08T17:13:27+00:00"
+  },
+  {
+    "user_id": "13354b77-b218-5675-9326-b63e6eae2c29",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-08-08T17:14:43+00:00"
+  },
+  {
+    "user_id": "13354b77-b218-5675-9326-b63e6eae2c29",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-08-08T17:02:12+00:00"
+  },
+  {
+    "user_id": "4868a6e3-8571-52f7-aa52-3089721db727",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-13T14:26:41+00:00"
+  },
+  {
+    "user_id": "4868a6e3-8571-52f7-aa52-3089721db727",
+    "achievement_id": "first-website",
+    "earned_at": "2026-07-13T14:17:23+00:00"
+  },
+  {
+    "user_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-09T14:44:52+00:00"
+  },
+  {
+    "user_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-09T14:44:47+00:00"
+  },
+  {
+    "user_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-09T14:44:50+00:00"
+  },
+  {
+    "user_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c",
+    "achievement_id": "list-master",
+    "earned_at": "2026-08-10T15:09:09+00:00"
+  },
+  {
+    "user_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-08-12T12:41:34+00:00"
+  },
+  {
+    "user_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-08-12T12:49:46+00:00"
+  },
+  {
+    "user_id": "134a5a0f-4e15-5173-b835-48e7b88d2f9c",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-08-09T14:53:58+00:00"
+  },
+  {
+    "user_id": "c4998012-4770-5ec1-be39-54e2c953840c",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-31T19:54:30+00:00"
+  },
+  {
+    "user_id": "c4998012-4770-5ec1-be39-54e2c953840c",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-31T19:54:26+00:00"
+  },
+  {
+    "user_id": "c4998012-4770-5ec1-be39-54e2c953840c",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-31T19:54:28+00:00"
+  },
+  {
+    "user_id": "5dd945f1-fc4b-5a7d-93ab-3f8810e5937c",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-05T22:01:03+00:00"
+  },
+  {
+    "user_id": "5dd945f1-fc4b-5a7d-93ab-3f8810e5937c",
+    "achievement_id": "first-website",
+    "earned_at": "2026-07-07T10:52:58+00:00"
+  },
+  {
+    "user_id": "5dd945f1-fc4b-5a7d-93ab-3f8810e5937c",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-07T10:58:05+00:00"
+  },
+  {
+    "user_id": "d23f0b4c-e067-5bb0-bd21-e4e4c6e4c807",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-30T10:30:14+00:00"
+  },
+  {
+    "user_id": "d23f0b4c-e067-5bb0-bd21-e4e4c6e4c807",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-30T10:30:12+00:00"
+  },
+  {
+    "user_id": "d23f0b4c-e067-5bb0-bd21-e4e4c6e4c807",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-30T10:30:13+00:00"
+  },
+  {
+    "user_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-07T16:25:42+00:00"
+  },
+  {
+    "user_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-07T16:25:40+00:00"
+  },
+  {
+    "user_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-07T16:25:41+00:00"
+  },
+  {
+    "user_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce",
+    "achievement_id": "list-master",
+    "earned_at": "2026-08-07T16:57:49+00:00"
+  },
+  {
+    "user_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-08-07T18:03:04+00:00"
+  },
+  {
+    "user_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-08-07T18:03:36+00:00"
+  },
+  {
+    "user_id": "09ae345e-0f42-561c-bd9b-7bd5d89b96ce",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-08-07T16:36:54+00:00"
+  },
+  {
+    "user_id": "ada1506c-6d0e-511f-ac49-1f3076b61d6c",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-05T18:26:50+00:00"
+  },
+  {
+    "user_id": "ada1506c-6d0e-511f-ac49-1f3076b61d6c",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-05T18:26:49+00:00"
+  },
+  {
+    "user_id": "ada1506c-6d0e-511f-ac49-1f3076b61d6c",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-05T18:26:49+00:00"
+  },
+  {
+    "user_id": "ada1506c-6d0e-511f-ac49-1f3076b61d6c",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-08-05T18:27:35+00:00"
+  },
+  {
+    "user_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-27T12:02:13+00:00"
+  },
+  {
+    "user_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-06-30T05:41:47+00:00"
+  },
+  {
+    "user_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb",
+    "achievement_id": "first-website",
+    "earned_at": "2026-06-30T05:40:47+00:00"
+  },
+  {
+    "user_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-27T12:02:12+00:00"
+  },
+  {
+    "user_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb",
+    "achievement_id": "list-master",
+    "earned_at": "2026-07-27T12:02:12+00:00"
+  },
+  {
+    "user_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb",
+    "achievement_id": "project-builder",
+    "earned_at": "2026-07-11T21:31:16+00:00"
+  },
+  {
+    "user_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb",
+    "achievement_id": "streak-3",
+    "earned_at": "2026-07-10T22:06:22+00:00"
+  },
+  {
+    "user_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-07-11T21:31:17+00:00"
+  },
+  {
+    "user_id": "fcaf03d8-7d97-5aed-b003-165daac60dbb",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-10T21:59:37+00:00"
+  },
+  {
+    "user_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-28T00:22:53+00:00"
+  },
+  {
+    "user_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-12T15:51:43+00:00"
+  },
+  {
+    "user_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "achievement_id": "first-website",
+    "earned_at": "2026-07-28T00:22:51+00:00"
+  },
+  {
+    "user_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-28T00:22:52+00:00"
+  },
+  {
+    "user_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "achievement_id": "list-master",
+    "earned_at": "2026-07-28T01:06:33+00:00"
+  },
+  {
+    "user_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-07-28T01:12:33+00:00"
+  },
+  {
+    "user_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-07-28T00:51:32+00:00"
+  },
+  {
+    "user_id": "507cee61-16a2-5c11-bb31-b5733ae10210",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-28T00:30:53+00:00"
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-02T23:33:16+00:00"
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-10T21:54:22+00:00"
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "achievement_id": "first-website",
+    "earned_at": "2026-07-10T21:52:14+00:00"
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-02T23:33:15+00:00"
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "achievement_id": "list-master",
+    "earned_at": "2026-08-02T23:34:03+00:00"
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-08-02T23:36:30+00:00"
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "achievement_id": "streak-3",
+    "earned_at": "2026-08-02T23:34:04+00:00"
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "achievement_id": "streak-7",
+    "earned_at": "2026-08-02T23:35:52+00:00"
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-08-02T23:36:31+00:00"
+  },
+  {
+    "user_id": "6e9737ac-157b-5834-8522-23ab46398962",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-08-02T23:33:17+00:00"
+  },
+  {
+    "user_id": "005ef699-039d-5f27-851b-bb2cd484e4f0",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-28T06:57:26+00:00"
+  },
+  {
+    "user_id": "005ef699-039d-5f27-851b-bb2cd484e4f0",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-28T06:59:10+00:00"
+  },
+  {
+    "user_id": "005ef699-039d-5f27-851b-bb2cd484e4f0",
+    "achievement_id": "first-website",
+    "earned_at": "2026-07-28T06:57:25+00:00"
+  },
+  {
+    "user_id": "005ef699-039d-5f27-851b-bb2cd484e4f0",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-28T06:57:25+00:00"
+  },
+  {
+    "user_id": "005ef699-039d-5f27-851b-bb2cd484e4f0",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-28T06:58:03+00:00"
+  },
+  {
+    "user_id": "8d8ad1bd-2fd7-500c-9adf-4e53f6f3c6d9",
+    "achievement_id": "first-website",
+    "earned_at": "2026-07-16T11:55:56+00:00"
+  },
+  {
+    "user_id": "ad4565d0-d0bc-5129-ad57-a7e308f40f42",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-30T14:56:54+00:00"
+  },
+  {
+    "user_id": "ad4565d0-d0bc-5129-ad57-a7e308f40f42",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-30T14:56:51+00:00"
+  },
+  {
+    "user_id": "ad4565d0-d0bc-5129-ad57-a7e308f40f42",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-30T14:56:53+00:00"
+  },
+  {
+    "user_id": "ad4565d0-d0bc-5129-ad57-a7e308f40f42",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-30T15:04:39+00:00"
+  },
+  {
+    "user_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-02T11:41:08+00:00"
+  },
+  {
+    "user_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-02T11:41:06+00:00"
+  },
+  {
+    "user_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-02T11:41:07+00:00"
+  },
+  {
+    "user_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2",
+    "achievement_id": "list-master",
+    "earned_at": "2026-08-02T12:01:32+00:00"
+  },
+  {
+    "user_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-08-10T16:20:03+00:00"
+  },
+  {
+    "user_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-08-10T16:40:04+00:00"
+  },
+  {
+    "user_id": "4e9278f8-3e09-5012-884d-bacb256cc0e2",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-08-02T11:43:56+00:00"
+  },
+  {
+    "user_id": "27c6ea04-42a4-5e19-8e7c-123a5bf3b68e",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-06T10:11:05+00:00"
+  },
+  {
+    "user_id": "27c6ea04-42a4-5e19-8e7c-123a5bf3b68e",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-06T10:11:03+00:00"
+  },
+  {
+    "user_id": "27c6ea04-42a4-5e19-8e7c-123a5bf3b68e",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-06T10:11:04+00:00"
+  },
+  {
+    "user_id": "27c6ea04-42a4-5e19-8e7c-123a5bf3b68e",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-08-06T10:11:07+00:00"
+  },
+  {
+    "user_id": "2a1f35a0-3cd3-5bb0-8b26-2414e2c0e044",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-17T20:26:15+00:00"
+  },
+  {
+    "user_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-09T18:18:21+00:00"
+  },
+  {
+    "user_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177",
+    "achievement_id": "first-website",
+    "earned_at": "2026-07-09T18:17:44+00:00"
+  },
+  {
+    "user_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177",
+    "achievement_id": "list-master",
+    "earned_at": "2026-07-09T18:29:13+00:00"
+  },
+  {
+    "user_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-07-09T18:28:12+00:00"
+  },
+  {
+    "user_id": "9a2a9d25-3bde-54e3-b3b9-1c827d4ce177",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-09T18:24:14+00:00"
+  },
+  {
+    "user_id": "f71cb18c-3762-592f-89e3-da017b808312",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-31T23:54:04+00:00"
+  },
+  {
+    "user_id": "f71cb18c-3762-592f-89e3-da017b808312",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-31T23:54:02+00:00"
+  },
+  {
+    "user_id": "f71cb18c-3762-592f-89e3-da017b808312",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-31T23:54:03+00:00"
+  },
+  {
+    "user_id": "f71cb18c-3762-592f-89e3-da017b808312",
+    "achievement_id": "streak-3",
+    "earned_at": "2026-07-31T23:54:39+00:00"
+  },
+  {
+    "user_id": "f71cb18c-3762-592f-89e3-da017b808312",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-31T23:54:40+00:00"
+  },
+  {
+    "user_id": "faafc8c9-771a-5af7-8f2a-736ef5aab5e0",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-31T15:45:13+00:00"
+  },
+  {
+    "user_id": "faafc8c9-771a-5af7-8f2a-736ef5aab5e0",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-31T15:45:12+00:00"
+  },
+  {
+    "user_id": "faafc8c9-771a-5af7-8f2a-736ef5aab5e0",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-31T15:45:12+00:00"
+  },
+  {
+    "user_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-07T11:01:58+00:00"
+  },
+  {
+    "user_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-07T11:01:56+00:00"
+  },
+  {
+    "user_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-07T11:01:57+00:00"
+  },
+  {
+    "user_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d",
+    "achievement_id": "list-master",
+    "earned_at": "2026-08-07T11:17:15+00:00"
+  },
+  {
+    "user_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-08-07T11:22:01+00:00"
+  },
+  {
+    "user_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-08-07T11:22:29+00:00"
+  },
+  {
+    "user_id": "eef1b6ff-323b-5a89-b7d7-53d23bcb6a8d",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-08-07T11:06:15+00:00"
+  },
+  {
+    "user_id": "79d288e2-4669-5479-92c5-0b56637eb242",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-17T15:41:03+00:00"
+  },
+  {
+    "user_id": "79d288e2-4669-5479-92c5-0b56637eb242",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-17T15:41:02+00:00"
+  },
+  {
+    "user_id": "79d288e2-4669-5479-92c5-0b56637eb242",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-17T15:41:03+00:00"
+  },
+  {
+    "user_id": "3c8efb8a-259d-52dd-b435-f16dff4ac2ec",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-13T17:43:57+00:00"
+  },
+  {
+    "user_id": "a6bb29fe-7f51-59ce-9a3d-d1158b31fbca",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-05T23:03:14+00:00"
+  },
+  {
+    "user_id": "a6bb29fe-7f51-59ce-9a3d-d1158b31fbca",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-05T23:03:13+00:00"
+  },
+  {
+    "user_id": "a6bb29fe-7f51-59ce-9a3d-d1158b31fbca",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-05T23:03:13+00:00"
+  },
+  {
+    "user_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-13T15:03:15+00:00"
+  },
+  {
+    "user_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-13T15:03:13+00:00"
+  },
+  {
+    "user_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-13T15:03:14+00:00"
+  },
+  {
+    "user_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d",
+    "achievement_id": "list-master",
+    "earned_at": "2026-08-14T09:41:44+00:00"
+  },
+  {
+    "user_id": "644d932a-d1b9-5da1-ac09-8a5ccf82361d",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-08-13T15:03:45+00:00"
+  },
+  {
+    "user_id": "3af0924f-093a-5a99-9487-aedd3d8312f0",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-22T07:32:20+00:00"
+  },
+  {
+    "user_id": "3af0924f-093a-5a99-9487-aedd3d8312f0",
+    "achievement_id": "first-website",
+    "earned_at": "2026-07-22T07:32:17+00:00"
+  },
+  {
+    "user_id": "3af0924f-093a-5a99-9487-aedd3d8312f0",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-22T07:32:18+00:00"
+  },
+  {
+    "user_id": "a27306b2-7779-5561-bf43-614019dd6d8d",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-17T21:17:32+00:00"
+  },
+  {
+    "user_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-21T13:46:28+00:00"
+  },
+  {
+    "user_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-06-29T15:36:23+00:00"
+  },
+  {
+    "user_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "achievement_id": "first-website",
+    "earned_at": "2026-06-29T15:34:20+00:00"
+  },
+  {
+    "user_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "achievement_id": "graduate",
+    "earned_at": "2026-08-18T16:43:23+00:00"
+  },
+  {
+    "user_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-21T13:46:27+00:00"
+  },
+  {
+    "user_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "achievement_id": "list-master",
+    "earned_at": "2026-08-10T13:14:09+00:00"
+  },
+  {
+    "user_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-08-10T13:49:38+00:00"
+  },
+  {
+    "user_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-08-10T13:58:06+00:00"
+  },
+  {
+    "user_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-21T13:46:29+00:00"
+  },
+  {
+    "user_id": "1b819ea5-f88e-5e06-ba49-d5e9666d9fbb",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-19T22:46:34+00:00"
+  },
+  {
+    "user_id": "1b819ea5-f88e-5e06-ba49-d5e9666d9fbb",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-19T22:46:33+00:00"
+  },
+  {
+    "user_id": "1b819ea5-f88e-5e06-ba49-d5e9666d9fbb",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-19T22:46:33+00:00"
+  },
+  {
+    "user_id": "7e51428c-ccc8-5999-9509-abcec3527307",
+    "achievement_id": "first-website",
+    "earned_at": "2026-07-10T21:13:17+00:00"
+  },
+  {
+    "user_id": "60ca24a7-f0b1-5307-8ddc-40596060bbea",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-05T21:48:17+00:00"
+  },
+  {
+    "user_id": "60ca24a7-f0b1-5307-8ddc-40596060bbea",
+    "achievement_id": "first-website",
+    "earned_at": "2026-06-29T15:51:20+00:00"
+  },
+  {
+    "user_id": "831c20c2-00a4-5d41-bbd0-dc2dccc7c58c",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-18T23:21:38+00:00"
+  },
+  {
+    "user_id": "831c20c2-00a4-5d41-bbd0-dc2dccc7c58c",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-18T23:21:36+00:00"
+  },
+  {
+    "user_id": "831c20c2-00a4-5d41-bbd0-dc2dccc7c58c",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-18T23:21:37+00:00"
+  },
+  {
+    "user_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9",
+    "achievement_id": "css-master",
+    "earned_at": "2026-07-22T07:39:37+00:00"
+  },
+  {
+    "user_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-07-22T07:39:35+00:00"
+  },
+  {
+    "user_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-07-22T07:39:36+00:00"
+  },
+  {
+    "user_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9",
+    "achievement_id": "list-master",
+    "earned_at": "2026-07-22T07:41:04+00:00"
+  },
+  {
+    "user_id": "2f96d4b2-d9bb-5c55-96c7-0d847f6209b9",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-07-22T07:40:14+00:00"
+  },
+  {
+    "user_id": "ab768c6c-166c-52aa-aa7d-153ca2e9641b",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-01T13:55:45+00:00"
+  },
+  {
+    "user_id": "ab768c6c-166c-52aa-aa7d-153ca2e9641b",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-01T13:55:42+00:00"
+  },
+  {
+    "user_id": "ab768c6c-166c-52aa-aa7d-153ca2e9641b",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-01T13:55:43+00:00"
+  },
+  {
+    "user_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff",
+    "achievement_id": "css-master",
+    "earned_at": "2026-08-05T17:45:06+00:00"
+  },
+  {
+    "user_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff",
+    "achievement_id": "first-lesson",
+    "earned_at": "2026-08-05T17:45:04+00:00"
+  },
+  {
+    "user_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff",
+    "achievement_id": "html-hero",
+    "earned_at": "2026-08-05T17:45:05+00:00"
+  },
+  {
+    "user_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff",
+    "achievement_id": "list-master",
+    "earned_at": "2026-08-05T18:54:01+00:00"
+  },
+  {
+    "user_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff",
+    "achievement_id": "semantic-pro",
+    "earned_at": "2026-08-05T19:34:13+00:00"
+  },
+  {
+    "user_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff",
+    "achievement_id": "xp-2000",
+    "earned_at": "2026-08-05T19:43:10+00:00"
+  },
+  {
+    "user_id": "93cd4ef7-7c16-5b62-9b5b-fa30bf4a9cff",
+    "achievement_id": "xp-500",
+    "earned_at": "2026-08-05T17:48:13+00:00"
+  }
+]

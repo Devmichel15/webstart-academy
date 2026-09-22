@@ -1,0 +1,37 @@
+[
+  {
+    "auth_uid": "3ab93750-0347-4517-b1c2-749cb041295e",
+    "source_profile_id": "b5314114-731b-5940-ac9e-bd54e9f1dbaf",
+    "legacy_firebase_uid": "AY8ZfkeSv9Y5dbtJbrUNtgvC2y12",
+    "match_source": "firebase_uid",
+    "created_at": "2026-09-21T22:24:46.568333+00:00"
+  },
+  {
+    "auth_uid": "a0d2e688-1820-4246-adcc-5e8e3b616760",
+    "source_profile_id": "1381a8a8-4a1c-5471-9485-d7f8ac552169",
+    "legacy_firebase_uid": "nnenGnK0KgU1QcoNGGITDyT9imH2",
+    "match_source": "email",
+    "created_at": "2026-09-21T23:44:06.595068+00:00"
+  },
+  {
+    "auth_uid": "3069f055-e7a1-4c20-a5db-44083008148c",
+    "source_profile_id": "60ca24a7-f0b1-5307-8ddc-40596060bbea",
+    "legacy_firebase_uid": "rbmFHw7EvEVLITx6EX5PWaPHSlB2",
+    "match_source": "email",
+    "created_at": "2026-09-21T23:44:07.793894+00:00"
+  },
+  {
+    "auth_uid": "30fe558e-edee-44ce-9d9a-14e765bcde70",
+    "source_profile_id": "4fca858f-c5a9-53bb-8c0e-2b901b3da485",
+    "legacy_firebase_uid": "ybwZpGpefUbdFxjX46RV4eesSgR2",
+    "match_source": "email",
+    "created_at": "2026-09-21T23:44:08.988757+00:00"
+  },
+  {
+    "auth_uid": "7a02287c-6a3c-4e57-a5b7-48c47d3f3ac8",
+    "source_profile_id": "a5f4b030-b86c-51c0-b05c-b334de9fc254",
+    "legacy_firebase_uid": "4lVjATGJOHSCDwygX2a3y1avhoF2",
+    "match_source": "email",
+    "created_at": "2026-09-21T23:44:10.152239+00:00"
+  }
+]
