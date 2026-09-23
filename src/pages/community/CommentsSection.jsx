@@ -13,6 +13,7 @@ import { ConfirmDialog } from '../../components/ui/ConfirmDialog.jsx'
 import { AuthorAvatar } from './shared.jsx'
 import { ReportModal } from './ReportModal.jsx'
 import { formatDatePt as formatPostDate } from '../../utils/formatDate.js'
+import { toUserMessage } from '../../utils/errors.js'
 
 function authorIdentityFromUser(user) {
   const meta = (user && user.user_metadata) || {}
@@ -73,7 +74,7 @@ export function CommentsSection({ projectId, currentUser, onCountChange }) {
       setNewComment('')
       onCountChange?.(1)
     } catch (err) {
-      showError(err.message)
+      showError(toUserMessage(err, 'Não foi possível publicar o comentário.'))
     } finally {
       setSubmitting(false)
     }
@@ -95,7 +96,7 @@ export function CommentsSection({ projectId, currentUser, onCountChange }) {
       setEditingId(null)
       showSuccess('Comentário atualizado!')
     } catch (err) {
-      showError(err.message)
+      showError(toUserMessage(err, 'Não foi possível atualizar o comentário.'))
     } finally {
       setSavingEdit(false)
     }
@@ -110,7 +111,7 @@ export function CommentsSection({ projectId, currentUser, onCountChange }) {
       onCountChange?.(-1)
       showSuccess('Comentário excluído.')
     } catch (err) {
-      showError(err.message)
+      showError(toUserMessage(err, 'Não foi possível excluir o comentário.'))
     } finally {
       setDeleting(false)
       setPendingDelete(null)

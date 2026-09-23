@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Flag, Loader2, X } from 'lucide-react'
 import { createPostReport } from '../../services/communityService.js'
 import { useToast } from '../../contexts/ToastContext.jsx'
+import { toUserMessage } from '../../utils/errors.js'
 
 export function ReportModal({ open, projectId = null, commentId = null, onClose, onReported }) {
   const { showError } = useToast()
@@ -22,7 +23,7 @@ export function ReportModal({ open, projectId = null, commentId = null, onClose,
       setReason('')
       onReported?.()
     } catch (err) {
-      showError(err.message || 'Não foi possível enviar a denúncia.')
+      showError(toUserMessage(err, 'Não foi possível enviar a denúncia.'))
     } finally {
       setSubmitting(false)
     }

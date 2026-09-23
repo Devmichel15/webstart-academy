@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { subscribeToCourses } from '../services/courseService.js'
+import { toUserMessage } from '../utils/errors.js'
 
 export function useCourses() {
   const [courses, setCourses] = useState([])
@@ -15,7 +16,7 @@ export function useCourses() {
         setLoading(false)
       },
       (err) => {
-        setError(err?.message || 'Erro ao carregar cursos.')
+        setError(toUserMessage(err, 'Erro ao carregar cursos.'))
         setLoading(false)
       },
     )

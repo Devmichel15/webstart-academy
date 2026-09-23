@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bot, Loader2, Send, Terminal, User, Code, AlertTriangle, CheckCircle, Lightbulb } from 'lucide-react'
 import { callAI } from '../../services/aiService'
+import { toUserMessage } from '../../utils/errors.js'
 
 const style = {
   container: {
@@ -269,7 +270,7 @@ export function AIChat({ lessonContext, compact = false }) {
         role: 'ai',
         content: text,
         data: {
-          feedback: err.message || 'Erro ao contactar a IA. Tenta novamente.',
+          feedback: toUserMessage(err, 'Erro ao contactar a IA. Tenta novamente.'),
           score: 0,
           mistakes: [],
           improvements: [],

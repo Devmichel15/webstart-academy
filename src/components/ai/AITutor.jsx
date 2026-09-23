@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Bot, Loader2, Send, Sparkles, Code, HelpCircle, BookOpen } from 'lucide-react'
 import { callAI } from '../../services/aiService'
 import { AIFeedbackCard } from './AIFeedbackCard'
+import { toUserMessage } from '../../utils/errors.js'
 
 const MODES = [
   { id: 'exercise_check', label: 'Corrigir', icon: Code },
@@ -44,7 +45,7 @@ export function AITutor({ lessonContext, initialCode, onInsertCode }) {
       })
       setResult(res)
     } catch (err) {
-      setError(err.message || 'Erro ao contactar a IA. Tenta novamente.')
+      setError(toUserMessage(err, 'Erro ao contactar a IA. Tenta novamente.'))
     } finally {
       setLoading(false)
     }

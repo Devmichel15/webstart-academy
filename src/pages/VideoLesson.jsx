@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, CheckCircle2, Circle, PlayCircle, BookOpen, Wrench } from 'lucide-react'
@@ -20,6 +20,7 @@ export default function VideoLesson() {
   const [course, setCourse] = useState(null)
   const [moduleLessons, setModuleLessons] = useState([])
   const [loading, setLoading] = useState(true)
+  const goingNext = useRef(false)
   const { completeLesson, visitLesson, getCourseProgress } = useProgress()
 
   useEffect(() => {
@@ -79,13 +80,25 @@ export default function VideoLesson() {
   const completedCount = course ? Math.round((courseProgress / 100) * (course.modules?.length || 0)) : 0
 
   const handleGoNext = async (nextLessonId) => {
-    await completeLesson(lesson.id)
-    navigate(`/video-aula/${nextLessonId}`)
+    if (goingNext.current) return
+    goingNext.current = true
+    try {
+      await completeLesson(lesson.id)
+      navigate(`/video-aula/${nextLessonId}`)
+    } finally {
+      goingNext.current = false
+    }
   }
 
   const handleFinishModule = async () => {
-    await completeLesson(lesson.id)
-    navigate(`/trilhas/${course?.id}/modulo/${module?.id}`)
+    if (goingNext.current) return
+    goingNext.current = true
+    try {
+      await completeLesson(lesson.id)
+      navigate(`/trilhas/${course?.id}/modulo/${module?.id}`)
+    } finally {
+      goingNext.current = false
+    }
   }
 
   return (

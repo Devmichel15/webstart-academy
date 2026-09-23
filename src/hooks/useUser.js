@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from './useAuth.js'
 import { subscribeToUser } from '../services/userService.js'
+import { toUserMessage } from '../utils/errors.js'
 
 export function useUser() {
   const { user, loading: authLoading } = useAuth()
@@ -25,7 +26,7 @@ export function useUser() {
         setLoading(false)
       },
       (err) => {
-        setError(err.message)
+        setError(toUserMessage(err, 'Erro ao carregar o utilizador.'))
         setLoading(false)
       },
     )

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { onAuthStateChanged } from "../services/authService.js";
 import { createUserProfile } from "../services/userService.js";
+import { toUserMessage } from "../utils/errors.js";
 
 const AuthContext = createContext(null);
 
@@ -40,7 +41,7 @@ export function AuthProvider({ children }) {
         }
       } catch (err) {
         console.error("[AuthContext] profile sync error:", err);
-        setError(err.message);
+        setError(toUserMessage(err, "Não foi possível sincronizar o teu perfil."));
       } finally {
         setLoading(false);
       }

@@ -9,6 +9,7 @@ import { useProgress } from '../hooks/useProgress.js'
 import { useAuth } from '../hooks/useAuth.js'
 import { updateUserProfile } from '../services/userService.js'
 import { useToast } from '../contexts/ToastContext.jsx'
+import { toUserMessage } from '../utils/errors.js'
 
 const URL_FIELDS = [
   { key: 'githubUrl', label: 'GitHub', placeholder: 'https://github.com/seu-usuario' },
@@ -88,7 +89,7 @@ export default function EditProfile() {
       showSuccess('Perfil atualizado com sucesso!')
     } catch (err) {
       console.error('[EditProfile] save error:', err)
-      showError(err.message || 'Erro ao guardar perfil.')
+      showError(toUserMessage(err, 'Erro ao guardar perfil.'))
     } finally {
       setSaving(false)
     }

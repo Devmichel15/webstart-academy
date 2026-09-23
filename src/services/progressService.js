@@ -183,6 +183,9 @@ export async function visitLesson(userId, lesson) {
 export async function completeLesson(userId, lessonId) {
   return withRetry(async () => {
     const profileId = await resolveProfileId(userId);
+    if (!profileId) {
+      throw new Error("Ainda não foi possível identificar o teu perfil. Tenta novamente em instantes.");
+    }
     const allAvailable = [...allLessons, ...allVideoLessons];
     const lesson = allAvailable.find((item) => item.id === lessonId);
     if (!lesson) throw new Error("Aula não encontrada.");

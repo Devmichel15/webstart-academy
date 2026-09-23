@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button.jsx'
 import { resetPassword } from '../services/authService.js'
 import { useToast } from '../contexts/ToastContext.jsx'
 import { SEO } from '../components/seo/SEO'
+import { toUserMessage } from '../utils/errors.js'
 
 export default function ForgotPassword() {
   const { showError, showSuccess } = useToast()
@@ -22,7 +23,7 @@ export default function ForgotPassword() {
       setSent(true)
       showSuccess('Email de recuperação enviado!')
     } catch (error) {
-      showError(error.message)
+      showError(toUserMessage(error, 'Não foi possível enviar o email de recuperação.'))
     } finally {
       setLoading(false)
     }

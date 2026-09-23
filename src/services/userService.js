@@ -308,8 +308,24 @@ async function readProfileWithRetry(uid) {
 }
 
 export async function resolveProfileId(uid) {
-  const profile = await getUserProfileRow(uid);
-  return profile?.id || uid;
+  let profile = await getUserProfileRow(uid);
+  if (profile?.id) return profile.id;
+
+  // Perfil ainda não resolvível (conta nova em corrida com createUserProfile,
+  // ou perfil órfão): tenta re-link idempotente antes de desistir.
+  // Nunca devolver um uid que não exista em profiles.id (senão as FK
+  // user_id → profiles.id falham com 23503).
+  try {
+    await supabase.rpc("link_legacy_profile", {
+      p_auth_uid: uid,
+      p_firebase_uid: null,
+    });
+  } catch (err) {
+    console.warn("[resolveProfileId] link_legacy_profile skipped:", err?.message || err);
+  }
+
+  profile = await getUserProfileRow(uid);
+  return profile?.id || null;
 }
 
 function mapJsToSql(data) {

@@ -7,6 +7,7 @@ import { logoutUser } from '../../services/authService.js'
 import { useToast } from '../../contexts/ToastContext.jsx'
 import { getNavItems } from '../../data/navItems.js'
 import { InstallNavItem } from '../pwa/InstallNavItem.jsx'
+import { toUserMessage } from '../../utils/errors.js'
 
 export function UserBadge() {
   const { user } = useAuth()
@@ -20,7 +21,7 @@ export function UserBadge() {
       navigate('/')
       showSuccess('Sessão encerrada.')
     } catch (error) {
-      showError(error.message)
+      showError(toUserMessage(error, 'Não foi possível encerrar a sessão.'))
     }
   }
 

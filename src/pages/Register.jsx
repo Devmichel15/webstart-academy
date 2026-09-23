@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button.jsx'
 import { loginWithGoogle, registerWithEmail } from '../services/authService.js'
 import { useToast } from '../contexts/ToastContext.jsx'
 import { SEO } from '../components/seo/SEO'
+import { toUserMessage } from '../utils/errors.js'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -25,7 +26,7 @@ export default function Register() {
       showSuccess('Conta criada com sucesso!')
       navigate('/avaliacao-perfil', { replace: true })
     } catch (error) {
-      showError(error.message)
+      showError(toUserMessage(error, 'Não foi possível criar a conta.'))
     } finally {
       setLoading(false)
     }
@@ -39,7 +40,7 @@ export default function Register() {
       showSuccess('Conta criada com Google!')
       navigate('/avaliacao-perfil', { replace: true })
     } catch (error) {
-      showError(error.message)
+      showError(toUserMessage(error, 'Não foi possível criar a conta com o Google.'))
     } finally {
       setGoogleLoading(false)
     }

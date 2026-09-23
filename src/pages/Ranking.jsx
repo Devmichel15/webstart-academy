@@ -5,6 +5,7 @@ import { Card } from "../components/ui/Card.jsx";
 import { Button } from "../components/ui/Button.jsx";
 import { SEO } from "../components/seo/SEO.jsx";
 import { getWeeklyRanking } from "../services/rankingService.js";
+import { toUserMessage } from "../utils/errors.js";
 
 const rankStyles = {
   1: "border-yellow-400 bg-yellow-50 dark:bg-yellow-950/30",
@@ -31,7 +32,7 @@ export default function Ranking() {
       setEntries(await getWeeklyRanking());
     } catch (loadError) {
       setError(
-        loadError.message || "Não foi possível carregar a classificação.",
+        toUserMessage(loadError, "Não foi possível carregar a classificação."),
       );
     } finally {
       setLoading(false);
@@ -47,7 +48,7 @@ export default function Ranking() {
       .catch((loadError) => {
         if (!cancelled)
           setError(
-            loadError.message || "Não foi possível carregar a classificação.",
+            toUserMessage(loadError, "Não foi possível carregar a classificação."),
           );
       })
       .finally(() => {

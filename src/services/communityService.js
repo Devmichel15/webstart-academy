@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase.js'
+import { resolveProfileId } from './userService.js'
 
 export const FEED_PAGE_SIZE = 9
 export const TITLE_MIN = 3
@@ -123,12 +124,13 @@ export async function createProject(uid, form) {
     throw new Error(Object.values(validation.errors)[0])
   }
 
+  const profileId = (await resolveProfileId(uid)) || uid
   const payload = buildProjectData(form)
   const { data, error } = await supabase
     .from('community_projects')
     .insert({
       ...payload,
-      author_id: uid,
+      author_id: profileId,
       like_count: 0,
       comment_count: 0,
     })
@@ -208,10 +210,11 @@ export async function getProjectsFeed({ pageSize = FEED_PAGE_SIZE, cursor = null
 }
 
 export async function getUserProjects(uid) {
+  const profileId = (await resolveProfileId(uid)) || uid
   const { data, error } = await supabase
     .from('community_projects')
     .select('*')
-    .eq('author_id', uid)
+    .eq('author_id', profileId)
     .order('created_at', { ascending: false })
     .limit(50)
 
@@ -276,10 +279,11 @@ export async function toggleLike(projectId) {
 export async function getLikedProjectIds(uid, projectIds) {
   if (!projectIds.length) return new Set()
 
+  const profileId = (await resolveProfileId(uid)) || uid
   const { data } = await supabase
     .from('project_likes')
     .select('project_id')
-    .eq('user_id', uid)
+    .eq('user_id', profileId)
     .in('project_id', projectIds)
 
   const liked = new Set()
@@ -324,11 +328,12 @@ export async function addComment(projectId, uid, content) {
     throw new Error(`O comentário deve ter entre 1 e ${COMMENT_MAX} caracteres.`)
   }
 
+  const profileId = (await resolveProfileId(uid)) || uid
   const { data: comment, error: commentError } = await supabase
     .from('project_comments')
     .insert({
       project_id: projectId,
-      author_id: uid,
+      author_id: profileId,
       content: trimmed,
     })
     .select()

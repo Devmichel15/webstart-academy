@@ -33,6 +33,7 @@ import {
   mergeCompletions,
   readLegacyCompletions,
 } from '../lib/data/legacyMerge.js'
+import { toUserMessage } from '../utils/errors.js'
 
 const ProgressContext = createContext(null)
 
@@ -80,13 +81,13 @@ export function ProgressProvider({ children }) {
           }
           setProfile(data || defaultProfile)
         } catch (err) {
-          setError(err.message)
+          setError(toUserMessage(err, 'Erro ao carregar o teu perfil.'))
         } finally {
           setLoading(false)
         }
       },
       (err) => {
-        setError(err.message)
+        setError(toUserMessage(err, 'Erro ao carregar o teu perfil.'))
         setLoading(false)
       },
     )
@@ -94,7 +95,7 @@ export function ProgressProvider({ children }) {
     const unsubProgress = subscribeToUserProgress(
       user.id,
       setProgressRecords,
-      (err) => setError(err.message),
+      (err) => setError(toUserMessage(err, 'Erro ao carregar o teu progresso.')),
     )
 
     return () => {
@@ -174,7 +175,7 @@ export function ProgressProvider({ children }) {
       return result
     } catch (err) {
       console.error('[completeLesson error]', err.code, err.message, err)
-      showError(err.message || 'Erro ao salvar progresso.')
+      showError(toUserMessage(err, 'Erro ao salvar progresso.'))
       return null
     }
   }, [user, showSuccess, showError])
@@ -186,7 +187,7 @@ export function ProgressProvider({ children }) {
       showSuccess(`Exercício concluído! +${result.xpEarned} XP`)
       return result
     } catch (err) {
-      showError(err.message || 'Erro ao salvar exercício.')
+      showError(toUserMessage(err, 'Erro ao salvar exercício.'))
       return null
     }
   }, [user, showSuccess, showError])
@@ -198,7 +199,7 @@ export function ProgressProvider({ children }) {
       showSuccess(`Projeto concluído! +${result.xpEarned} XP`)
       return result
     } catch (err) {
-      showError(err.message || 'Erro ao salvar projeto.')
+      showError(toUserMessage(err, 'Erro ao salvar projeto.'))
       return null
     }
   }, [user, showSuccess, showError])
@@ -216,7 +217,7 @@ export function ProgressProvider({ children }) {
       }
       return result
     } catch (err) {
-      showError(err.message || 'Erro ao salvar quiz.')
+      showError(toUserMessage(err, 'Erro ao salvar quiz.'))
       return null
     }
   }, [user, showSuccess, showError])

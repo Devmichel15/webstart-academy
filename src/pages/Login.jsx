@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button.jsx'
 import { loginWithEmail, loginWithGoogle } from '../services/authService.js'
 import { useToast } from '../contexts/ToastContext.jsx'
 import { SEO } from '../components/seo/SEO'
+import { toUserMessage } from '../utils/errors.js'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -33,7 +34,7 @@ export default function Login() {
       showSuccess('Login realizado com sucesso!')
       navigate(redirectTo, { replace: true })
     } catch (error) {
-      showError(error.message)
+      showError(toUserMessage(error, 'Não foi possível entrar.'))
     } finally {
       setLoading(false)
     }
@@ -47,7 +48,7 @@ export default function Login() {
       showSuccess('Login com Google realizado!')
       navigate(redirectTo, { replace: true })
     } catch (error) {
-      showError(error.message)
+      showError(toUserMessage(error, 'Não foi possível entrar com o Google.'))
     } finally {
       setGoogleLoading(false)
     }

@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase.js";
+import { toUserMessage } from "../utils/errors.js";
 
 const NETWORK_FAILURE_PATTERN =
   /failed to fetch|networkerror|network request failed|fetch failed|load failed/i;
@@ -54,7 +55,7 @@ function mapAuthError(error, operation) {
     "auth/too-many-requests": "Muitas tentativas. Tente novamente mais tarde.",
     "auth/redirect-cancelled-by-user": "Login cancelado.",
     "auth/redirect-operation-pending": "Redirecionamento em andamento.",
-    AuthApiError: error.message || "Erro de autenticação.",
+    AuthApiError: toUserMessage(error, "Erro de autenticação."),
     invalid_credentials: "Email ou senha incorretos.",
   };
 
@@ -67,7 +68,9 @@ function mapAuthError(error, operation) {
   }
 
   if (isBackendRejection(error)) {
-    return messages[error?.code] || error?.message || "Erro de autenticação.";
+    const mapped = messages[error?.code];
+    if (mapped) return mapped;
+    return toUserMessage(error, "Erro de autenticação.");
   }
 
   return SERVER_UNREACHABLE_MESSAGE;

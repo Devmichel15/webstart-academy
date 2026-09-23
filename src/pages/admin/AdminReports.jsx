@@ -12,6 +12,7 @@ import {
   resolveReport,
 } from '../../services/communityService.js'
 import { formatDatePt } from '../../utils/formatDate.js'
+import { toUserMessage } from '../../utils/errors.js'
 
 export default function AdminReports() {
   const { showSuccess, showError } = useToast()
@@ -79,7 +80,7 @@ export default function AdminReports() {
       setPendingAction(null)
       await load()
     } catch (err) {
-      showError(err.message || 'Não foi possível resolver a denúncia.')
+      showError(toUserMessage(err, 'Não foi possível resolver a denúncia.'))
     } finally {
       setActing(false)
     }

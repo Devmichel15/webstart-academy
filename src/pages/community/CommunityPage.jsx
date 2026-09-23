@@ -17,8 +17,10 @@ import {
   toggleLike,
   updateProject,
 } from '../../services/communityService.js'
+import { resolveProfileId } from '../../services/userService.js'
 import { ProjectCard } from './ProjectCard.jsx'
 import { ProjectFormModal } from './ProjectFormModal.jsx'
+import { toUserMessage } from '../../utils/errors.js'
 
 const MAX_FILTER_TAGS = 12
 
@@ -26,6 +28,7 @@ export default function CommunityPage() {
   const { user } = useAuth()
   const { showSuccess, showError } = useToast()
 
+  const [myProfileId, setMyProfileId] = useState(null)
   const [projects, setProjects] = useState([])
   const [authors, setAuthors] = useState({})
   const [likedIds, setLikedIds] = useState(() => new Set())
@@ -48,6 +51,21 @@ export default function CommunityPage() {
 
   const sentinelRef = useRef(null)
 
+  useEffect(() => {
+    if (!user) return undefined
+    let cancelled = false
+    resolveProfileId(user.id)
+      .then((id) => {
+        if (!cancelled) setMyProfileId(id || user.id)
+      })
+      .catch(() => {
+        if (!cancelled) setMyProfileId(user.id)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [user])
+
   const loadFeed = useCallback(
     async ({ tag, sortMode }) => {
       setLoading(true)
@@ -63,7 +81,7 @@ export default function CommunityPage() {
           setLikedIds(liked)
         }
       } catch (err) {
-        setError(err.message || 'Não foi possível carregar o feed.')
+        setError(toUserMessage(err, 'Não foi possível carregar o feed.'))
       } finally {
         setLoading(false)
       }
@@ -162,13 +180,13 @@ export default function CommunityPage() {
       } else {
         const created = await createProject(user.id, payload)
         setProjects((current) => [created, ...current])
-        await refreshAuthorFor(user.id)
+        await refreshAuthorFor(created.authorId)
         showSuccess('Projeto publicado no feed!')
       }
       setFormOpen(false)
       setEditingProject(null)
     } catch (err) {
-      showError(err.message)
+      showError(toUserMessage(err, 'Não foi possível guardar o projeto.'))
     } finally {
       setFormSubmitting(false)
     }
@@ -183,7 +201,7 @@ export default function CommunityPage() {
       showSuccess('Projeto excluído.')
       setPendingDelete(null)
     } catch (err) {
-      showError(err.message)
+      showError(toUserMessage(err, 'Não foi possível excluir o projeto.'))
     } finally {
       setDeleting(false)
     }
@@ -218,7 +236,7 @@ export default function CommunityPage() {
           p.id === project.id ? { ...p, likeCount: Math.max(0, (p.likeCount ?? 0) + (wasLiked ? 1 : -1)) } : p,
         ),
       )
-      showError(err.message)
+      showError(toUserMessage(err, 'Não foi possível atualizar o gosto.'))
     } finally {
       setLikePendingIds((current) => {
         const next = new Set(current)
@@ -344,7 +362,7 @@ export default function CommunityPage() {
                 project={project}
                 author={authors[project.authorId]}
                 currentUser={user}
-                isMine={user?.id === project.authorId}
+                isMine={Boolean(user) && myProfileId === project.authorId}
                 liked={likedIds.has(project.id)}
                 likePending={likePendingIds.has(project.id)}
                 onToggleLike={handleToggleLike}

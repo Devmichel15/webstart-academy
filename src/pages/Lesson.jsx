@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
@@ -20,6 +20,7 @@ export default function Lesson() {
   const [lesson, setLesson] = useState(null)
   const [course, setCourse] = useState(null)
   const [loading, setLoading] = useState(true)
+  const goingNext = useRef(false)
   const { completeLesson, visitLesson } = useProgress()
 
   useEffect(() => {
@@ -72,10 +73,15 @@ export default function Lesson() {
   const nextLesson = getNextLesson(lessonId, course?.lessons)
 
   const handleGoNext = async () => {
-    if (!nextLesson) return
-    await completeLesson(lesson.id)
-    const target = nextLesson.type === 'videoLesson' ? `/video-aula/${nextLesson.id}` : `/aula/${nextLesson.id}`
-    navigate(target)
+    if (!nextLesson || goingNext.current) return
+    goingNext.current = true
+    try {
+      await completeLesson(lesson.id)
+      const target = nextLesson.type === 'videoLesson' ? `/video-aula/${nextLesson.id}` : `/aula/${nextLesson.id}`
+      navigate(target)
+    } finally {
+      goingNext.current = false
+    }
   }
 
   return (
