@@ -36,9 +36,11 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminReports from "./pages/admin/AdminReports";
 import { InstallPrompt } from "./components/pwa/InstallPrompt.jsx";
 import InstallApp from "./pages/InstallApp.jsx";
 import Ranking from "./pages/Ranking.jsx";
+import CommunityPage from "./pages/community/CommunityPage.jsx";
 
 export default function App() {
   return (
@@ -90,6 +92,7 @@ export default function App() {
                           element={<PrimeirosPassos />}
                         />
                         <Route path="ranking" element={<Ranking />} />
+                        <Route path="feed" element={<CommunityPage />} />
                         <Route index element={<Dashboard />} />
                         <Route element={<FirstStepsGuard />}>
                           <Route path="trilhas" element={<Journey />} />
@@ -144,6 +147,7 @@ export default function App() {
                       path="admin/analytics"
                       element={<AdminAnalytics />}
                     />
+                    <Route path="admin/denuncias" element={<AdminReports />} />
                   </Route>
 
                   <Route path="*" element={<Navigate to="/" replace />} />

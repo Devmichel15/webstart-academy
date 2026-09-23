@@ -14,7 +14,7 @@ export function ProfileProjectsSection() {
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    if (!user?.uid) return undefined
+    if (!user?.id) return undefined
     let active = true
     setLoading(true)
     setError(false)
@@ -25,7 +25,7 @@ export function ProfileProjectsSection() {
     return () => {
       active = false
     }
-  }, [user?.uid])
+  }, [user?.id])
 
   return (
     <Card className="mb-8">

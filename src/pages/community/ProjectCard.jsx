@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ExternalLink, Github, Heart, Loader2, MessageCircle, Pencil, Trash2 } from 'lucide-react'
+import { ExternalLink, Flag, Github, Heart, Loader2, MessageCircle, Pencil, Trash2 } from 'lucide-react'
 import { Card } from '../../components/ui/Card.jsx'
 import { CommentsSection } from './CommentsSection.jsx'
 import { AuthorAvatar } from './shared.jsx'
+import { ReportModal } from './ReportModal.jsx'
+import { useToast } from '../../contexts/ToastContext.jsx'
 import { formatDatePt as formatPostDate } from '../../utils/formatDate.js'
 
 export function ProjectCard({
@@ -20,6 +22,8 @@ export function ProjectCard({
   onCommentCountChange,
 }) {
   const [showComments, setShowComments] = useState(false)
+  const [reportOpen, setReportOpen] = useState(false)
+  const { showSuccess } = useToast()
   const name = (author?.name || '').trim() || 'Aluno WebStart'
 
   return (
@@ -127,6 +131,14 @@ export function ProjectCard({
             <MessageCircle size={16} />
             {project.commentCount ?? 0}
           </button>
+          <button
+            type="button"
+            onClick={() => setReportOpen(true)}
+            aria-label="Denunciar projeto"
+            className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-sm font-bold text-secondary cursor-pointer hover:text-red-500"
+          >
+            <Flag size={16} />
+          </button>
         </div>
 
         {showComments && (
@@ -136,6 +148,16 @@ export function ProjectCard({
             onCountChange={(delta) => onCommentCountChange(project, delta)}
           />
         )}
+
+        <ReportModal
+          open={reportOpen}
+          projectId={project.id}
+          onClose={() => setReportOpen(false)}
+          onReported={() => {
+            setReportOpen(false)
+            showSuccess('Denúncia enviada. Obrigado por ajudar a manter o feed seguro!')
+          }}
+        />
       </div>
     </Card>
   )

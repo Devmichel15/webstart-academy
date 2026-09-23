@@ -205,7 +205,7 @@ export default function CommunityPage() {
       ),
     )
     try {
-      await toggleLike(project.id, user.id)
+      await toggleLike(project.id)
     } catch (err) {
       setLikedIds((current) => {
         const next = new Set(current)
@@ -344,7 +344,7 @@ export default function CommunityPage() {
                 project={project}
                 author={authors[project.authorId]}
                 currentUser={user}
-                isMine={user?.uid === project.authorId}
+                isMine={user?.id === project.authorId}
                 liked={likedIds.has(project.id)}
                 likePending={likePendingIds.has(project.id)}
                 onToggleLike={handleToggleLike}

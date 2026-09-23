@@ -50,7 +50,7 @@ export default function AssessmentPage() {
 
       setRoadmapResult(generatedRoadmap)
 
-      if (user?.uid) {
+      if (user?.id) {
         await saveFullLearningProfile(user.id, {
           assessment: answers,
           roadmap: generatedRoadmap,
@@ -69,7 +69,7 @@ export default function AssessmentPage() {
   }, [])
 
   const handleStartJourney = async () => {
-    if (user?.uid) {
+    if (user?.id) {
       try {
         await updateUserProfile(user.id, { firstStepsDone: true })
       } catch (err) {

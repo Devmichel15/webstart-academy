@@ -7,6 +7,7 @@ import {
   Download,
   GraduationCap,
   LayoutDashboard,
+  Rocket,
   Shield,
   Trophy,
   Users,
@@ -21,6 +22,7 @@ const baseNavItems = [
   { to: "/chat", label: "Tutor IA", icon: Bot },
   { to: "/materiais", label: "Materiais", icon: GraduationCap },
   { to: "/perfil", label: "Perfil", icon: Award },
+  { to: "/feed", label: "Feed", icon: Rocket },
   { to: "/ranking", label: "Classificação", icon: Trophy },
   { to: "/instalar-app", label: "Instalar app", icon: Download },
 ];

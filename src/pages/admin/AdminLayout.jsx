@@ -1,10 +1,11 @@
 import { Link, NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, BarChart3, ArrowLeft } from 'lucide-react'
+import { LayoutDashboard, Users, BarChart3, Flag, ArrowLeft } from 'lucide-react'
 
 const navItems = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/admin/users', label: 'Utilizadores', icon: Users },
   { to: '/admin/analytics', label: 'Análises', icon: BarChart3 },
+  { to: '/admin/denuncias', label: 'Denúncias', icon: Flag },
 ]
 
 export default function AdminLayout() {

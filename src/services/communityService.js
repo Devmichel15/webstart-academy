@@ -23,7 +23,7 @@ export function isValidUrl(value) {
   if (value.length < 8 || value.length > 2048) return false
   try {
     const parsed = new URL(value)
-    return parsed.protocol === 'https:' || parsed.protocol === 'http:'
+    return parsed.protocol === 'https:'
   } catch {
     return false
   }
@@ -264,12 +264,10 @@ export function clearAuthorCache() {
   authorCache.clear()
 }
 
-export async function toggleLike(projectId, uid) {
-  const { data, error } = await supabase
-    .rpc('toggle_project_like', {
-      p_project_id: projectId,
-      p_user_id: uid,
-    })
+export async function toggleLike(projectId) {
+  const { data, error } = await supabase.rpc('toggle_project_like', {
+    p_project_id: projectId,
+  })
 
   if (error) throw error
   return data
@@ -338,11 +336,6 @@ export async function addComment(projectId, uid, content) {
 
   if (commentError) throw commentError
 
-  await supabase.rpc('increment_comment_count', {
-    p_project_id: projectId,
-    p_delta: 1,
-  })
-
   return {
     id: comment.id,
     projectId: comment.project_id,
@@ -367,16 +360,74 @@ export async function updateComment(commentId, content) {
   if (error) throw error
 }
 
-export async function deleteComment(commentId, projectId) {
+export async function deleteComment(commentId) {
   const { error } = await supabase
     .from('project_comments')
     .delete()
     .eq('id', commentId)
 
   if (error) throw error
+}
 
-  await supabase.rpc('increment_comment_count', {
-    p_project_id: projectId,
-    p_delta: -1,
+export async function getCommentById(commentId) {
+  const { data, error } = await supabase
+    .from('project_comments')
+    .select('*')
+    .eq('id', commentId)
+    .maybeSingle()
+
+  if (error || !data) return null
+  return {
+    id: data.id,
+    projectId: data.project_id,
+    authorId: data.author_id,
+    content: data.content,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
+  }
+}
+
+export async function createPostReport({ projectId = null, commentId = null, reason }) {
+  const trimmed = String(reason || '').trim()
+  if (trimmed.length < 3 || trimmed.length > 500) {
+    throw new Error('Descreve o motivo da denúncia (3 a 500 caracteres).')
+  }
+  if (!projectId && !commentId) {
+    throw new Error('Falta o conteúdo a denunciar.')
+  }
+
+  const payload = { reason: trimmed }
+  if (projectId) payload.project_id = projectId
+  else payload.comment_id = commentId
+
+  const { data, error } = await supabase
+    .from('post_reports')
+    .insert(payload)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+export async function listReports() {
+  const { data, error } = await supabase
+    .from('post_reports')
+    .select('*')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false })
+    .limit(100)
+
+  if (error) throw error
+  return data || []
+}
+
+export async function resolveReport(reportId, action) {
+  const { data, error } = await supabase.rpc('admin_resolve_report', {
+    p_report_id: reportId,
+    p_action: action,
   })
+
+  if (error) throw error
+  return data
 }

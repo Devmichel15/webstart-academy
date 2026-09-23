@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Loader2, Pencil, Trash2, X } from 'lucide-react'
+import { Flag, Loader2, Pencil, Trash2, X } from 'lucide-react'
 import {
   COMMENT_MAX,
   addComment,
@@ -11,7 +11,16 @@ import {
 import { useToast } from '../../contexts/ToastContext.jsx'
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog.jsx'
 import { AuthorAvatar } from './shared.jsx'
+import { ReportModal } from './ReportModal.jsx'
 import { formatDatePt as formatPostDate } from '../../utils/formatDate.js'
+
+function authorIdentityFromUser(user) {
+  const meta = (user && user.user_metadata) || {}
+  return {
+    name: (meta.name || meta.full_name || '').trim(),
+    photoURL: meta.avatar_url || meta.picture || '',
+  }
+}
 
 export function CommentsSection({ projectId, currentUser, onCountChange }) {
   const { showSuccess, showError } = useToast()
@@ -26,6 +35,7 @@ export function CommentsSection({ projectId, currentUser, onCountChange }) {
   const [savingEdit, setSavingEdit] = useState(false)
   const [pendingDelete, setPendingDelete] = useState(null)
   const [deleting, setDeleting] = useState(false)
+  const [reportComment, setReportComment] = useState(null)
 
   useEffect(() => {
     let active = true
@@ -49,14 +59,15 @@ export function CommentsSection({ projectId, currentUser, onCountChange }) {
     if (!content || submitting) return
     setSubmitting(true)
     try {
-      const created = await addComment(projectId, currentUser.uid, content)
+      const created = await addComment(projectId, currentUser.id, content)
       setComments((current) => [...current, created])
+      const identity = authorIdentityFromUser(currentUser)
       setAuthors((current) => ({
         ...current,
-        [currentUser.uid]: current[currentUser.uid] || {
-          name: (currentUser.displayName || '').trim() || 'Aluno WebStart',
+        [currentUser.id]: current[currentUser.id] || {
+          name: identity.name || 'Aluno WebStart',
           username: '',
-          photoURL: currentUser.photoURL || '',
+          photoURL: identity.photoURL,
         },
       }))
       setNewComment('')
@@ -94,7 +105,7 @@ export function CommentsSection({ projectId, currentUser, onCountChange }) {
     if (!pendingDelete || deleting) return
     setDeleting(true)
     try {
-      await deleteCommentService(pendingDelete.id, projectId)
+      await deleteCommentService(pendingDelete.id)
       setComments((current) => current.filter((c) => c.id !== pendingDelete.id))
       onCountChange?.(-1)
       showSuccess('Comentário excluído.')
@@ -153,7 +164,7 @@ export function CommentsSection({ projectId, currentUser, onCountChange }) {
         <ul className="space-y-3">
           {comments.map((comment) => {
             const author = authors[comment.authorId]
-            const isOwn = currentUser?.uid === comment.authorId
+            const isOwn = currentUser?.id === comment.authorId
             return (
               <li key={comment.id} className="rounded-lg border-2 border-strong bg-surface p-3">
                 <div className="mb-1 flex items-start justify-between gap-2">
@@ -170,6 +181,14 @@ export function CommentsSection({ projectId, currentUser, onCountChange }) {
                       <p className="text-[10px] text-secondary">{formatPostDate(comment.createdAt)}</p>
                     </div>
                   </div>
+                  <button
+                    type="button"
+                    aria-label="Denunciar comentário"
+                    onClick={() => setReportComment(comment)}
+                    className="rounded-lg p-1 text-secondary hover:text-red-500"
+                  >
+                    <Flag size={13} />
+                  </button>
                   {isOwn && editingId !== comment.id && (
                     <div className="flex shrink-0 items-center gap-1">
                       <button
@@ -242,6 +261,16 @@ export function CommentsSection({ projectId, currentUser, onCountChange }) {
         loading={deleting}
         onConfirm={handleDelete}
         onCancel={() => setPendingDelete(null)}
+      />
+
+      <ReportModal
+        open={Boolean(reportComment)}
+        commentId={reportComment?.id}
+        onClose={() => setReportComment(null)}
+        onReported={() => {
+          setReportComment(null)
+          showSuccess('Denúncia enviada. Obrigado por ajudar a manter o feed seguro!')
+        }}
       />
     </div>
   )
