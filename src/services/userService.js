@@ -62,7 +62,12 @@ export async function createUserProfile(user, extra = {}) {
       });
       profile = await loadProfile(user.id);
     } catch (err) {
+      // Engolir a falha fazia `profile` ficar null e o fluxo caía no insert de
+      // um perfil NOVO e vazio: o migrador perdia o histórico e ainda ganhas
+      // uma segunda linha para o mesmo auth uid. Propagar para o AuthContext
+      // mostrar o erro em vez de fingir que o login correu bem.
       console.error("[createUserProfile] link_legacy_profile error:", err);
+      throw err;
     }
   }
 
@@ -132,17 +137,41 @@ function isEmptyProfile(row, authUid = null) {
   );
 }
 
-async function loadProfile(uid) {
+// Um auth uid pode corresponder a DUAS linhas de `profiles`: a "work profile"
+// criada no registo (id = auth uid) e o perfil migrado do Firebase ligado por
+// `auth_user_id`. Ler com `maybeSingle()` devolve PGRST116 nesse estado, o que
+// fazia o perfil parecer inexistente. Buscamos até 2 linhas e escolhemos de
+// forma determinística a que tem histórico.
+function pickCanonicalProfileRow(rows, uid) {
+  if (!rows || rows.length === 0) return null;
+  if (rows.length === 1) return rows[0];
+
+  const linked = rows.filter((row) => row.auth_user_id === uid);
+  const candidates = linked.length > 0 ? linked : rows;
+
+  return (
+    candidates.find((row) => !isEmptyProfile(row, uid)) ||
+    candidates.find((row) => row.name && String(row.name).trim()) ||
+    candidates[0]
+  );
+}
+
+async function fetchProfileRows(uid) {
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
     .or(`id.eq.${uid},auth_user_id.eq.${uid}`)
-    .maybeSingle();
-  if (error) {
-    console.error("[createUserProfile] lookup error:", error);
-    throw error;
-  }
-  return data || null;
+    .limit(2);
+  if (error) throw error;
+  return data || [];
+}
+
+async function getUserProfileRow(uid) {
+  return pickCanonicalProfileRow(await fetchProfileRows(uid), uid);
+}
+
+async function loadProfile(uid) {
+  return getUserProfileRow(uid);
 }
 
 async function findMigratedProfileByEmail(email) {
@@ -188,17 +217,16 @@ function generateUniqueUsername(name, uid) {
 }
 
 export async function getUserProfile(uid) {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .or(`id.eq.${uid},auth_user_id.eq.${uid}`)
-    .maybeSingle();
-
-  if (error) {
+  try {
+    const row = await getUserProfileRow(uid);
+    return row ? mapProfileRow(row) : null;
+  } catch (error) {
+    // `null` significa "perfil inexistente". devolver `null` num erro de rede
+    // confundia os dois: createUserProfile inseria um perfil duplicado e o
+    // ProgressContext tratava o utilizador como novo. Propagar o erro.
     console.error(`[getUserProfile] error for uid ${uid}:`, error);
-    return null;
+    throw error;
   }
-  return data ? mapProfileRow(data) : null;
 }
 
 const activeUserChannels = new Map();
@@ -280,16 +308,6 @@ export async function updateUserProfile(uid, data) {
     .update(supabaseData)
     .eq("id", profile.id);
   if (error) throw error;
-}
-
-async function getUserProfileRow(uid) {
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .or(`id.eq.${uid},auth_user_id.eq.${uid}`)
-    .maybeSingle();
-  if (error) throw error;
-  return data;
 }
 
 async function readProfileWithRetry(uid) {
@@ -492,6 +510,12 @@ function computeStreakUpdate(lastStudyDate, currentStreak) {
   const today = getTodayKey();
   const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
 
+  // Primeira atividade de sempre: começa o streak em 1. Não é uma quebra e
+  // não dá bónus (antes caía no ramo de gap: `broke: true` + 10 XP grátis).
+  if (!lastStudyDate) {
+    return { streak: 1, broke: false, bonusXp: 0, penaltyXp: 0 };
+  }
+
   if (lastStudyDate === today) {
     return { streak: currentStreak, broke: false, bonusXp: 0, penaltyXp: 0 };
   }
@@ -502,6 +526,8 @@ function computeStreakUpdate(lastStudyDate, currentStreak) {
     return { streak: newStreak, broke: false, bonusXp, penaltyXp: 0 };
   }
 
+  // Gap: o streak reinicia e penaliza, mas nunca dá bónus — caso contrário
+  // `xp = max(0, xp - penalty) + bonus` podia terminar acima do XP anterior.
   const penaltyXp = currentStreak >= 7 ? 25 : currentStreak >= 3 ? 10 : 0;
-  return { streak: 1, broke: true, bonusXp: 10, penaltyXp };
+  return { streak: 1, broke: true, bonusXp: 0, penaltyXp };
 }

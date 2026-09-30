@@ -137,7 +137,11 @@ export function subscribeToUserProgress(userId, callback, onError) {
         }
       };
     })
-    .catch(onError);
+    .catch((err) => {
+      // Não chamar onError depois de unsubscribe: o componente já pode ter
+      // sido desmontado (setState após unmount / erro fantasma no ecrã).
+      if (!disposed) onError?.(err);
+    });
 
   return () => unsubscribe();
 }
