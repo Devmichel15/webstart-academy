@@ -1,4 +1,10 @@
 import { supabase } from "../lib/supabase.js";
+import {
+  BIO_MAX,
+  isValidUrl,
+  normalizeUrl,
+  validateProfileName,
+} from "../utils/profileValidation.js";
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
 
@@ -34,6 +40,59 @@ function mapProfileRow(row) {
     instagramUrl: row.instagram_url || null,
     websiteUrl: row.website_url || null,
   };
+}
+
+/**
+ * Nome a gravar num perfil novo (bugs #21, #22).
+ *
+ * Antes: `(extra.name || user.user_metadata?.name || '').trim() || "Aluno WebStart"`.
+ * Um só campo de metadata, e "Aluno WebStart" como resposta a tudo o que
+ * faltasse — daí a школа de utilizadores sem nome próprio. Ordem agora:
+ *
+ *   1. o que o formulário mandou (`extra.name`);
+ *   2. `user_metadata.name` / `full_name` / `user_name` / `preferred_username`
+ *      — o Google devolve `full_name`, e `name` só quando o claim vem;
+ *   3. derivado do email (`maria.silva@...` -> "Maria Silva");
+ *   4. "Aluno WebStart", só quando não há mesmo nada.
+ *
+ * O fallback genérico é o ÚLTIMO recurso: é preferível mostrar um nome derivado
+ * do email a "Aluno WebStart". Sem nada aproveitável devolvemos `null`: o
+ * cadastro é marcado como incompleto (`isIncompleteProfileName`) e é o modal
+ * lateral que pede o nome. Gravar o default era o que multiplicava as linhas
+ * "Aluno WebStart" no top 10 — daí `name` passar a ser NULLABLE
+ * (supabase/migrations/017).
+ */
+const NAME_METADATA_KEYS = ["name", "full_name", "user_name", "preferred_username"];
+
+function titleCaseToken(token) {
+  return token.charAt(0).toUpperCase() + token.slice(1);
+}
+
+function deriveNameFromEmail(email) {
+  const localPart = String(email || "").split("@")[0];
+  if (!localPart) return "";
+  const words = localPart
+    .split(/[.\-_+]+/)
+    .map((w) => w.trim())
+    .filter(Boolean)
+    .map(titleCaseToken);
+  return words.join(" ");
+}
+
+function resolveDisplayName(user, extra = {}) {
+  const fromExtra = String(extra.name || "").trim();
+  if (fromExtra) return fromExtra.slice(0, 80);
+
+  const metadata = user?.user_metadata || {};
+  for (const key of NAME_METADATA_KEYS) {
+    const value = String(metadata[key] || "").trim();
+    if (value) return value.slice(0, 80);
+  }
+
+  const fromEmail = deriveNameFromEmail(user?.email);
+  if (fromEmail) return fromEmail.slice(0, 80);
+
+  return null;
 }
 
 export async function createUserProfile(user, extra = {}) {
@@ -77,8 +136,7 @@ export async function createUserProfile(user, extra = {}) {
   }
 
   // nenhum perfil ainda (novo cadastro GoTrue, sem histórico Firebase)
-  const name =
-    (extra.name || user.user_metadata?.name || "").trim() || "Aluno WebStart";
+  const name = resolveDisplayName(user, extra);
   const isAdmin = ADMIN_EMAIL && user.email === ADMIN_EMAIL;
 
   const profileData = {
@@ -308,6 +366,101 @@ export async function updateUserProfile(uid, data) {
     .update(supabaseData)
     .eq("id", profile.id);
   if (error) throw error;
+}
+
+// Campos que o utilizador pode editar no seu próprio perfil. `updateUserProfile`
+// acima é interno (xp, streak, role…) e aceita chaves arbitrárias; este é o
+// caminho para dados que vêm de um formulário. Os mesmos nomes, em
+// snake_case, são a whitelist do servidor (supabase/migrations/018).
+const EDITABLE_PROFILE_FIELDS = new Set([
+  "name",
+  "bio",
+  "githubUrl",
+  "portfolioUrl",
+  "linkedinUrl",
+  "twitterUrl",
+  "instagramUrl",
+  "websiteUrl",
+  "isPublic",
+]);
+
+const EDITABLE_URL_FIELDS = [
+  "githubUrl",
+  "portfolioUrl",
+  "linkedinUrl",
+  "twitterUrl",
+  "instagramUrl",
+  "websiteUrl",
+];
+
+/**
+ * Actualiza o perfil do utilizador autenticado.
+ *
+ * A gravação passa por `public.update_own_profile(jsonb)`
+ * (supabase/migrations/018), que valida no servidor e recusa chaves fora da
+ * whitelist. A validação abaixo continua a existir — para dar o erro sem ida
+ * ao servidor e para o formulário responder imediatamente — mas já não é a
+ * única linha de defesa: a RPC e o trigger `guard_privileged_profile_columns`
+ * fecham o que um cliente hostil tentaria.
+ *
+ * O que a RPC garante, e o `updateUserProfile` interno não:
+ *   1. whitelist no servidor — `role`, `xp`, `is_premium`… num formulário são
+ *      erro, não um campo silenciosamente descartado;
+ *   2. validação no servidor — o front é conveniência, não autoridade;
+ *   3. resolve a linha canónica (perfis migrados têm `id` ≠ `auth.uid()`).
+ *
+ * Lança `Error` com mensagem em português, pronta para `toUserMessage`.
+ */
+export async function updateOwnProfile(uid, data = {}) {
+  const patch = {};
+
+  // Valida-se o payload em camelCase, ANTES de `mapJsToSql` renomear as chaves
+  // para snake_case — validar depois comparava "githubUrl" com "github_url" e
+  // a validação de URL nunca corria.
+  for (const key of Object.keys(data)) {
+    if (!EDITABLE_PROFILE_FIELDS.has(key)) {
+      if (key !== "id") console.warn(`[updateOwnProfile] campo ignorado: ${key}`);
+      continue;
+    }
+
+    if (key === "name") {
+      const validation = validateProfileName(data.name);
+      if (!validation.valid) throw new Error(validation.error);
+      patch.name = validation.value;
+      continue;
+    }
+
+    if (key === "bio") {
+      const bio = String(data.bio ?? "").trim();
+      patch.bio = bio ? bio.slice(0, BIO_MAX) : null;
+      continue;
+    }
+
+    if (EDITABLE_URL_FIELDS.includes(key)) {
+      if (!isValidUrl(data[key])) {
+        throw new Error("URL inválida. Exemplo: https://github.com/usuario");
+      }
+      patch[key] = normalizeUrl(data[key]) || null;
+      continue;
+    }
+
+    patch[key] = data[key];
+  }
+
+  // Payload vazio: nem vale a pena uma viagem ao servidor.
+  if (Object.keys(patch).length === 0) {
+    const profile = await getUserProfileRow(uid);
+    if (!profile) throw new Error("Perfil do utilizador não encontrado.");
+    return mapProfileRow(profile);
+  }
+
+  const { data: rows, error } = await supabase.rpc("update_own_profile", {
+    p_patch: mapJsToSql(patch),
+  });
+  if (error) throw error;
+
+  const updated = Array.isArray(rows) ? rows[0] : rows;
+  return updated ? mapProfileRow(updated) : null;
 }
 
 async function readProfileWithRetry(uid) {
