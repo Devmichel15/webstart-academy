@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Check, Loader2, Sparkles } from 'lucide-react'
+import { Button } from '../ui/Button.jsx'
 
 const ANALYSIS_STEPS = [
   'Analisando seu perfil de aprendizagem...',
@@ -10,11 +11,12 @@ const ANALYSIS_STEPS = [
   'Montando seu plano personalizado...',
 ]
 
-export function AssessmentAnalyzingScreen({ isBackendDone, onFinish }) {
+export function AssessmentAnalyzingScreen({ isBackendDone, error, onRetry, onFinish }) {
   const [completedSteps, setCompletedSteps] = useState([])
-  const [startTime] = useState(Date.now())
+  const startTime = useRef(null)
 
   useEffect(() => {
+    startTime.current = Date.now()
     const interval = setInterval(() => {
       setCompletedSteps((prev) => {
         if (prev.length < ANALYSIS_STEPS.length) {
@@ -28,17 +30,15 @@ export function AssessmentAnalyzingScreen({ isBackendDone, onFinish }) {
 
   useEffect(() => {
     const checkFinish = setInterval(() => {
-      const elapsed = Date.now() - startTime
+      const elapsed = Date.now() - startTime.current
       const minDurationMet = elapsed >= 4200
-      const maxTimeoutMet = elapsed >= 6000
-
-      if ((minDurationMet && isBackendDone) || maxTimeoutMet) {
+      if (minDurationMet && isBackendDone) {
         clearInterval(checkFinish)
         onFinish()
       }
     }, 200)
     return () => clearInterval(checkFinish)
-  }, [startTime, isBackendDone, onFinish])
+  }, [isBackendDone, onFinish])
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center justify-center px-4 py-12 bg-gradient-to-br from-brand-950 via-brand-900 to-brand-950 overflow-hidden">
@@ -109,6 +109,18 @@ export function AssessmentAnalyzingScreen({ isBackendDone, onFinish }) {
             )
           })}
         </div>
+
+        {error && (
+          <div
+            role="alert"
+            className="mt-6 rounded-xl border-2 border-red-500/50 bg-red-500/10 p-4 text-left"
+          >
+            <p className="mb-3 text-sm font-semibold text-primary">{error}</p>
+            <Button onClick={onRetry} className="w-full">
+              Tentar novamente
+            </Button>
+          </div>
+        )}
       </motion.div>
     </div>
   )

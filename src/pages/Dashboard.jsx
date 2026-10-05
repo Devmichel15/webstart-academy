@@ -110,7 +110,8 @@ export default function Dashboard() {
           subtitle="Acompanhe seu progresso na WebStart Academy em tempo real."
         />
 
-        {outletContext.assessmentCompleted === false && <AssessmentBanner />}
+        {!outletContext.assessmentLoading &&
+          outletContext.assessmentCompleted === false && <AssessmentBanner />}
 
         {firstStepsDone === false && (
           <Card className="mb-8 border-2 border-brand-400 bg-brand-50 dark:bg-brand-900/30">

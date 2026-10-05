@@ -13,6 +13,7 @@ import { AssessmentIntroScreen } from '../components/assessment/AssessmentIntroS
 import { AssessmentFlow } from '../components/assessment/AssessmentFlow.jsx'
 import { AssessmentAnalyzingScreen } from '../components/assessment/AssessmentAnalyzingScreen.jsx'
 import { AssessmentResultScreen } from '../components/assessment/AssessmentResultScreen.jsx'
+import { toUserMessage } from '../utils/errors.js'
 
 export default function AssessmentPage() {
   const { user } = useAuthContext()
@@ -24,6 +25,7 @@ export default function AssessmentPage() {
   const [calculatedArchetype, setCalculatedArchetype] = useState(null)
   const [roadmapResult, setRoadmapResult] = useState(null)
   const [backendDone, setBackendDone] = useState(false)
+  const [saveError, setSaveError] = useState(null)
 
   const handleStartFlow = () => {
     setStage('flow')
@@ -33,6 +35,7 @@ export default function AssessmentPage() {
     setAssessmentAnswers(answers)
     setStage('analyzing')
     setBackendDone(false)
+    setSaveError(null)
 
     const archetype = getArchetype(answers.experience, answers.objective)
     setCalculatedArchetype(archetype)
@@ -50,17 +53,22 @@ export default function AssessmentPage() {
 
       setRoadmapResult(generatedRoadmap)
 
-      if (user?.id) {
-        await saveFullLearningProfile(user.id, {
-          assessment: answers,
-          roadmap: generatedRoadmap,
-          source,
-        })
-      }
+      if (!user?.id) throw new Error('Sessão de utilizador não encontrada.')
+
+      await saveFullLearningProfile(user.id, {
+        assessment: answers,
+        roadmap: generatedRoadmap,
+        source,
+      })
+      setBackendDone(true)
     } catch (err) {
       console.error('[AssessmentPage] Error analyzing or saving profile:', err)
-    } finally {
-      setBackendDone(true)
+      setSaveError(
+        toUserMessage(
+          err,
+          'Não foi possível concluir e guardar o seu plano. Verifique a ligação e tente novamente.',
+        ),
+      )
     }
   }
 
@@ -101,7 +109,14 @@ export default function AssessmentPage() {
   }
 
   if (stage === 'analyzing') {
-    return <AssessmentAnalyzingScreen isBackendDone={backendDone} onFinish={handleAnalyzingFinish} />
+    return (
+      <AssessmentAnalyzingScreen
+        isBackendDone={backendDone}
+        error={saveError}
+        onRetry={() => assessmentAnswers && handleFlowComplete(assessmentAnswers)}
+        onFinish={handleAnalyzingFinish}
+      />
+    )
   }
 
   if (stage === 'result') {

@@ -2,6 +2,8 @@ import { supabase } from '../lib/supabase.js'
 import { resolveProfileId } from './userService.js'
 import { withRetry } from '../utils/retry.js'
 
+const assessmentStatusListeners = new Map()
+
 function mapLearningProfileRow(row) {
   if (!row) return null
   return {
@@ -15,6 +17,26 @@ function mapLearningProfileRow(row) {
     completed: row.completed === true,
     source: row.source ?? null,
   }
+}
+
+export function subscribeToAssessmentStatus(uid, callback) {
+  if (!uid) return () => {}
+
+  if (!assessmentStatusListeners.has(uid)) {
+    assessmentStatusListeners.set(uid, new Set())
+  }
+
+  const listeners = assessmentStatusListeners.get(uid)
+  listeners.add(callback)
+
+  return () => {
+    listeners.delete(callback)
+    if (listeners.size === 0) assessmentStatusListeners.delete(uid)
+  }
+}
+
+function publishAssessmentStatus(uid, status) {
+  assessmentStatusListeners.get(uid)?.forEach((listener) => listener(status))
 }
 
 /**
@@ -114,6 +136,11 @@ export async function saveFullLearningProfile(uid, { assessment, roadmap, source
       .upsert(payload, { onConflict: 'user_id' })
 
     if (error) throw error
+    const saved = await getLearningProfile(uid)
+    if (saved?.id !== profileId || saved.completed !== true) {
+      throw new Error('Learning profile save could not be verified')
+    }
+    publishAssessmentStatus(uid, true)
     return payload
   })
 }
