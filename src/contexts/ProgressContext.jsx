@@ -57,18 +57,27 @@ export function ProgressProvider({ children }) {
   const [profile, setProfile] = useState(defaultProfile)
   const [progressRecords, setProgressRecords] = useState([])
   const [loading, setLoading] = useState(true)
+  // `loading` é posto a true num efeito, um commit DEPOIS de o `user` aparecer.
+  // Nesse intervalo `loading === false` mas `profile` ainda é o `defaultProfile`
+  // (name: ''). Quem lê `profile.name` nesse intervalo acha que o cadastro está
+  // incompleto quando não está — era o que fazia o modal lateral abrir a
+  // todos os utilizadores com nome válido. `profileLoaded` só é true depois
+  // da leitura real.
+  const [profileLoaded, setProfileLoaded] = useState(false)
   const [error, setError] = useState(null)
   const [legacyCompletions, setLegacyCompletions] = useState(null)
 
   useEffect(() => {
     if (!user) {
       setProfile(defaultProfile)
+      setProfileLoaded(false)
       setProgressRecords([])
       setLoading(false)
       return undefined
     }
 
     setLoading(true)
+    setProfileLoaded(false)
 
     const unsubUser = subscribeToUser(
       user.id,
@@ -83,11 +92,13 @@ export function ProgressProvider({ children }) {
         } catch (err) {
           setError(toUserMessage(err, 'Erro ao carregar o teu perfil.'))
         } finally {
+          setProfileLoaded(true)
           setLoading(false)
         }
       },
       (err) => {
         setError(toUserMessage(err, 'Erro ao carregar o teu perfil.'))
+        setProfileLoaded(true)
         setLoading(false)
       },
     )
@@ -304,6 +315,7 @@ export function ProgressProvider({ children }) {
       studyHours,
       progressRecords,
       loading,
+      profileLoaded,
       error,
       completeLesson,
       completeExercise,
@@ -335,6 +347,7 @@ export function ProgressProvider({ children }) {
       studyHours,
       progressRecords,
       loading,
+      profileLoaded,
       error,
       completeLesson,
       completeExercise,

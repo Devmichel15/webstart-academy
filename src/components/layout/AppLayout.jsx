@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { MobileHeader } from './MobileHeader'
 import { MobileNavDrawer } from './MobileNavDrawer'
+import { IncompleteProfileDrawer } from '../profile/IncompleteProfileDrawer'
 
 export function AppLayout() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -20,6 +21,7 @@ export function AppLayout() {
         </main>
       </div>
       <MobileNavDrawer isOpen={menuOpen} onClose={handleMenuClose} />
+      <IncompleteProfileDrawer />
     </div>
   )
 }
