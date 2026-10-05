@@ -1,5 +1,6 @@
 import { supabase } from "../lib/supabase.js";
 import { toUserMessage } from "../utils/errors.js";
+import { PASSWORD_MIN } from "../utils/profileValidation.js";
 
 const NETWORK_FAILURE_PATTERN =
   /failed to fetch|networkerror|network request failed|fetch failed|load failed/i;
@@ -118,6 +119,69 @@ export async function resetPassword(email) {
     redirectTo: `${PUBLIC_APP_URL}/login`,
   });
   if (error) throw new Error(mapAuthError(error, "password-reset"));
+}
+
+const WRONG_CURRENT_PASSWORD_CODES = new Set([
+  "auth/invalid-credential",
+  "auth/wrong-password",
+]);
+
+/**
+ * Altera a senha do utilizador autenticado.
+ *
+ * O hash é o do próprio GoTrue (bcrypt) - `supabase.auth.updateUser` é o mesmo
+ * caminho do registo, por isso não há hashing novo no projeto.
+ *
+ * GoTrue não expõe "confirma a senha atual": a única forma de a verificar é
+ * re-autenticar com `signInWithPassword` antes de gravar. Só depois disso é
+ * que `updateUser` corre.
+ *
+ * DÍVIDA CONHECIDA (decisão deliberada): o mínimo de 8 caracteres é aplicado
+ * aqui e no formulário, mas não no servidor. Quem tiver sessão e craftar
+ * `supabase.auth.updateUser({ password })` à mão passa pelo mínimo do GoTrue
+ * (6 por omissão). Fechar isto exige subir `Password min length` nas
+ * settings do projeto Supabase ou uma Edge Function — não é código desta app,
+ * por isso fica documentado em vez de silenciosamente assumido.
+ *
+ * @param {{ currentPassword: string, newPassword: string, email?: string }} params
+ */
+export async function changePassword({ currentPassword, newPassword, email }) {
+  if (typeof newPassword === "string" && newPassword.length < PASSWORD_MIN) {
+    throw new Error(`A nova senha precisa de pelo menos ${PASSWORD_MIN} caracteres.`);
+  }
+
+  let targetEmail = email;
+  if (!targetEmail) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    targetEmail = user?.email || null;
+  }
+  if (!targetEmail) {
+    throw new Error("Não foi possível identificar a tua conta.");
+  }
+
+  const { error: reauthError } = await supabase.auth.signInWithPassword({
+    email: targetEmail,
+    password: currentPassword,
+  });
+  if (reauthError) {
+    const msg = String(reauthError?.message || "");
+    if (
+      WRONG_CURRENT_PASSWORD_CODES.has(reauthError?.code) ||
+      /\binvalid login credentials\b/i.test(msg)
+    ) {
+      throw new Error("A senha atual está incorreta.");
+    }
+    throw new Error(mapAuthError(reauthError, "reauth"));
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) {
+    // `auth/weak-password` é o limite do GoTrue (6); nós exigimos 8 na
+    // validação, mas a mensagem do servidor é a específica se alguma vez mudar.
+    throw new Error(mapAuthError(error, "update-password"));
+  }
 }
 
 export function onAuthStateChanged(callback) {

@@ -26,6 +26,7 @@ import VideoLesson from "./pages/VideoLesson";
 import Lab from "./pages/Lab";
 import Materials from "./pages/Materials";
 import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 import AIChat from "./pages/AIChat";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -128,6 +129,7 @@ export default function App() {
                           <Route path="laboratorio" element={<Lab />} />
                           <Route path="materiais" element={<Materials />} />
                           <Route path="perfil" element={<Profile />} />
+                          <Route path="editar-perfil" element={<EditProfile />} />
                           <Route path="chat" element={<AIChat />} />
                         </Route>
                       </Route>

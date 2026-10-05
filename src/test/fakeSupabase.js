@@ -414,6 +414,31 @@ class QueryBuilder {
     }
 
     if (kind === "update") {
+      // profiles_guard_privileged_columns (supabase/migrations/018): `role`,
+      // `is_premium` and `purchased_courses` are not the user's to change,
+      // whichever path they take to the table. Without a session (migrations,
+      // service_role) or for an admin, the write goes through.
+      if (
+        table === "profiles" &&
+        this.client.currentUserId() !== null &&
+        !this.client.isAdmin()
+      ) {
+        const guarded = ["role", "is_premium", "purchased_courses"].filter(
+          (key) => key in payload,
+        );
+        if (guarded.length > 0) {
+          return {
+            data: null,
+            error: postgrestError(
+              "Alteração de campos privilegiados apenas pelo servidor.",
+              "42501",
+            ),
+            count: null,
+            status: 403,
+          };
+        }
+      }
+
       const visible = this.rlsFilter(this.applyFilters(rows), "write");
       if (visible.length === 0) {
         return { data: null, error: null, count: 0, status: 204, statusText: "No Content" };
@@ -558,6 +583,42 @@ class FakeAuth {
     return Promise.resolve({ error: null });
   }
 
+  /** GoTrue guarda a senha em claro no duplo; o hash é do servidor, não nos cabe. */
+  updateUser({ password } = {}) {
+    if (password === undefined) {
+      return Promise.resolve({
+        data: { user: null },
+        error: { name: "AuthApiError", message: "Bad request", status: 400 },
+      });
+    }
+    if (String(password).length < 6) {
+      return Promise.resolve({
+        data: { user: null },
+        error: {
+          name: "AuthApiError",
+          message: "New password should be at least 6 characters.",
+          code: "weak_password",
+          status: 422,
+        },
+      });
+    }
+
+    const record = this.client.authUsers.find(
+      (u) => u.id === this.client.session?.user?.id,
+    );
+    if (!record) {
+      return Promise.resolve({
+        data: { user: null },
+        error: { name: "AuthApiError", message: "Auth session missing!", status: 400 },
+      });
+    }
+    record.password = password;
+    const session = { user: stripPassword(record), access_token: "token", expires_at: 0 };
+    this.client.session = session;
+    this.client.emitAuth("USER_UPDATED", session);
+    return Promise.resolve({ data: { user: session.user }, error: null });
+  }
+
   signInWithOAuth({ provider }) {
     this.client.lastOAuthProvider = provider;
     return Promise.resolve({ data: { provider, url: "https://oauth.test" }, error: null });
@@ -632,10 +693,108 @@ export class FakeSupabase {
       delete this.rpcErrors[fnName];
       return Promise.reject(error);
     }
+    if (fnName === "update_own_profile") {
+      return Promise.resolve(this.updateOwnProfile(args));
+    }
     if (fnName !== "link_legacy_profile") {
       return Promise.resolve({ data: null, error: postgrestError(`unknown function ${fnName}`, "42883") });
     }
     return Promise.resolve({ data: this.linkLegacyProfile(args), error: null });
+  }
+
+  /**
+   * Mirror of public.update_own_profile (supabase/migrations/018).
+   *
+   * The point of the fake is that the SERVER rules are enforced here too: a
+   * test that tries to sneak `role` through the service must fail because the
+   * RPC refuses it, not because the client filtered it out.
+   */
+  updateOwnProfile({ p_patch: patch } = {}) {
+    const uid = this.currentUserId();
+    const fail = (message, code) => ({ data: null, error: postgrestError(message, code) });
+
+    if (!uid) return fail("Sessão inválida.", "42501");
+    if (!patch || typeof patch !== "object" || Array.isArray(patch)) {
+      return fail("Dados inválidos.", "22023");
+    }
+
+    const allowed = new Set([
+      "name",
+      "bio",
+      "is_public",
+      "github_url",
+      "portfolio_url",
+      "linkedin_url",
+      "twitter_url",
+      "instagram_url",
+      "website_url",
+    ]);
+    const rejected = Object.keys(patch).filter((key) => !allowed.has(key));
+    if (rejected.length > 0) {
+      return fail(`Campo não editável pelo utilizador: ${rejected.join(", ")}`, "42501");
+    }
+
+    const row = this.db.profiles.find(
+      (p) => p.id === uid || p.auth_user_id === uid,
+    );
+    if (!row) return fail("Perfil do utilizador não encontrado.", "P0002");
+
+    const update = {};
+    for (const [key, value] of Object.entries(patch)) {
+      if (key === "name") {
+        const name = String(value ?? "").trim();
+        if (name.length < 2 || name.length > 60) {
+          return fail("O nome tem de ter entre 2 e 60 caracteres.", "22023");
+        }
+        if (/^aluno\s+webstart$/i.test(name)) {
+          return fail("Escolhe um nome próprio para apareceres na classificação.", "22023");
+        }
+        update.name = name;
+        continue;
+      }
+
+      if (key === "bio") {
+        const bio = String(value ?? "").trim();
+        if (bio.length > 500) {
+          return fail("A bio não pode ter mais de 500 caracteres.", "22023");
+        }
+        update.bio = bio || null;
+        continue;
+      }
+
+      if (key === "is_public") {
+        if (typeof value !== "boolean") {
+          return fail("Valor inválido para a visibilidade do perfil.", "22023");
+        }
+        update.is_public = value;
+        continue;
+      }
+
+      const url = value === null || value === undefined ? null : String(value).trim();
+      if (url) {
+        if (url.length > 300) return fail("URL demasiado longa.", "22023");
+        if (!/^https?:\/\/\S+$/i.test(url)) {
+          return fail("URL inválida. Exemplo: https://github.com/utilizador", "22023");
+        }
+      }
+      update[key] = url || null;
+    }
+
+    if (Object.keys(update).length === 0) return { data: [clone(row)], error: null };
+
+    // RLS + the privileged-columns trigger: the same guard the real database
+    // has (018). Reaching `role` here is an escalation attempt, not a form bug.
+    if (!this.isAdmin()) {
+      for (const key of ["role", "is_premium", "purchased_courses"]) {
+        if (key in update) {
+          return fail("Alteração de campos privilegiados apenas pelo servidor.", "42501");
+        }
+      }
+    }
+
+    Object.assign(row, update);
+    this.emitRealtime("profiles", "UPDATE", [clone(row)]);
+    return { data: [clone(row)], error: null };
   }
 
   /**
