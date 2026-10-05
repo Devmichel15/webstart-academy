@@ -5,6 +5,7 @@ import { Card } from "../components/ui/Card.jsx";
 import { Button } from "../components/ui/Button.jsx";
 import { SEO } from "../components/seo/SEO.jsx";
 import { getWeeklyRanking } from "../services/rankingService.js";
+import { ANONYMOUS_DISPLAY_NAME } from "../utils/profileValidation.js";
 import { toUserMessage } from "../utils/errors.js";
 
 const rankStyles = {
@@ -133,15 +134,25 @@ export default function Ranking() {
             <div className="divide-y divide-border">
               {topEntries.map((entry) => (
                 <div
-                  key={`${entry.rank}-${entry.name}`}
+                  key={entry.rank}
                   className={`flex items-center gap-3 p-4 ${entry.is_current_user ? "bg-brand-50 dark:bg-brand-950/30" : ""} ${rankStyles[entry.rank] || ""}`}
                 >
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-strong font-black">
                     {entry.rank <= 3 ? <Medal size={18} /> : entry.rank}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-black text-primary">
-                      {entry.name || "Aluno WebStart"}
+                    {/* A RPC (017) já devolve "Aluno anónimo" para quem tem
+                        cadastro incompleto. O fallback cobre respostas de uma
+                        versão anterior da função. Sem link para o perfil
+                        público: `has_public_profile` é false para esses. */}
+                    <p
+                      className={`truncate font-black ${
+                        entry.has_public_profile === false
+                          ? "text-muted italic"
+                          : "text-primary"
+                      }`}
+                    >
+                      {entry.name || ANONYMOUS_DISPLAY_NAME}
                       {entry.is_current_user ? " (você)" : ""}
                     </p>
                     <div className="flex flex-wrap gap-3 text-xs font-semibold text-secondary">
