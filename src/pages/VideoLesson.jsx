@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, CheckCircle2, Circle, PlayCircle, BookOpen, Wrench } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CheckCircle2, Circle, PlayCircle, BookOpen, Wrench, Loader2 } from 'lucide-react'
 import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Button } from '../components/ui/Button'
@@ -20,6 +20,7 @@ export default function VideoLesson() {
   const [course, setCourse] = useState(null)
   const [moduleLessons, setModuleLessons] = useState([])
   const [loading, setLoading] = useState(true)
+  const [completingLesson, setCompletingLesson] = useState(false)
   const goingNext = useRef(false)
   const { completeLesson, visitLesson, getCourseProgress } = useProgress()
 
@@ -82,22 +83,28 @@ export default function VideoLesson() {
   const handleGoNext = async (nextLessonId) => {
     if (goingNext.current) return
     goingNext.current = true
+    setCompletingLesson(true)
     try {
-      await completeLesson(lesson.id)
+      const result = await completeLesson(lesson.id)
+      if (!result) return
       navigate(`/video-aula/${nextLessonId}`)
     } finally {
       goingNext.current = false
+      setCompletingLesson(false)
     }
   }
 
   const handleFinishModule = async () => {
     if (goingNext.current) return
     goingNext.current = true
+    setCompletingLesson(true)
     try {
-      await completeLesson(lesson.id)
+      const result = await completeLesson(lesson.id)
+      if (!result) return
       navigate(`/trilhas/${course?.id}/modulo/${module?.id}`)
     } finally {
       goingNext.current = false
+      setCompletingLesson(false)
     }
   }
 
@@ -230,14 +237,32 @@ export default function VideoLesson() {
             <div />
           )}
           {nextLesson ? (
-            <Button onClick={() => handleGoNext(nextLesson.id)}>
-              Próxima aula
-              <ArrowRight size={16} />
+            <Button onClick={() => handleGoNext(nextLesson.id)} disabled={completingLesson}>
+              {completingLesson ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  A guardar aula...
+                </>
+              ) : (
+                <>
+                  Próxima aula
+                  <ArrowRight size={16} />
+                </>
+              )}
             </Button>
           ) : (
-            <Button onClick={handleFinishModule}>
-              Ver módulo
-              <ArrowRight size={16} />
+            <Button onClick={handleFinishModule} disabled={completingLesson}>
+              {completingLesson ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  A guardar aula...
+                </>
+              ) : (
+                <>
+                  Ver módulo
+                  <ArrowRight size={16} />
+                </>
+              )}
             </Button>
           )}
         </div>

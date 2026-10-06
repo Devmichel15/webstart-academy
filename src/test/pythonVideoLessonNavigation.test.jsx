@@ -73,4 +73,26 @@ describe('Python video lesson navigation', () => {
       )
     })
   })
+
+  it('shows progress while saving and stays on the lesson if saving fails', async () => {
+    const user = userEvent.setup()
+    let finishCompletion
+    progressMocks.completeLesson.mockReturnValue(
+      new Promise((resolve) => {
+        finishCompletion = resolve
+      }),
+    )
+    renderVideoLesson()
+
+    await screen.findByTitle('Aula 1 — Seja um Programador')
+    await user.click(screen.getByRole('button', { name: /próxima aula/i }))
+
+    const savingButton = screen.getByRole('button', { name: /a guardar aula/i })
+    expect(savingButton.disabled).toBe(true)
+
+    finishCompletion(null)
+    await waitFor(() => expect(savingButton.disabled).toBe(false))
+    expect(screen.getByTestId('current-path').textContent).toBe('/video-aula/python-vid-1')
+    expect(screen.getByRole('button', { name: /próxima aula/i }).disabled).toBe(false)
+  })
 })
