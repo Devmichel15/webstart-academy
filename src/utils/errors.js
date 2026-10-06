@@ -24,6 +24,14 @@ function isTechnicalDbError(err) {
 }
 
 export function toUserMessage(err, fallback) {
+  if (
+    err?.code === "23503" &&
+    /lesson_progress_lesson_id_fkey/.test(String(err?.message || ""))
+  ) {
+    console.error("[aula ausente no catálogo do banco de dados]", err);
+    return "Não foi possível guardar o progresso: esta aula ainda não está registada na base de dados. Um administrador precisa executar a migration 016_seed_python_trail.sql no Supabase e tentar novamente.";
+  }
+
   if (isTechnicalDbError(err)) {
     console.error("[erro técnico (não exibido ao utilizador)]", err);
     return fallback;

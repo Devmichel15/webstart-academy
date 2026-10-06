@@ -12,6 +12,7 @@
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
 import { mockSupabase, loadUserService, loadLearningProfileService, loadProgressService } from "./harness.js";
 import { makeProfile, postgrestError } from "./fakeSupabase.js";
+import { toUserMessage } from "../utils/errors.js";
 
 const AUTH_UID = "11111111-1111-4111-8111-111111111111";
 
@@ -292,6 +293,35 @@ describe("subscribeToUserProgress — callback de erro", () => {
     expect(onError).toHaveBeenCalled();
     expect(onError.mock.calls[0][0]).toMatchObject({ code: "42501" });
     unsubscribe();
+  });
+
+  describe("toUserMessage — catálogo de aulas ausente", () => {
+    it("indica a migration necessária para a FK da aula", () => {
+      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+      const error = postgrestError(
+        'insert or update on table "lesson_progress" violates foreign key constraint "lesson_progress_lesson_id_fkey"',
+        "23503",
+      );
+
+      expect(toUserMessage(error, "Erro ao salvar progresso.")).toMatch(
+        /016_seed_python_trail\.sql/,
+      );
+      expect(consoleError).toHaveBeenCalled();
+      consoleError.mockRestore();
+    });
+
+    it("mantém a mensagem genérica para outras violações de FK", () => {
+      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+      const error = postgrestError(
+        'insert or update on table "lesson_progress" violates foreign key constraint "other_fk"',
+        "23503",
+      );
+
+      expect(toUserMessage(error, "Erro ao salvar progresso.")).toBe(
+        "Erro ao salvar progresso.",
+      );
+      consoleError.mockRestore();
+    });
   });
 
   it("unsubscribe antes da resolução não deixa callback pendurado", async () => {
