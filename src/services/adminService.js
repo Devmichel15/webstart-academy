@@ -18,6 +18,10 @@ function mapProfileRow(row) {
     xp: row.xp || 0,
     level: row.level || 1,
     streak: row.streak || 0,
+    // BUG #19: `current_course` não era mapeado, e `AdminUsers.jsx` lê
+    // `user.currentCourse` → caía sempre no fallback "Nenhuma".
+    currentCourse: row.current_course || null,
+    currentLesson: row.current_lesson || null,
     completedLessons: row.completed_lessons || [],
     completedCourses: row.completed_courses || [],
     completedExercises: row.completed_exercises || 0,
