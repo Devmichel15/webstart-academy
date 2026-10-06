@@ -38,6 +38,12 @@ export const trailTechConfig = {
     brandColorDark: '#9B9DD4',
     label: 'PHP',
   },
+  python: {
+    deviconClass: 'devicon-python-plain',
+    brandColor: '#3776AB',
+    brandColorDark: '#4B9CD3',
+    label: 'Python',
+  },
   'git-github': {
     deviconClass: 'devicon-git-plain',
     brandColor: '#F05032',

@@ -5,6 +5,7 @@ import { fundamentosModules } from './modules/fundamentos-modules.js'
 import { javascriptModules } from './modules/javascript-modules.js'
 import { phpModules } from './modules/php-modules.js'
 import { gitModules } from './modules/git-modules.js'
+import { pythonModules } from './modules/python-modules.js'
 import { htmlLessons } from './lessons/html-lessons.js'
 import { cssLessons } from './lessons/css-lessons.js'
 import { fundamentosLessons } from './lessons/fundamentos-lessons.js'
@@ -12,6 +13,7 @@ import { videoLessons } from './lessons/video-lessons.js'
 import { javascriptLessons } from './lessons/javascript-lessons.js'
 import { phpLessons } from './lessons/php-lessons.js'
 import { gitLessons } from './lessons/git-lessons.js'
+import { pythonLessons } from './lessons/python-lessons.js'
 
 export const TRAIL_ORDER = [
   'fundamentos-web',
@@ -20,6 +22,7 @@ export const TRAIL_ORDER = [
   'css',
   'javascript',
   'php',
+  'python',
   'git-github',
   'react',
   'backend',
@@ -244,6 +247,28 @@ export const trails = [
     cover: null,
   }),
   createTrail({
+    id: 'python',
+    slug: 'python',
+    title: 'Python 3',
+    description: 'Aprenda Python 3 do zero com Gustavo Guanabara (Curso em Vídeo). Fundamentos, tipos primitivos, operadores, módulos, strings, condicionais, repetições, listas, dicionários e funções.',
+    instructor: 'Gustavo Guanabara (Curso em Vídeo)',
+    icon: 'code2',
+    color: 'brand',
+    order: 6,
+    difficulty: 'beginner',
+    estimatedHours: 30,
+    modules: [
+      'python-mod-mundo1',
+      'python-mod-mundo2',
+      'python-mod-mundo3',
+    ],
+    status: 'available',
+    requiredTrail: null,
+    xp: 2500,
+    level: 3,
+    cover: null,
+  }),
+  createTrail({
     id: 'git-github',
     slug: 'git-e-github',
     title: 'Git & GitHub',
@@ -251,7 +276,7 @@ export const trails = [
     instructor: 'Carlos Uchoa (Horadev)',
     icon: 'gitBranch',
     color: 'brand',
-    order: 6,
+    order: 7,
     difficulty: 'beginner',
     estimatedHours: 2,
     modules: [
@@ -275,7 +300,7 @@ export const trails = [
     description: 'Construa interfaces modernas e reativas com componentização.',
     icon: 'atom',
     color: 'brand',
-    order: 7,
+    order: 8,
     difficulty: 'intermediate',
     estimatedHours: 8,
     modules: [],
@@ -292,7 +317,7 @@ export const trails = [
     description: 'Servidores, rotas, middleware e lógica do lado do servidor.',
     icon: 'terminal',
     color: 'brand',
-    order: 8,
+    order: 9,
     difficulty: 'intermediate',
     estimatedHours: 6,
     modules: [],
@@ -309,7 +334,7 @@ export const trails = [
     description: 'Modelagem, SQL e integração com bancos de dados relacionais.',
     icon: 'database',
     color: 'brand',
-    order: 9,
+    order: 10,
     difficulty: 'intermediate',
     estimatedHours: 5,
     modules: [],
@@ -326,7 +351,7 @@ export const trails = [
     description: 'Crie e consuma APIs RESTful completas com autenticação e documentação.',
     icon: 'link2',
     color: 'brand',
-    order: 10,
+    order: 11,
     difficulty: 'advanced',
     estimatedHours: 6,
     modules: [],
@@ -343,7 +368,7 @@ export const trails = [
     description: 'Publicação, CI/CD, cloud hosting e infraestrutura moderna.',
     icon: 'cloud',
     color: 'brand',
-    order: 11,
+    order: 12,
     difficulty: 'advanced',
     estimatedHours: 4,
     modules: [],
@@ -367,14 +392,14 @@ export function getTrailWithModules(trailId) {
 }
 
 export function getModuleData(moduleId) {
-  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules]
+  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules]
   return allMods.find((m) => m.id === moduleId) || null
 }
 
 export function getModuleLessons(moduleId) {
   const mod = getModuleData(moduleId)
   if (!mod) return []
-  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons]
+  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons, ...pythonLessons]
   return mod.lessons.map((lId) => allLessons.find((l) => l.id === lId)).filter(Boolean)
 }
 

@@ -269,6 +269,30 @@ describe("completeLesson — persistência", () => {
     expect(row.completed).toBe(true);
   });
 
+  it("conclui uma vídeo-aula Python e atualiza progresso e XP", async () => {
+    const pythonLesson = allVideoLessons.find((item) => item.id === "python-vid-2");
+    fake.db.profiles.push(makeProfile({ id: AUTH_UID }));
+    fake.db.lessons.push({
+      id: pythonLesson.id,
+      course_id: pythonLesson.courseId,
+      module_id: pythonLesson.moduleId,
+    });
+    fake.setSession({ id: AUTH_UID });
+
+    const result = await progressService.completeLesson(AUTH_UID, pythonLesson.id);
+
+    expect(result.xpEarned).toBeGreaterThan(0);
+    expect(
+      fake.db.lesson_progress.find((row) => row.lesson_id === pythonLesson.id),
+    ).toMatchObject({
+      course_id: "python",
+      module_id: pythonLesson.moduleId,
+      completed: true,
+      progress_percentage: 100,
+    });
+    expect(fake.db.profiles[0].completed_lessons).toContain(pythonLesson.id);
+  });
+
   it("não volta a dar XP quando a aula já estava concluída", async () => {
     fake.db.profiles.push(makeProfile({ id: AUTH_UID }));
     fake.db.lessons.push({

@@ -4,9 +4,10 @@ import { fundamentosModules } from './fundamentos-modules.js'
 import { javascriptModules } from './javascript-modules.js'
 import { phpModules } from './php-modules.js'
 import { gitModules } from './git-modules.js'
+import { pythonModules } from './python-modules.js'
 
-export { htmlModules, cssModules, fundamentosModules, javascriptModules, phpModules, gitModules }
-export const allModules = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules]
+export { htmlModules, cssModules, fundamentosModules, javascriptModules, phpModules, gitModules, pythonModules }
+export const allModules = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules]
 
 export function getModuleById(id) {
   return allModules.find((m) => m.id === id) || null
