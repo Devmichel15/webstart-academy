@@ -91,7 +91,7 @@ export function ActivityHeatmap({ data = [] }) {
 
                   const label = activityLabel(cell.count, cell.dayKey);
                   const todayClass = cell.isToday
-                    ? "outline outline-1 outline-offset-1 outline-amber-500 dark:outline-amber-300"
+                    ? "outline outline-1 outline-offset-1 outline-green-900 dark:outline-green-300"
                     : "";
 
                   return (

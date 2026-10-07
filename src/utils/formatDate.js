@@ -4,3 +4,5 @@ export function formatDatePt(value) {
   if (!date || isNaN(date.getTime())) return ''
   return date.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' })
 }
+
+export const formatPostDate = formatDatePt

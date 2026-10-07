@@ -42,6 +42,7 @@ import { InstallPrompt } from "./components/pwa/InstallPrompt.jsx";
 import InstallApp from "./pages/InstallApp.jsx";
 import Ranking from "./pages/Ranking.jsx";
 import CommunityPage from "./pages/community/CommunityPage.jsx";
+import PublicProfile from "./pages/PublicProfile.jsx";
 
 export default function App() {
   return (
@@ -63,6 +64,7 @@ export default function App() {
                     element={<EmailPreferences />}
                   />
 
+                  <Route path="/u/:username" element={<PublicProfile />} />
                   {/* Fullscreen Protected Route (No AppLayout / No Sidebar / 100% Viewport) */}
                   <Route
                     element={

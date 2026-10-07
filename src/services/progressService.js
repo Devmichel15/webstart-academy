@@ -4,6 +4,7 @@ import { trails as staticCourses } from "../data/trails.js";
 import { getModuleData } from "../data/trails.js";
 import { withRetry } from "../utils/retry.js";
 import { durationToMinutes } from "../utils/duration.js";
+import { getLuandaDayKey } from "../utils/activityCalendar.js";
 import {
   XP_COURSE,
   XP_EXERCISE,
@@ -390,4 +391,33 @@ export function getCourseProgressPercent(
 
 export function isLessonCompleted(completedLessons, lessonId) {
   return completedLessons.includes(lessonId);
+}
+
+export async function getMyActivityByDay({ days = 365 } = {}) {
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError) throw authError;
+  if (!authData.user) return [];
+
+  const profileId = (await resolveProfileId(authData.user.id)) || authData.user.id;
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - (days - 1));
+  const { data, error } = await supabase
+    .from("lesson_progress")
+    .select("completed_at")
+    .eq("user_id", profileId)
+    .eq("completed", true)
+    .not("completed_at", "is", null)
+    .gte("completed_at", cutoff.toISOString());
+
+  if (error) throw error;
+
+  const activityByDay = new Map();
+  for (const record of data || []) {
+    if (!record.completed_at) continue;
+    const day = getLuandaDayKey(record.completed_at);
+    if (!day) continue;
+    activityByDay.set(day, (activityByDay.get(day) || 0) + 1);
+  }
+
+  return Array.from(activityByDay, ([day, count]) => ({ day, count }));
 }

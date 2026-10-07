@@ -1,113 +1,142 @@
-import { Copy, ExternalLink, Pencil } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { SEO } from '../components/seo/SEO'
-import { Header } from '../components/layout/Header'
-import { Card } from '../components/ui/Card'
-import { ProgressBar } from '../components/ui/ProgressBar'
-import { ProfileSkeleton } from '../components/ui/Skeleton.jsx'
-import { useProgress } from '../hooks/useProgress.js'
-import { ProfileProjectsSection } from './community/ProfileProjectsSection.jsx'
-import { getPublicProfileUrl } from '../utils/username.js'
-import { copyToClipboard } from '../utils/clipboard.js'
-import { useToast } from '../contexts/ToastContext.jsx'
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { SEO } from "../components/seo/SEO";
+import { Header } from "../components/layout/Header";
+import { ProfileSkeleton } from "../components/ui/Skeleton.jsx";
+import { ProfileView } from "../components/profile/ProfileView.jsx";
+import { useAuth } from "../hooks/useAuth.js";
+import { useProgress } from "../hooks/useProgress.js";
+import { getUserProjects } from "../services/communityService.js";
+import { getMyActivityByDay } from "../services/progressService.js";
 
 export default function Profile() {
-  const { showSuccess } = useToast()
+  const navigate = useNavigate();
+  const { user: authUser, loading: authLoading } = useAuth();
   const {
     name,
     username,
     photoURL,
-    email,
+    bio,
+    githubUrl,
+    portfolioUrl,
+    linkedinUrl,
+    twitterUrl,
+    instagramUrl,
+    websiteUrl,
     xp,
     level,
     streak,
     completedCount,
-    completedExercises,
-    completedProjects,
-    totalLessons,
-    progressPercent,
-    studyHours,
-    journeyProgress,
+    createdAt,
     loading,
-  } = useProgress()
+  } = useProgress();
 
-  if (loading) {
+  const [projects, setProjects] = useState([]);
+  const [projectsError, setProjectsError] = useState("");
+  const [activity, setActivity] = useState([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [activityLoading, setActivityLoading] = useState(true);
+
+  useEffect(() => {
+    if (authLoading) return undefined;
+    let active = true;
+    async function loadProjects() {
+      setProjectsLoading(true);
+      setProjectsError("");
+      try {
+        if (!authUser?.id) {
+          throw new Error("Não foi possível identificar o teu perfil.");
+        }
+        const list = await getUserProjects(authUser.id);
+        if (active) setProjects(list || []);
+      } catch {
+        if (active) {
+          setProjects([]);
+          setProjectsError(
+            authUser?.id
+              ? "Não foi possível carregar os teus projetos."
+              : "Não foi possível identificar o teu perfil.",
+          );
+        }
+      } finally {
+        if (active) setProjectsLoading(false);
+      }
+    }
+    loadProjects();
+    return () => {
+      active = false;
+    };
+  }, [authUser?.id, authLoading]);
+
+  useEffect(() => {
+    let active = true;
+    async function loadActivity() {
+      setActivityLoading(true);
+      try {
+        const act = await getMyActivityByDay({ days: 365 });
+        if (active) setActivity(act || []);
+      } catch {
+        if (active) setActivity([]);
+      } finally {
+        if (active) setActivityLoading(false);
+      }
+    }
+    loadActivity();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const profile = {
+    name,
+    username,
+    photoURL,
+    bio,
+    githubUrl,
+    portfolioUrl,
+    linkedinUrl,
+    twitterUrl,
+    instagramUrl,
+    websiteUrl,
+    xp,
+    level,
+    streak,
+    completedLessonsCount: completedCount,
+    createdAt,
+    is_public: true, // don't know here; show link anyway
+  };
+
+  const publicProfileUrl = username ? `${window.location.origin}/u/${username}` : null;
+  const isOwner = true;
+
+  if (loading || projectsLoading || activityLoading) {
     return (
-      <div>
-        <Header title="Perfil do Aluno" subtitle="Carregando perfil..." />
+      <div className="mx-auto w-full max-w-4xl px-4 sm:px-6">
+        <Header title="Perfil" subtitle="Carregando perfil..." />
         <ProfileSkeleton />
       </div>
-    )
-  }
-
-  const profileUrl = username ? getPublicProfileUrl(username) : null
-
-  const handleCopyProfileLink = async () => {
-    if (!profileUrl) return
-    await copyToClipboard(profileUrl)
-    showSuccess('Link do perfil copiado!')
+    );
   }
 
   return (
     <>
-    <SEO title="Meu Perfil" description="Seu perfil na WebStart Academy: XP, badges, conquistas e estatísticas de aprendizado." url="/perfil" keywords="perfil, jogador, xp, badges, conquistas" />
-    <div>
-      <Header
-        title="Perfil do Jogador"
-        subtitle="XP, níveis e perfil público compartilhável."
+      <SEO
+        title={`Meu Perfil · WebStart Academy`}
+        description="O teu perfil na WebStart Academy."
+        url="/perfil"
       />
-
-      <div className="mb-6">
-        <Link
-          to="/editar-perfil"
-          className="inline-flex items-center gap-2 rounded-xl border-2 border-brand-800 bg-brand-500 px-4 py-2 text-sm font-black text-white shadow-[3px_3px_0_0_#064e3b] transition hover:bg-brand-600 dark:border-brand-400"
-        >
-          <Pencil size={14} />
-          Editar perfil
-        </Link>
+      <div className="mx-auto w-full max-w-4xl px-4 sm:px-6">
+        <Header title="Perfil" subtitle="O teu perfil" />
+        <ProfileView
+          profile={profile}
+          activity={activity}
+          projects={projects}
+          projectsError={projectsError}
+          isOwner={isOwner}
+          onEdit={() => navigate("/editar-perfil")}
+          publicProfileUrl={publicProfileUrl}
+        />
       </div>
-
-      {profileUrl && (
-        <Card className="mb-8 mt-6">
-          <h2 className="mb-2 text-lg font-black">Perfil público</h2>
-          <p className="mb-3 text-sm text-secondary">
-            Partilha o teu player card e convida amigos para a WebStart.
-          </p>
-          <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border-2 border bg-surface-hover p-3 text-sm font-semibold">
-            <span className="flex-1 truncate">{profileUrl.replace(/^https?:\/\//, '')}</span>
-            <button type="button" onClick={handleCopyProfileLink} className="rounded-lg p-2 hover:bg-surface">
-              <Copy size={16} />
-            </button>
-            <Link to={`/u/${username}`} target="_blank" className="rounded-lg p-2 hover:bg-surface">
-              <ExternalLink size={16} />
-            </Link>
-          </div>
-        </Card>
-      )}
-
-      <Card className="mb-8 flex flex-wrap items-center gap-4">
-        {photoURL ? (
-          <img src={photoURL} alt={name} className="h-16 w-16 rounded-full border-3 border-brand-800 object-cover dark:border-brand-400" />
-        ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border-3 border-brand-800 bg-brand-500 text-2xl font-black text-white dark:border-brand-400">
-            {(name || 'A').charAt(0).toUpperCase()}
-          </div>
-        )}
-        <div>
-          <p className="text-lg font-black">{email}</p>
-          <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">
-            {studyHours}h estudadas · {journeyProgress?.completedCount || 0} trilha(s) concluída(s)
-          </p>
-        </div>
-      </Card>
-
-      <Card className="mb-8">
-        <h2 className="mb-4 text-lg font-black">Progresso geral</h2>
-        <ProgressBar value={progressPercent} label={`${completedCount}/${totalLessons} aulas concluídas`} />
-      </Card>
-
-      <ProfileProjectsSection />
-    </div>
     </>
-  )
+  );
 }
