@@ -1,4 +1,5 @@
 import logoUrl from '../assets/logo-dark-bg.svg'
+import { stats } from '../data/content'
 
 const columns = [
   {
@@ -36,7 +37,7 @@ export function Footer() {
             pessoas da área de tecnologia.
           </p>
           <p className="mt-4 inline-flex rounded-lg border-2 border-border bg-elevated px-3 py-1.5 font-mono text-xs font-semibold text-accent">
-            +90 membros · +12 trilhas · 100% gratuito
+            +{stats.members} membros · +{stats.trails} trilhas · 100% gratuito
           </p>
         </div>
 

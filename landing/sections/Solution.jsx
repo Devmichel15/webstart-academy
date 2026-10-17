@@ -1,5 +1,6 @@
 import { BookOpen, FlaskConical, Hammer, TrendingUp, Users, ArrowDown } from 'lucide-react'
 import { Reveal, SectionHeader } from '../components/Reveal'
+import { stats } from '../data/content'
 
 const pillars = [
   {
@@ -25,7 +26,7 @@ const pillars = [
   {
     key: 'CONECTAR',
     icon: Users,
-    text: 'Perfis públicos e uma comunidade de mais de 90 pessoas aprendendo juntas.',
+    text: `Perfis públicos e uma comunidade de ${stats.members} pessoas aprendendo juntas.`,
   },
 ]
 

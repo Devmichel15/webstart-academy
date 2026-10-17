@@ -1,6 +1,7 @@
 import { CheckCircle2, Award } from 'lucide-react'
 import { Reveal, SectionHeader } from '../components/Reveal'
 import { CountUp } from '../components/CountUp'
+import { stats } from '../data/content'
 
 const avatarColors = ['#F06539', '#2196F3', '#F7DF1E', '#9B9DD4', '#818cf8', '#F4725B', '#34d399', '#60A5FA', '#FF8A5C']
 const avatarInitials = ['A', 'D', 'L', 'M', 'R', 'S', 'T', 'V', 'C']
@@ -39,7 +40,7 @@ export function Community() {
 
           <Reveal delay={0.12} className="mt-6 inline-flex items-baseline gap-3 rounded-2xl border-3 border-brand-800 bg-brand-500 px-5 py-4 text-white shadow-[5px_5px_0_0_#022c22]">
             <span className="text-4xl font-black tabular-nums sm:text-5xl">
-              <CountUp value={90} prefix="+" />
+              <CountUp value={stats.members} prefix="+" />
             </span>
             <span className="text-sm font-bold leading-tight">
               membros já fazem
@@ -76,7 +77,7 @@ export function Community() {
               </div>
             ))}
             <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-dashed border-brand-400 bg-accent-soft text-sm font-black text-accent">
-              +81
+              +151
             </div>
           </div>
 
@@ -93,4 +94,3 @@ export function Community() {
     </section>
   )
 }
-

@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Sparkles } from 'lucide-react'
 import { CountUp } from '../components/CountUp'
 import { PlayerCardMock } from '../components/mockups/PlayerCardMock'
+import { stats } from '../data/content'
 
 export function Hero() {
   const reduced = useReducedMotion()
@@ -74,7 +75,7 @@ export function Hero() {
             className="mt-10 flex flex-wrap gap-x-8 gap-y-4"
           >
             <HeroStat label="membros estudando juntos">
-              <CountUp value={90} prefix="+" suffix="" />
+              <CountUp value={stats.members} prefix="+" suffix="" />
             </HeroStat>
             <HeroStat label="trilhas e cursos">
               <CountUp value={12} prefix="+" />

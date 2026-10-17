@@ -1,5 +1,5 @@
 export const stats = {
-  members: 90,
+  members: 160,
   trails: 12,
   achievements: 12,
 }
