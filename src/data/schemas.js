@@ -26,6 +26,12 @@ export function createTrail({
   status = 'available',
   requiredTrail = null,
 
+  // Origem do conteúdo. 'external' = curadoria de vídeos de terceiros;
+  // 'webstart' = formação produzida e lecionada pela própria WebStart
+  // (usada para aplicar o selo «Produção WebStart» de forma reutilizável).
+  origin = 'external',
+  producer = null,
+
   cover = null,
   level = 1,
   xp = 500,
@@ -44,6 +50,8 @@ export function createTrail({
     modules,
     status,
     requiredTrail,
+    origin,
+    producer,
     cover,
     level,
     xp,

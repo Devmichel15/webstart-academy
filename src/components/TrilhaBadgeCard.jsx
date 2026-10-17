@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { CheckCircle2, Clock, Sparkles, Lock, ArrowRight, Globe, Link2, Code2 } from 'lucide-react'
 import { trailTechConfig } from '../data/trailTechConfig'
+import { WebStartOfficialBadge } from './WebStartOfficialBadge.jsx'
+import { isOfficialTrail } from '../data/trails.js'
 
 const statusConfig = {
   available: { label: 'Disponível', color: 'text-emerald-600 dark:text-emerald-400', icon: Sparkles },
@@ -87,6 +89,15 @@ export function TrilhaBadgeCard({ trail, status, progress, completedLessons, tot
           </span>
         )}
 
+        {/* Selo de produção oficial WebStart */}
+        {!isLocked && (
+          <WebStartOfficialBadge
+            trail={trail}
+            variant="compact"
+            className="absolute top-2 left-2"
+          />
+        )}
+
         {/* Lock overlay for "soon" trails */}
         {isLocked && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
@@ -109,6 +120,12 @@ export function TrilhaBadgeCard({ trail, status, progress, completedLessons, tot
         >
           {trail.title}
         </h3>
+
+        {!isLocked && isOfficialTrail(trail) && trail.instructor && (
+          <p className="mt-0.5 text-[10px] font-semibold text-secondary">
+            Lecionado por {trail.instructor}
+          </p>
+        )}
 
         {!isLocked && (
           <div className={`mt-1.5 flex items-center gap-1.5 text-[10px] font-semibold ${cfg.color}`}>

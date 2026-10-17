@@ -6,6 +6,7 @@ import { javascriptModules } from './modules/javascript-modules.js'
 import { phpModules } from './modules/php-modules.js'
 import { gitModules } from './modules/git-modules.js'
 import { pythonModules } from './modules/python-modules.js'
+import { reactModules } from './modules/react-modules.js'
 import { htmlLessons } from './lessons/html-lessons.js'
 import { cssLessons } from './lessons/css-lessons.js'
 import { fundamentosLessons } from './lessons/fundamentos-lessons.js'
@@ -14,6 +15,7 @@ import { javascriptLessons } from './lessons/javascript-lessons.js'
 import { phpLessons } from './lessons/php-lessons.js'
 import { gitLessons } from './lessons/git-lessons.js'
 import { pythonLessons } from './lessons/python-lessons.js'
+import { reactLessons } from './lessons/react-lessons.js'
 
 export const TRAIL_ORDER = [
   'fundamentos-web',
@@ -296,18 +298,22 @@ export const trails = [
   createTrail({
     id: 'react',
     slug: 'react',
-    title: 'React',
-    description: 'Construa interfaces modernas e reativas com componentização.',
+    title: 'ReactJS para Iniciantes',
+    description:
+      'Formação prática para aprender ReactJS desde o zero: configuração do ambiente com Node.js, npm e Vite, JSX, componentização, props, estado com useState e renderização condicional, com explicações aprofundadas, exemplos de código e projetos progressivos.',
+    instructor: 'Michel César',
+    origin: 'webstart',
+    producer: 'WebStart',
     icon: 'atom',
     color: 'brand',
     order: 8,
-    difficulty: 'intermediate',
-    estimatedHours: 8,
-    modules: [],
-    status: 'soon',
-    requiredTrail: 'git-github',
-    xp: 2000,
-    level: 4,
+    difficulty: 'beginner',
+    estimatedHours: 3,
+    modules: ['react-mod-fundamentos', 'react-mod-interatividade'],
+    status: 'available',
+    requiredTrail: 'javascript',
+    xp: 800,
+    level: 2,
     cover: null,
   }),
   createTrail({
@@ -384,6 +390,14 @@ export function getTrailById(id) {
   return trails.find((t) => t.id === id) || null
 }
 
+// Uma trilha é uma produção oficial da WebStart quando o metadado `origin`
+// está definido como 'webstart'. Centraliza a deteção para que o selo
+// «Produção WebStart» seja aplicado de forma reutilizável, sem verificações
+// espalhadas pelo código.
+export function isOfficialTrail(trail) {
+  return trail?.origin === 'webstart'
+}
+
 export function getTrailWithModules(trailId) {
   const trail = getTrailById(trailId)
   if (!trail) return null
@@ -392,14 +406,14 @@ export function getTrailWithModules(trailId) {
 }
 
 export function getModuleData(moduleId) {
-  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules]
+  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules, ...reactModules]
   return allMods.find((m) => m.id === moduleId) || null
 }
 
 export function getModuleLessons(moduleId) {
   const mod = getModuleData(moduleId)
   if (!mod) return []
-  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons, ...pythonLessons]
+  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons, ...pythonLessons, ...reactLessons]
   return mod.lessons.map((lId) => allLessons.find((l) => l.id === lId)).filter(Boolean)
 }
 

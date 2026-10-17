@@ -8,8 +8,9 @@ import { Card } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { PageSkeleton } from '../components/ui/Skeleton.jsx'
-import { getTrailById, getModuleData } from '../data/trails.js'
+import { getTrailById, getModuleData, isOfficialTrail } from '../data/trails.js'
 import { getLessonById } from '../data/lessons/index.js'
+import { WebStartOfficialBadge } from '../components/WebStartOfficialBadge.jsx'
 import { useProgress } from '../hooks/useProgress.js'
 import { XP_LESSON } from '../utils/xp.js'
 
@@ -91,6 +92,25 @@ export default function CourseDetail() {
           'Disponível'
         }
       />
+
+      {isOfficialTrail(trail) && (
+        <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border-2 border-brand-800 bg-white p-3 dark:border-brand-300 dark:bg-brand-950">
+          <WebStartOfficialBadge trail={trail} />
+          {trail.instructor && (
+            <span className="text-xs font-bold text-secondary">
+              Lecionado por <span className="text-primary">{trail.instructor}</span>
+            </span>
+          )}
+          {trail.producer && (
+            <span className="text-xs font-bold text-secondary">
+              Produzido por <span className="text-primary">{trail.producer}</span>
+            </span>
+          )}
+          <span className="text-xs font-bold text-secondary">
+            Nível <span className="text-primary">{trail.difficulty === 'beginner' ? 'Iniciante' : trail.difficulty === 'intermediate' ? 'Intermédio' : 'Avançado'}</span>
+          </span>
+        </div>
+      )}
 
       {trail.status === 'building' && (
         <div className="mb-4 rounded-xl border-3 border-yellow-500 bg-yellow-50 p-3 text-sm font-semibold text-yellow-700 dark:border-yellow-400 dark:bg-yellow-950 dark:text-yellow-300">

@@ -5,9 +5,10 @@ import { javascriptModules } from './javascript-modules.js'
 import { phpModules } from './php-modules.js'
 import { gitModules } from './git-modules.js'
 import { pythonModules } from './python-modules.js'
+import { reactModules } from './react-modules.js'
 
-export { htmlModules, cssModules, fundamentosModules, javascriptModules, phpModules, gitModules, pythonModules }
-export const allModules = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules]
+export { htmlModules, cssModules, fundamentosModules, javascriptModules, phpModules, gitModules, pythonModules, reactModules }
+export const allModules = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules, ...reactModules]
 
 export function getModuleById(id) {
   return allModules.find((m) => m.id === id) || null

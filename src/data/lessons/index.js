@@ -6,11 +6,12 @@ import { javascriptLessons } from './javascript-lessons.js'
 import { phpLessons } from './php-lessons.js'
 import { gitLessons } from './git-lessons.js'
 import { pythonLessons } from './python-lessons.js'
+import { reactLessons } from './react-lessons.js'
 
 // fundamentosLessons são agora videoLessons (Lógica de Programação — Curso em Vídeo)
-export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons, phpLessons, gitLessons, pythonLessons }
+export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons, phpLessons, gitLessons, pythonLessons, reactLessons }
 export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...javascriptLessons, ...phpLessons, ...gitLessons]
-export const allVideoLessons = [...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons, ...pythonLessons]
+export const allVideoLessons = [...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons, ...pythonLessons, ...reactLessons]
 
 export function getLessonById(id) {
   return allLessons.find((l) => l.id === id) || allVideoLessons.find((l) => l.id === id) || null
