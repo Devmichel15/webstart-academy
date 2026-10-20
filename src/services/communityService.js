@@ -99,13 +99,25 @@ function buildProjectData(form) {
   return data
 }
 
+function normalizeTagList(tags) {
+  const seen = new Set()
+  const out = []
+  for (const raw of tags || []) {
+    const tag = normalizeTag(raw)
+    if (!tag || seen.has(tag)) continue
+    seen.add(tag)
+    out.push(tag)
+  }
+  return out
+}
+
 function mapProjectFromDb(row) {
   if (!row) return null
   return {
     id: row.id,
     title: row.title,
     description: row.description,
-    tags: row.tags || [],
+    tags: normalizeTagList(row.tags),
     projectUrl: row.project_url,
     githubUrl: row.github_url,
     imagePaths: row.image_paths || [],

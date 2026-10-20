@@ -57,7 +57,7 @@ describe("ProjectFormModal — imagens", () => {
 
     pickFiles(fileInput, [makeFile("a.png", "image/png"), makeFile("b.jpg", "image/jpeg")]);
 
-    expect(screen.getByText("Adicionar imagens (2/4)")).toBeTruthy();
+    expect(screen.getByText("2/4")).toBeTruthy();
     expect(screen.getAllByLabelText("Remover imagem")).toHaveLength(2);
     expect(screen.getAllByAltText("Nova imagem seleccionada")).toHaveLength(2);
   });
@@ -68,7 +68,7 @@ describe("ProjectFormModal — imagens", () => {
 
     fireEvent.click(screen.getAllByLabelText("Remover imagem")[0]);
 
-    expect(screen.getByText("Adicionar imagens (1/4)")).toBeTruthy();
+    expect(screen.getByText("1/4")).toBeTruthy();
     expect(screen.getAllByLabelText("Remover imagem")).toHaveLength(1);
     expect(URL.revokeObjectURL).toHaveBeenCalled();
   });
@@ -79,8 +79,8 @@ describe("ProjectFormModal — imagens", () => {
     pickFiles(fileInput, [makeFile("anim.gif", "image/gif")]);
 
     expect(screen.getByText(/Formato não suportado/)).toBeTruthy();
-    expect(screen.getByText("Adicionar imagens (0/4)")).toBeTruthy();
     expect(screen.queryAllByLabelText("Remover imagem")).toHaveLength(0);
+    expect(screen.queryByText("0/4")).toBeNull();
   });
 
   it("mostra erro claro para ficheiro acima de 5 MB", () => {
@@ -109,7 +109,7 @@ describe("ProjectFormModal — imagens", () => {
     expect(screen.getByText("Limite de 4 imagens atingido.")).toBeTruthy();
     expect(screen.getByText(/Só podes anexar até 4 imagens/)).toBeTruthy();
     expect(screen.getAllByLabelText("Remover imagem")).toHaveLength(4);
-    expect(screen.queryByText(/^Adicionar imagens/)).toBeNull();
+    expect(screen.queryByLabelText("Adicionar imagem")).toBeNull();
   });
 
   it("mostra as imagens existentes em edição e permite removê-las", () => {
@@ -124,13 +124,13 @@ describe("ProjectFormModal — imagens", () => {
     const { fileInput } = renderModal({ project });
 
     expect(screen.getAllByAltText("Imagem existente")).toHaveLength(2);
-    expect(screen.getByText("Adicionar imagens (2/4)")).toBeTruthy();
+    expect(screen.getByText("2/4")).toBeTruthy();
 
     fireEvent.click(screen.getAllByLabelText("Remover imagem")[0]);
-    expect(screen.getByText("Adicionar imagens (1/4)")).toBeTruthy();
+    expect(screen.getByText("1/4")).toBeTruthy();
 
     pickFiles(fileInput, [makeFile("nova.png", "image/png")]);
-    expect(screen.getByText("Adicionar imagens (2/4)")).toBeTruthy();
+    expect(screen.getByText("2/4")).toBeTruthy();
   });
 
   it("envia no payload os ficheiros novos e os paths mantidos", () => {
@@ -138,7 +138,7 @@ describe("ProjectFormModal — imagens", () => {
     fillValidForm();
     pickFiles(fileInput, [makeFile("a.png", "image/png")]);
 
-    fireEvent.click(screen.getByRole("button", { name: "Publicar projeto" }));
+    fireEvent.click(screen.getByRole("button", { name: "Publicar" }));
 
     expect(onSave).toHaveBeenCalledTimes(1);
     const [payload] = onSave.mock.calls[0];
@@ -151,7 +151,7 @@ describe("ProjectFormModal — imagens", () => {
     const { onSave } = renderModal({ submitting: true });
     fillValidForm();
 
-    fireEvent.click(screen.getByRole("button", { name: "Publicar projeto" }));
+    fireEvent.click(screen.getByRole("button", { name: "Publicar" }));
 
     expect(onSave).not.toHaveBeenCalled();
   });

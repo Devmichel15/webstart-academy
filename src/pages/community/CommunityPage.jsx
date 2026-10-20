@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Loader2, Rocket } from 'lucide-react'
-import { SEO } from '../../components/seo/SEO'
+import { Loader2, Plus, Rocket, User } from 'lucide-react'
+import { SEO } from '../../components/seo/SEO.jsx'
 import { Header } from '../../components/layout/Header.jsx'
 import { Button } from '../../components/ui/Button.jsx'
-import { CardSkeleton } from '../../components/ui/Skeleton.jsx'
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog.jsx'
+import { Skeleton } from '../../components/ui/Skeleton.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
 import { useToast } from '../../contexts/ToastContext.jsx'
 import {
@@ -14,6 +14,7 @@ import {
   getLikedProjectIds,
   getProjectsFeed,
   hydrateAuthors,
+  normalizeTag,
   toggleLike,
   updateProject,
 } from '../../services/communityService.js'
@@ -23,6 +24,35 @@ import { ProjectFormModal } from './ProjectFormModal.jsx'
 import { toUserMessage } from '../../utils/errors.js'
 
 const MAX_FILTER_TAGS = 12
+
+function FeedSkeleton() {
+  return (
+    <div>
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="flex gap-3 border-b border-border px-4 py-3.5 last:border-b-0">
+          <Skeleton className="h-11 w-11 shrink-0 rounded-full" />
+          <div className="min-w-0 flex-1 space-y-2 pt-1">
+            <Skeleton className="h-3.5 w-40" />
+            <Skeleton className="h-3.5 w-3/4" />
+            <Skeleton className="h-3.5 w-2/3" />
+            <Skeleton className="h-36 w-full rounded-2xl" />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function currentUserAvatar(user) {
+  return user?.user_metadata?.avatar_url || user?.user_metadata?.photo_url || ''
+}
+
+function currentUserDisplayName(user) {
+  const name = user?.user_metadata?.name || ''
+  if (name.trim()) return name.trim()
+  if (user?.email) return user.email.split('@')[0]
+  return 'Aluno'
+}
 
 export default function CommunityPage() {
   const { user } = useAuth()
@@ -130,14 +160,22 @@ export default function CommunityPage() {
     return () => observer.disconnect()
   }, [loadMore])
 
-  const availableTags = useMemo(() => {
+  const tagCounts = useMemo(() => {
     const counts = new Map()
-    projects.forEach((p) => (p.tags || []).forEach((tag) => counts.set(tag, (counts.get(tag) || 0) + 1)))
-    return [...counts.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, MAX_FILTER_TAGS)
-      .map(([tag]) => tag)
+    projects.forEach((p) =>
+      (p.tags || []).forEach((raw) => {
+        const tag = normalizeTag(raw)
+        if (!tag) return
+        counts.set(tag, (counts.get(tag) || 0) + 1)
+      }),
+    )
+    return [...counts.entries()].sort((a, b) => b[1] - a[1])
   }, [projects])
+
+  const availableTags = useMemo(
+    () => tagCounts.slice(0, MAX_FILTER_TAGS).map(([tag]) => tag),
+    [tagCounts],
+  )
 
   const handleSelectTag = (tag) => {
     setActiveTag((current) => (current === tag ? null : tag))
@@ -254,8 +292,19 @@ export default function CommunityPage() {
     )
   }
 
-  const chipBase =
-    'rounded-full border-2 border-strong px-3 py-1 text-xs font-bold uppercase tracking-wide cursor-pointer transition-colors'
+  const tabClass = (active) =>
+    `relative flex-1 py-3 text-sm font-bold transition-colors ${active ? 'text-primary' : 'text-secondary hover:text-primary'}`
+
+  const tagFilterClass = (active) =>
+    `shrink-0 whitespace-nowrap border-b-2 pb-1 text-xs font-bold uppercase tracking-wide transition-colors ${
+      active ? 'border-accent text-primary' : 'border-transparent text-secondary hover:text-primary'
+    }`
+
+  const modalAuthor = {
+    name: currentUserDisplayName(user),
+    photoURL: currentUserAvatar(user),
+    photo_url: currentUserAvatar(user),
+  }
 
   return (
     <>
@@ -266,127 +315,150 @@ export default function CommunityPage() {
       >
         <div className="hidden lg:block">
           <Button onClick={openCreate}>
-            <Rocket size={18} /> Publicar projeto
+            <Plus size={18} /> Novo post
           </Button>
         </div>
       </Header>
 
-      <div className="mb-6 space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => handleSelectSort('recent')}
-              className={`${chipBase} ${sort === 'recent' ? 'bg-brand-500 text-white' : 'bg-surface text-primary hover:bg-surface-hover'}`}
-            >
+      <div className="mx-auto w-full max-w-[780px]">
+        <div className="w-full min-w-0">
+          <div className="flex border-b border-border">
+            <button type="button" onClick={() => handleSelectSort('recent')} className={tabClass(sort === 'recent')}>
               Recentes
+              {sort === 'recent' && (
+                <span className="absolute bottom-0 left-1/2 h-1 w-14 -translate-x-1/2 rounded-full bg-accent" />
+              )}
             </button>
-            <button
-              type="button"
-              onClick={() => handleSelectSort('popular')}
-              className={`${chipBase} ${sort === 'popular' ? 'bg-brand-500 text-white' : 'bg-surface text-primary hover:bg-surface-hover'}`}
-            >
+            <button type="button" onClick={() => handleSelectSort('popular')} className={tabClass(sort === 'popular')}>
               Populares
+              {sort === 'popular' && (
+                <span className="absolute bottom-0 left-1/2 h-1 w-14 -translate-x-1/2 rounded-full bg-accent" />
+              )}
             </button>
           </div>
-          <div className="lg:hidden">
-            <Button size="sm" onClick={openCreate}>
-              <Rocket size={16} /> Publicar
-            </Button>
-          </div>
-        </div>
 
-        {availableTags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setActiveTag(null)}
-              className={`${chipBase} ${!activeTag ? 'bg-brand-500 text-white' : 'bg-surface text-primary hover:bg-surface-hover'}`}
-            >
-              Todos
-            </button>
-            {availableTags.map((tag) => (
+          {availableTags.length > 0 && (
+            <div className="flex gap-4 overflow-x-auto border-b border-border py-2.5">
               <button
-                key={tag}
                 type="button"
-                onClick={() => handleSelectTag(tag)}
-                className={`${chipBase} ${activeTag === tag ? 'bg-brand-500 text-white' : 'bg-surface text-primary hover:bg-surface-hover'}`}
+                onClick={() => setActiveTag(null)}
+                className={tagFilterClass(!activeTag)}
               >
-                #{tag}
+                Todos
               </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {loading && (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {[...Array(6)].map((_, i) => (
-            <CardSkeleton key={i} className="h-64" />
-          ))}
-        </div>
-      )}
-
-      {!loading && error && (
-        <div className="rounded-xl border-2 border-strong bg-surface p-8 text-center">
-          <p className="mb-4 font-bold text-red-500">{error}</p>
-          <Button variant="secondary" onClick={() => loadFeed({ tag: activeTag, sortMode: sort })}>
-            Tentar novamente
-          </Button>
-        </div>
-      )}
-
-      {!loading && !error && projects.length === 0 && (
-        <div className="rounded-xl border-2 border-strong bg-surface p-10 text-center">
-          <Rocket size={48} className="mx-auto mb-4 text-brand-500" />
-          <h2 className="mb-1 text-lg font-black text-primary">
-            {activeTag ? `Ainda não há projetos com #${activeTag}` : 'O feed ainda está vazio'}
-          </h2>
-          <p className="mx-auto mb-6 max-w-md text-sm text-secondary">
-            Sê o primeiro a publicar o projeto que estás a construir durante os teus estudos. Pode ser simples — o importante é começar!
-          </p>
-          {!activeTag && user && (
-            <Button onClick={openCreate}>
-              <Rocket size={18} /> Publicar o primeiro projeto
-            </Button>
-          )}
-        </div>
-      )}
-
-      {!loading && !error && projects.length > 0 && (
-        <>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                author={authors[project.authorId]}
-                currentUser={user}
-                isMine={Boolean(user) && myProfileId === project.authorId}
-                liked={likedIds.has(project.id)}
-                likePending={likePendingIds.has(project.id)}
-                onToggleLike={handleToggleLike}
-                onTagClick={handleSelectTag}
-                onEdit={openEdit}
-                onDelete={setPendingDelete}
-                onCommentCountChange={handleCommentCountChange}
-              />
-            ))}
-          </div>
-
-          <div ref={sentinelRef} aria-hidden="true" />
-
-          {loadingMore && (
-            <div className="flex justify-center py-6">
-              <Loader2 size={24} className="animate-spin text-brand-500" />
+              {availableTags.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => handleSelectTag(tag)}
+                  className={tagFilterClass(activeTag === tag)}
+                >
+                  #{tag}
+                </button>
+              ))}
             </div>
           )}
-        </>
-      )}
+
+          <div className="overflow-hidden rounded-b-lg border-2 border-t-0 border-strong bg-surface shadow-brutal max-[859px]:rounded-none max-[859px]:border-x-0 max-[859px]:shadow-none">
+            {user && (
+              <div className="flex items-center gap-3 border-b border-border px-4 py-3">
+                {currentUserAvatar(user) ? (
+                  <img
+                    src={currentUserAvatar(user)}
+                    alt=""
+                    className="h-10 w-10 shrink-0 rounded-full border-2 border-border object-cover"
+                  />
+                ) : (
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-border bg-accent-soft">
+                    <User size={18} className="text-secondary" />
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={openCreate}
+                  className="flex-1 rounded-full px-3 py-2 text-left text-base text-secondary transition-colors hover:bg-surface-hover"
+                >
+                  O que estás a construir?
+                </button>
+                <Button size="sm" onClick={openCreate}>
+                  Publicar
+                </Button>
+              </div>
+            )}
+
+            {loading && <FeedSkeleton />}
+
+            {!loading && error && (
+              <div className="p-8 text-center">
+                <p className="mb-4 font-bold text-red-500">{error}</p>
+                <Button variant="secondary" onClick={() => loadFeed({ tag: activeTag, sortMode: sort })}>
+                  Tentar novamente
+                </Button>
+              </div>
+            )}
+
+            {!loading && !error && projects.length === 0 && (
+              <div className="p-10 text-center">
+                <Rocket size={48} className="mx-auto mb-4 text-brand-500" />
+                <h2 className="mb-1 text-lg font-black text-primary">
+                  {activeTag ? `Ainda não há projetos com #${activeTag}` : 'O feed ainda está vazio'}
+                </h2>
+                <p className="mx-auto mb-6 max-w-md text-sm text-secondary">
+                  Sê o primeiro a publicar o projeto que estás a construir durante os teus estudos. Pode ser simples — o importante é começar!
+                </p>
+                {!activeTag && user && (
+                  <Button onClick={openCreate}>
+                    <Rocket size={18} /> Publicar o primeiro projeto
+                  </Button>
+                )}
+              </div>
+            )}
+
+            {!loading && !error && projects.length > 0 && (
+              <>
+                {projects.map((project) => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    author={authors[project.authorId]}
+                    currentUser={user}
+                    isMine={Boolean(user) && myProfileId === project.authorId}
+                    liked={likedIds.has(project.id)}
+                    likePending={likePendingIds.has(project.id)}
+                    onToggleLike={handleToggleLike}
+                    onTagClick={handleSelectTag}
+                    onEdit={openEdit}
+                    onDelete={setPendingDelete}
+                    onCommentCountChange={handleCommentCountChange}
+                  />
+                ))}
+
+                <div ref={sentinelRef} aria-hidden="true" />
+
+                {loadingMore && (
+                  <div className="flex justify-center py-6">
+                    <Loader2 size={24} className="animate-spin text-brand-500" />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={openCreate}
+        aria-label="Publicar projeto"
+        className="brutal-btn fixed bottom-5 right-5 z-40 hidden h-14 w-14 place-items-center rounded-full bg-brand-500 text-white hover:bg-brand-600 max-[859px]:grid"
+      >
+        <Plus size={26} />
+      </button>
 
       <ProjectFormModal
         open={formOpen}
         project={editingProject}
+        author={modalAuthor}
         submitting={formSubmitting}
         onClose={closeForm}
         onSave={handleSaveForm}
