@@ -1,8 +1,14 @@
 import { supabase } from '../lib/supabase.js'
 import { trails } from '../data/trails.js'
-import { allLessons } from '../data/lessons/index.js'
+import { allLessons, allVideoLessons } from '../data/lessons/index.js'
 import { allModules } from '../data/modules/index.js'
-import { getAccessibleTrails } from './trailProgressService.js'
+import { getAccessibleTrails, getJourneyProgress } from './trailProgressService.js'
+import {
+  getLocalDayKey,
+  getStartOfLocalDay,
+  getStartOfLocalWeek,
+  getStartOfLocalMonth,
+} from '../utils/dates.js'
 
 const USERS_PER_PAGE = 50
 
@@ -10,6 +16,10 @@ function mapProfileRow(row) {
   if (!row) return null
   return {
     id: row.id,
+    // `auth_user_id` liga a linha migrada (id = uuidv5 do firebase uid) ao auth
+    // uid. O total de utilizadores tem de contar PESSOAS, não linhas: um
+    // migrado tem as duas (bug #18).
+    authUserId: row.auth_user_id || null,
     name: row.name,
     username: row.username,
     email: row.email,
@@ -29,6 +39,13 @@ function mapProfileRow(row) {
     completedQuizzes: row.completed_quizzes || [],
     isPublic: row.is_public,
     photoURL: row.photo_url,
+    bio: row.bio || null,
+    githubUrl: row.github_url || null,
+    portfolioUrl: row.portfolio_url || null,
+    linkedinUrl: row.linkedin_url || null,
+    twitterUrl: row.twitter_url || null,
+    instagramUrl: row.instagram_url || null,
+    websiteUrl: row.website_url || null,
     createdAt: row.created_at,
     lastLogin: row.last_login,
     totalStudyTime: row.total_study_time || 0,
@@ -166,8 +183,11 @@ export function subscribeToAllUsersMerged(_firestoreCallback, mergeCallback, onE
       { event: '*', schema: 'public', table: 'profiles' },
       loadAndMerge
     )
-    .subscribe((status) => {
+    .subscribe((status, err) => {
       if (status === 'SUBSCRIBED') loadAndMerge()
+      else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+        onError?.(err || new Error(`Admin user subscription failed: ${status}`))
+      }
     })
 
   return () => {
@@ -199,11 +219,13 @@ export function subscribeToAllProgress(callback, onError) {
         }
       }
     )
-    .subscribe((status) => {
+    .subscribe((status, err) => {
       if (status === 'SUBSCRIBED') {
         getAllProgressRecords()
           .then(callback)
           .catch(onError)
+      } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+        onError?.(err || new Error(`Admin progress subscription failed: ${status}`))
       }
     })
 
@@ -220,53 +242,137 @@ function toDate(ts) {
   return new Date(ts)
 }
 
-function getStartOfDay(date) {
-  const d = new Date(date)
-  d.setHours(0, 0, 0, 0)
-  return d
-}
-
-function getStartOfWeek(date) {
-  const d = new Date(date)
-  const day = d.getDay()
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1)
-  d.setDate(diff)
-  d.setHours(0, 0, 0, 0)
-  return d
-}
-
-function getStartOfMonth(date) {
-  const d = new Date(date)
-  d.setDate(1)
-  d.setHours(0, 0, 0, 0)
-  return d
-}
+// Os limites de dia vêm de `utils/dates` (bug #16): antes eram `setHours(0,0,0,0)`
+// sobre o fuso do browser de quem abre o painel, pelo que "Novos hoje" mudava
+// conforme a máquina do admin. Um dia civil só tem uma definição em todo o código.
 
 function daysAgo(n) {
-  const d = new Date()
-  d.setDate(d.getDate() - n)
-  d.setHours(0, 0, 0, 0)
-  return d
+  return getStartOfLocalDay(new Date(Date.now() - n * 86400000))
+}
+
+/**
+ * Trilha atual de uma linha do painel admin.
+ *
+ * `profiles.current_course` é escrito quando o utilizador visita uma aula.
+ * Se não existir um valor válido, deriva-se o progresso das aulas concluídas
+ * e dos cursos/módulos concluídos, seguindo a regra de `getJourneyProgress()`.
+ * IDs que já não existem no catálogo não devem inventar uma trilha atual.
+ */
+export function getUserTrailForRow(user, progressRecords = []) {
+  const accessibleTrailIds = new Set(getAccessibleTrails().map((trail) => trail.id))
+  const persistedTrail = trails.find(
+    (trail) => trail.id === user?.currentCourse && accessibleTrailIds.has(trail.id),
+  )
+  if (persistedTrail) return persistedTrail.id
+
+  const userIds = new Set([user?.id, user?.authUserId].filter(Boolean))
+  const lessonsById = new Map(
+    [...allLessons, ...allVideoLessons].map((lesson) => [lesson.id, lesson]),
+  )
+  const userProgress = progressRecords.filter((record) => {
+    if (!record.completed || !userIds.has(record.userId)) return false
+    const lesson = lessonsById.get(record.lessonId)
+    return (
+      lesson &&
+      accessibleTrailIds.has(lesson.courseId) &&
+      (!record.courseId || record.courseId === lesson.courseId)
+    )
+  })
+  const validCompletedLessons = (user?.completedLessons || []).filter((lessonId) => {
+    const lesson = lessonsById.get(lessonId)
+    return lesson && accessibleTrailIds.has(lesson.courseId)
+  })
+  const completedLessons = [
+    ...new Set([
+      ...validCompletedLessons,
+      ...userProgress.map((record) => record.lessonId).filter(Boolean),
+    ]),
+  ]
+  const completedCourses = (user?.completedCourses || []).filter((courseId) =>
+    accessibleTrailIds.has(courseId),
+  )
+  const accessibleModuleIds = new Set(
+    allModules
+      .filter((module) => accessibleTrailIds.has(module.courseId))
+      .map((module) => module.id),
+  )
+  const completedQuizzes = (user?.completedQuizzes || []).filter((moduleId) =>
+    accessibleModuleIds.has(moduleId),
+  )
+  if (completedCourses.length === 0 && completedLessons.length === 0 && completedQuizzes.length === 0) {
+    return null
+  }
+
+  const journey = getJourneyProgress(completedCourses, completedLessons, completedQuizzes)
+  return journey.currentTrail || null
+}
+
+/**
+ * Agrega linhas de `profiles` por PESSOA.
+ *
+ * Chave: `auth_user_id` quando existe (o perfil migrado fica ligado ao auth
+ * uid), senão o próprio `id`. Sem `auth_user_id` duas linhas são duas pessoas.
+ * Dentro de cada pessoa escolhe-se a linha canónica: primeiro a que tem
+ * histórico (mesmo critério de `userService.pickCanonicalProfileRow`), depois
+ * a que tem nome, depois a primeira.
+ */
+function groupRowsByPerson(rows) {
+  const byPerson = new Map();
+  for (const row of rows || []) {
+    if (!row) continue;
+    const key = row.authUserId || row.id;
+    if (!key) continue;
+    const existing = byPerson.get(key);
+    if (!existing) {
+      byPerson.set(key, row);
+      continue;
+    }
+    byPerson.set(key, pickCanonical(existing, row));
+  }
+  return byPerson;
+}
+
+function hasHistory(row) {
+  return (row.xp || 0) > 0 || (row.completedLessons || []).length > 0;
+}
+
+function pickCanonical(a, b) {
+  const [first, second] = hasHistory(a) === hasHistory(b) ? [a, b] : hasHistory(a) ? [a, b] : [b, a];
+  const firstNamed = Boolean((first.name || '').trim());
+  const secondNamed = Boolean((second.name || '').trim());
+  if (firstNamed !== secondNamed) return firstNamed ? first : second;
+  return first;
 }
 
 export function computeDashboardMetrics(users, progressRecords) {
   const now = new Date()
-  const todayStart = getStartOfDay(now)
-  const weekStart = getStartOfWeek(now)
-  const monthStart = getStartOfMonth(now)
+  const todayStart = getStartOfLocalDay(now)
+  const weekStart = getStartOfLocalWeek(now)
+  const monthStart = getStartOfLocalMonth(now)
 
   let newToday = 0
   let newThisWeek = 0
   let newThisMonth = 0
+  let usersWithUnknownCreatedAt = 0
   let totalCompletedLessons = 0
   const userLessonCounts = {}
   const userCourseCompletions = {}
 
-  for (const u of users) {
+  const profileRows = users || []
+  const byPerson = groupRowsByPerson(users)
+  const people = [...byPerson.values()]
+  const duplicateProfileRows = profileRows.length - people.length
+
+  for (const u of profileRows) {
     const created = toDate(u.createdAt)
-    if (created && created >= todayStart) newToday++
-    if (created && created >= weekStart) newThisWeek++
-    if (created && created >= monthStart) newThisMonth++
+    if (!created || Number.isNaN(created.getTime())) {
+      usersWithUnknownCreatedAt++
+      console.warn('[adminService] Invalid or missing created_at for profile:', u.id)
+      continue
+    }
+    if (created >= todayStart && created < now) newToday++
+    if (created >= weekStart && created < now) newThisWeek++
+    if (created >= monthStart && created < now) newThisMonth++
   }
 
   const uniqueUsersWithProgress = new Set()
@@ -278,7 +384,7 @@ export function computeDashboardMetrics(users, progressRecords) {
     }
   }
 
-  for (const u of users) {
+  for (const u of people) {
     const courses = u.completedCourses || []
     if (courses.length > 0) {
       userCourseCompletions[u.id] = courses.length
@@ -286,7 +392,7 @@ export function computeDashboardMetrics(users, progressRecords) {
   }
 
   const usersCompletedAnyTrail = Object.keys(userCourseCompletions).length
-  const usersCompletedAllTrails = users.filter((u) => {
+  const usersCompletedAllTrails = people.filter((u) => {
     const availableTrails = trails.filter((t) => t.status === 'available')
     return availableTrails.every((t) => (u.completedCourses || []).includes(t.id))
   }).length
@@ -294,20 +400,22 @@ export function computeDashboardMetrics(users, progressRecords) {
   let totalProgressSum = 0
   let activeUsersCount = 0
   const accessibleCount = getAccessibleTrails().length
-  for (const u of users) {
+  for (const u of people) {
     const completed = (u.completedLessons || []).length
     const pct = allLessons.length > 0 ? Math.round((completed / allLessons.length) * 100) : 0
     totalProgressSum += pct
     if (completed > 0) activeUsersCount++
   }
-  const avgProgress = users.length > 0 ? Math.round(totalProgressSum / users.length) : 0
+  const avgProgress = people.length > 0 ? Math.round(totalProgressSum / people.length) : 0
 
   const totalTrails = accessibleCount
   const totalModules = allModules.length
   const totalLessons = allLessons.length
 
   return {
-    totalUsers: users.length,
+    totalUsers: profileRows.length,
+    duplicateProfileRows,
+    usersWithUnknownCreatedAt,
     newToday,
     newThisWeek,
     newThisMonth,
@@ -358,15 +466,14 @@ export function computeChartData(users, progressRecords) {
   const lessonsPerDay = []
   for (let i = 29; i >= 0; i--) {
     const day = daysAgo(i)
-    const dayEnd = new Date(day)
-    dayEnd.setDate(dayEnd.getDate() + 1)
+    const dayEnd = getStartOfLocalDay(new Date(day.getTime() + 86400000))
     const count = progressRecords.filter((r) => {
       if (!r.completed) return false
       const d = toDate(r.completedAt)
       return d && d >= day && d < dayEnd
     }).length
     lessonsPerDay.push({
-      date: day.toISOString().slice(5, 10),
+      date: getLocalDayKey(day).slice(5),
       aulas: count,
     })
   }
@@ -374,14 +481,13 @@ export function computeChartData(users, progressRecords) {
   const usersPerDay = []
   for (let i = 29; i >= 0; i--) {
     const day = daysAgo(i)
-    const dayEnd = new Date(day)
-    dayEnd.setDate(dayEnd.getDate() + 1)
+    const dayEnd = getStartOfLocalDay(new Date(day.getTime() + 86400000))
     const count = users.filter((u) => {
       const d = toDate(u.createdAt)
       return d && d >= day && d < dayEnd
     }).length
     usersPerDay.push({
-      date: day.toISOString().slice(5, 10),
+      date: getLocalDayKey(day).slice(5),
       utilizadores: count,
     })
   }
@@ -422,14 +528,13 @@ export function computeChartData(users, progressRecords) {
   const growthData = []
   for (let i = 29; i >= 0; i--) {
     const day = daysAgo(i)
-    const dayEnd = new Date(day)
-    dayEnd.setDate(dayEnd.getDate() + 1)
+    const dayEnd = getStartOfLocalDay(new Date(day.getTime() + 86400000))
     const totalOnDay = users.filter((u) => {
       const d = toDate(u.createdAt)
       return d && d < dayEnd
     }).length
     growthData.push({
-      date: day.toISOString().slice(5, 10),
+      date: getLocalDayKey(day).slice(5),
       total: totalOnDay,
     })
   }

@@ -43,6 +43,7 @@ function mapProject(row) {
     tags: row.tags || [],
     projectUrl: row.project_url,
     githubUrl: row.github_url,
+    imagePaths: row.image_paths || [],
     likeCount: row.like_count ?? 0,
     commentCount: row.comment_count ?? 0,
     createdAt: row.created_at,

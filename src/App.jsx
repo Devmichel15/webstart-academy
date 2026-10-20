@@ -59,12 +59,10 @@ export default function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/registro" element={<Register />} />
                   <Route path="/recuperar-senha" element={<ForgotPassword />} />
-                  <Route
-                    path="/email-preferences"
-                    element={<EmailPreferences />}
-                  />
+                  <Route path="/email-preferences" element={<EmailPreferences />} />
 
                   <Route path="/u/:username" element={<PublicProfile />} />
+
                   {/* Fullscreen Protected Route (No AppLayout / No Sidebar / 100% Viewport) */}
                   <Route
                     element={
@@ -90,44 +88,20 @@ export default function App() {
                     >
                       <Route element={<LearningProfileGuard />}>
                         <Route path="instalar-app" element={<InstallApp />} />
-                        <Route
-                          path="primeiros-passos"
-                          element={<PrimeirosPassos />}
-                        />
+                        <Route path="primeiros-passos" element={<PrimeirosPassos />} />
                         <Route path="ranking" element={<Ranking />} />
                         <Route path="feed" element={<CommunityPage />} />
                         <Route index element={<Dashboard />} />
                         <Route element={<FirstStepsGuard />}>
                           <Route path="trilhas" element={<Journey />} />
-                          <Route
-                            path="trilhas/:courseId"
-                            element={<CourseDetail />}
-                          />
-                          <Route
-                            path="trilhas/:courseId/conclusao"
-                            element={<CourseCompletion />}
-                          />
-                          <Route
-                            path="trilhas/:courseId/modulo/:moduleId"
-                            element={<ModuleDetail />}
-                          />
-                          <Route
-                            path="trilhas/:courseId/modulo/:moduleId/quiz"
-                            element={<ModuleQuiz />}
-                          />
-                          <Route
-                            path="trilhas/:courseId/modulo/:moduleId/lab"
-                            element={<ModuleLab />}
-                          />
-                          <Route
-                            path="trilhas/:courseId/modulo/:moduleId/mini-projeto"
-                            element={<ModuleMiniProject />}
-                          />
+                          <Route path="trilhas/:courseId" element={<CourseDetail />} />
+                          <Route path="trilhas/:courseId/conclusao" element={<CourseCompletion />} />
+                          <Route path="trilhas/:courseId/modulo/:moduleId" element={<ModuleDetail />} />
+                          <Route path="trilhas/:courseId/modulo/:moduleId/quiz" element={<ModuleQuiz />} />
+                          <Route path="trilhas/:courseId/modulo/:moduleId/lab" element={<ModuleLab />} />
+                          <Route path="trilhas/:courseId/modulo/:moduleId/mini-projeto" element={<ModuleMiniProject />} />
                           <Route path="aula/:lessonId" element={<Lesson />} />
-                          <Route
-                            path="video-aula/:lessonId"
-                            element={<VideoLesson />}
-                          />
+                          <Route path="video-aula/:lessonId" element={<VideoLesson />} />
                           <Route path="laboratorio" element={<Lab />} />
                           <Route path="materiais" element={<Materials />} />
                           <Route path="perfil" element={<Profile />} />
@@ -147,10 +121,7 @@ export default function App() {
                   >
                     <Route path="admin" element={<AdminDashboard />} />
                     <Route path="admin/users" element={<AdminUsers />} />
-                    <Route
-                      path="admin/analytics"
-                      element={<AdminAnalytics />}
-                    />
+                    <Route path="admin/analytics" element={<AdminAnalytics />} />
                     <Route path="admin/denuncias" element={<AdminReports />} />
                   </Route>
 

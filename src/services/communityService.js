@@ -1,5 +1,10 @@
 import { supabase } from '../lib/supabase.js'
 import { resolveProfileId } from './userService.js'
+import {
+  POST_IMAGES_MAX,
+  removeProjectImages,
+  uploadProjectImages,
+} from './projectImageService.js'
 
 export const FEED_PAGE_SIZE = 9
 export const TITLE_MIN = 3
@@ -53,7 +58,7 @@ export function parseTags(input) {
   return tags.slice(0, TAGS_MAX)
 }
 
-export function validateProjectForm({ title, description, projectUrl, githubUrl, tags }) {
+export function validateProjectForm({ title, description, projectUrl, githubUrl, tags, images = [], imagePaths = [] }) {
   const errors = {}
 
   if (!title || title.trim().length < TITLE_MIN || title.trim().length > TITLE_MAX) {
@@ -73,6 +78,9 @@ export function validateProjectForm({ title, description, projectUrl, githubUrl,
   }
   if ((tags || []).some((tag) => tag.length < 2 || tag.length > 24)) {
     errors.tags = 'Cada tag deve ter entre 2 e 24 caracteres.'
+  }
+  if ((imagePaths || []).length + (images || []).length > POST_IMAGES_MAX) {
+    errors.images = `Máximo de ${POST_IMAGES_MAX} imagens por publicação.`
   }
 
   return { valid: Object.keys(errors).length === 0, errors }
@@ -100,6 +108,7 @@ function mapProjectFromDb(row) {
     tags: row.tags || [],
     projectUrl: row.project_url,
     githubUrl: row.github_url,
+    imagePaths: row.image_paths || [],
     authorId: row.author_id,
     likeCount: row.like_count,
     commentCount: row.comment_count,
@@ -115,6 +124,7 @@ function mapProjectToDb(data) {
   if (data.tags !== undefined) mapped.tags = data.tags
   if (data.project_url !== undefined) mapped.project_url = data.project_url
   if (data.github_url !== undefined) mapped.github_url = data.github_url
+  if (data.image_paths !== undefined) mapped.image_paths = data.image_paths
   return mapped
 }
 
@@ -126,18 +136,30 @@ export async function createProject(uid, form) {
 
   const profileId = (await resolveProfileId(uid)) || uid
   const payload = buildProjectData(form)
+  const projectId = crypto.randomUUID()
+
+  const newFiles = (form.images || []).filter(Boolean)
+  const uploadedPaths = newFiles.length
+    ? await uploadProjectImages({ profileId, projectId, files: newFiles })
+    : []
+
   const { data, error } = await supabase
     .from('community_projects')
     .insert({
+      id: projectId,
       ...payload,
       author_id: profileId,
       like_count: 0,
       comment_count: 0,
+      image_paths: uploadedPaths,
     })
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {
+    await removeProjectImages(uploadedPaths)
+    throw error
+  }
   return mapProjectFromDb(data)
 }
 
@@ -150,22 +172,47 @@ export async function updateProject(projectId, current, form) {
   const payload = buildProjectData(form)
   const dbPayload = mapProjectToDb(payload)
 
+  const currentPaths = Array.isArray(current?.imagePaths) ? current.imagePaths : []
+  const keptPaths = (form.imagePaths || []).filter((path) => currentPaths.includes(path))
+  const newFiles = (form.images || []).filter(Boolean)
+  const finalCount = keptPaths.length + newFiles.length
+  if (finalCount > POST_IMAGES_MAX) {
+    throw new Error(`Máximo de ${POST_IMAGES_MAX} imagens por publicação.`)
+  }
+
+  const uploadedPaths = newFiles.length
+    ? await uploadProjectImages({ profileId: current.authorId, projectId, files: newFiles })
+    : []
+
+  const finalPaths = [...keptPaths, ...uploadedPaths]
+  dbPayload.image_paths = finalPaths
+
   const { error } = await supabase
     .from('community_projects')
     .update(dbPayload)
     .eq('id', projectId)
 
-  if (error) throw error
-  return { id: projectId, ...current, ...payload }
+  if (error) {
+    await removeProjectImages(uploadedPaths)
+    throw error
+  }
+
+  const removedPaths = currentPaths.filter((path) => !finalPaths.includes(path))
+  if (removedPaths.length) await removeProjectImages(removedPaths)
+
+  return { id: projectId, ...current, ...payload, imagePaths: finalPaths }
 }
 
-export async function deleteProject(projectId) {
+export async function deleteProject(projectId, imagePaths = []) {
   const { error } = await supabase
     .from('community_projects')
     .delete()
     .eq('id', projectId)
 
   if (error) throw error
+
+  const paths = (imagePaths || []).filter(Boolean)
+  if (paths.length) await removeProjectImages(paths)
 }
 
 export async function getProjectsFeed({ pageSize = FEED_PAGE_SIZE, cursor = null, tag = null, sort = 'recent' }) {

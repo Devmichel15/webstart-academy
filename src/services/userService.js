@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase.js";
+import { getLocalDayKey } from "../utils/dates.js";
 import {
   BIO_MAX,
   isValidUrl,
@@ -655,13 +656,18 @@ function getLevelFromXp(xp) {
   return 1;
 }
 
+// Dia civil único em todo o produto (`src/utils/dates.js`, bug #16). Era
+// `toISOString().split("T")[0]`, ou seja UTC: em Luanda (UTC+1) quem estuda às
+// 00:30 gravava o dia UTC anterior, e o mesmo dia civil podia contar como dois.
+// O painel admin usava meia-noite local; agora as duas coisas partilham o helper.
 function getTodayKey() {
-  return new Date().toISOString().split("T")[0];
+  return getLocalDayKey(new Date());
 }
 
 function computeStreakUpdate(lastStudyDate, currentStreak) {
   const today = getTodayKey();
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+  // "Ontem" é o dia civil anterior em Africa/Luanda, não `now - 24h` em UTC.
+  const yesterday = getLocalDayKey(new Date(Date.now() - 86400000));
 
   // Primeira atividade de sempre: começa o streak em 1. Não é uma quebra e
   // não dá bónus (antes caía no ramo de gap: `broke: true` + 10 XP grátis).

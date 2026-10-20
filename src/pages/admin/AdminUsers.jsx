@@ -9,7 +9,7 @@ import {
 import { Card } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { Button } from '../../components/ui/Button'
-import { subscribeToAllUsersMerged, subscribeToAllProgress } from '../../services/adminService.js'
+import { subscribeToAllUsersMerged, subscribeToAllProgress, getUserTrailForRow } from '../../services/adminService.js'
 import { allLessons } from '../../data/lessons/index.js'
 import { trails } from '../../data/trails.js'
 import { getAccessibleTrails } from '../../services/trailProgressService.js'
@@ -30,15 +30,22 @@ function toDate(ts) {
   return new Date(ts)
 }
 
-function UserRow({ user, expanded, onToggle }) {
+function UserRow({ user, progressRecords, progressLoaded, progressError, expanded, onToggle }) {
   const completedCount = (user.completedLessons || []).length
   const totalLessons = allLessons.length
   const progressPct = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0
   const accessibleCount = getAccessibleTrails().length
   const completedCourses = Math.min((user.completedCourses || []).length, accessibleCount)
-  const currentTrail = user.currentCourse
-    ? trails.find((t) => t.id === user.currentCourse)?.title || user.currentCourse
-    : 'Nenhuma'
+  // BUG #20: `current_course` é NULL para quem nunca abriu uma aula, por isso o
+  // id é derivado de `completed_courses` quando não há valor persistido.
+  const trailId = getUserTrailForRow(user, progressRecords)
+  const currentTrail = trailId
+    ? trails.find((t) => t.id === trailId)?.title || 'Nenhuma'
+    : progressError
+      ? 'Erro ao carregar'
+      : !progressLoaded
+        ? 'A carregar...'
+        : 'Nenhuma'
   const lastAccess = toDate(user.lastLogin) || toDate(user.createdAt)
   const createdAt = toDate(user.createdAt)
   const provider = user.provider || 'email'
@@ -157,22 +164,38 @@ export default function AdminUsers() {
   const [users, setUsers] = useState([])
   const [progressRecords, setProgressRecords] = useState([])
   const [loading, setLoading] = useState(true)
+  const [usersError, setUsersError] = useState('')
+  const [progressLoaded, setProgressLoaded] = useState(false)
+  const [progressError, setProgressError] = useState('')
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('all')
   const [expandedId, setExpandedId] = useState(null)
   const [showFilters, setShowFilters] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
     const unsubUsers = subscribeToAllUsersMerged(
       () => {},
       (merged) => {
         setUsers(merged)
         setLoading(false)
+        setUsersError('')
       },
-      () => setLoading(false),
+      () => {
+        setLoading(false)
+        setUsersError('Não foi possível carregar os utilizadores.')
+      },
     )
-    const unsubProgress = subscribeToAllProgress(setProgressRecords, () => {})
+    const unsubProgress = subscribeToAllProgress(
+      (records) => {
+        setProgressRecords(records)
+        setProgressLoaded(true)
+        setProgressError('')
+      },
+      () => {
+        setProgressLoaded(true)
+        setProgressError('Não foi possível carregar o progresso dos utilizadores.')
+      },
+    )
     return () => {
       unsubUsers()
       unsubProgress()
@@ -252,6 +275,17 @@ export default function AdminUsers() {
         <p className="text-sm text-secondary">Visualize e analise todos os utilizadores da plataforma</p>
       </div>
 
+      {usersError && users.length > 0 && (
+        <p role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800">
+          {usersError}
+        </p>
+      )}
+      {progressError && (
+        <p role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800">
+          {progressError}
+        </p>
+      )}
+
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <div className="relative flex-1 sm:max-w-md">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
@@ -314,7 +348,9 @@ export default function AdminUsers() {
           </div>
         ) : filteredUsers.length === 0 ? (
           <div className="py-12 text-center">
-            <p className="text-sm font-semibold text-muted">Nenhum utilizador encontrado.</p>
+            <p className="text-sm font-semibold text-muted">
+              {usersError ? 'Não foi possível carregar os utilizadores.' : 'Nenhum utilizador encontrado.'}
+            </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -336,6 +372,9 @@ export default function AdminUsers() {
                   <UserRow
                     key={user.id}
                     user={user}
+                    progressRecords={progressRecords}
+                    progressLoaded={progressLoaded}
+                    progressError={progressError}
                     progressCount={userProgressMap[user.id] || 0}
                     expanded={expandedId === user.id}
                     onToggle={() => toggleExpand(user.id)}

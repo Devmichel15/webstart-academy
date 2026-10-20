@@ -112,7 +112,7 @@ export default function CommunityPage() {
       }
       setLastDoc(result.lastDoc)
       setHasMore(result.hasMore)
-    } catch (err) {
+    } catch {
       showError('Não foi possível carregar mais projetos.')
     } finally {
       setLoadingMore(false)
@@ -196,7 +196,7 @@ export default function CommunityPage() {
     if (!pendingDelete || deleting) return
     setDeleting(true)
     try {
-      await deleteProject(pendingDelete.id)
+      await deleteProject(pendingDelete.id, pendingDelete.imagePaths || [])
       setProjects((current) => current.filter((p) => p.id !== pendingDelete.id))
       showSuccess('Projeto excluído.')
       setPendingDelete(null)
@@ -397,7 +397,7 @@ export default function CommunityPage() {
         title="Excluir projeto"
         message={
           pendingDelete
-            ? `Tens a certeza que queres excluir "${pendingDelete.title}"? Os comentários e likes associados também serão removidos. Esta ação não pode ser revertida.`
+            ? `Tens a certeza que queres excluir "${pendingDelete.title}"? Os comentários, likes e imagens associados também serão removidos. Esta ação não pode ser revertida.`
             : ''
         }
         confirmLabel="Excluir"

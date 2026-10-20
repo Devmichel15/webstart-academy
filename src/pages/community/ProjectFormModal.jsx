@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Loader2, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { ImageIcon, Loader2, X } from 'lucide-react'
 import {
   DESCRIPTION_MAX,
   DESCRIPTION_MIN,
@@ -8,6 +8,12 @@ import {
   parseTags,
   validateProjectForm,
 } from '../../services/communityService.js'
+import {
+  POST_IMAGE_TYPES,
+  POST_IMAGES_MAX,
+  projectImageUrl,
+  validateImageFile,
+} from '../../services/projectImageService.js'
 
 const EMPTY_FORM = {
   title: '',
@@ -32,12 +38,35 @@ export function ProjectFormModal({ open, project = null, submitting = false, onC
   const [form, setForm] = useState(EMPTY_FORM)
   const [errors, setErrors] = useState({})
   const [tagsPreview, setTagsPreview] = useState([])
+  const [imageFiles, setImageFiles] = useState([])
+  const [keptPaths, setKeptPaths] = useState([])
+  const [imageErrors, setImageErrors] = useState([])
+  const fileInputRef = useRef(null)
+  const [fileUrls, setFileUrls] = useState(() => new Map())
+  const fileUrlsRef = useRef(fileUrls)
+
+  useEffect(() => {
+    fileUrlsRef.current = fileUrls
+  }, [fileUrls])
+
+  const revokeFileUrls = (map = fileUrlsRef.current) => {
+    map.forEach((url) => URL.revokeObjectURL(url))
+    setFileUrls(new Map())
+  }
 
   useEffect(() => {
     if (open) {
       setForm(toFormValues(project))
       setErrors({})
       setTagsPreview(project ? project.tags || [] : [])
+      setImageFiles([])
+      setKeptPaths(project ? (project.imagePaths || []) : [])
+      setImageErrors([])
+    } else {
+      revokeFileUrls()
+      setImageFiles([])
+      setKeptPaths([])
+      setImageErrors([])
     }
   }, [open, project])
 
@@ -50,7 +79,14 @@ export function ProjectFormModal({ open, project = null, submitting = false, onC
     return () => window.removeEventListener('keydown', handler)
   }, [open, submitting, onClose])
 
+  useEffect(() => {
+    const urls = fileUrlsRef
+    return () => urls.current.forEach((url) => URL.revokeObjectURL(url))
+  }, [])
+
   if (!open) return null
+
+  const imageTotal = keptPaths.length + imageFiles.length
 
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }))
@@ -62,8 +98,63 @@ export function ProjectFormModal({ open, project = null, submitting = false, onC
     }
   }
 
+  const handleFilesSelected = (event) => {
+    const picked = Array.from(event.target.files || [])
+    event.target.value = ''
+    if (!picked.length || submitting) return
+
+    const messages = []
+    const accepted = []
+    let total = keptPaths.length + imageFiles.length
+
+    for (const file of picked) {
+      const invalid = validateImageFile(file)
+      if (invalid) {
+        messages.push(`«${file.name}»: ${invalid}`)
+        continue
+      }
+      if (total >= POST_IMAGES_MAX) {
+        messages.push(`Só podes anexar até ${POST_IMAGES_MAX} imagens por publicação.`)
+        break
+      }
+      accepted.push(file)
+      total += 1
+    }
+
+    if (accepted.length) {
+      setFileUrls((current) => {
+        const next = new Map(current)
+        accepted.forEach((file) => next.set(file, URL.createObjectURL(file)))
+        return next
+      })
+      setImageFiles((current) => [...current, ...accepted])
+    }
+    setImageErrors(messages)
+  }
+
+  const removeNewFile = (file) => {
+    setFileUrls((current) => {
+      const url = current.get(file)
+      if (url) URL.revokeObjectURL(url)
+      const next = new Map(current)
+      next.delete(file)
+      return next
+    })
+    setImageFiles((current) => current.filter((item) => item !== file))
+  }
+
+  const removeKeptPath = (path) => {
+    setKeptPaths((current) => current.filter((item) => item !== path))
+  }
+
   const handleSave = () => {
-    const validation = validateProjectForm({ ...form, tags: tagsPreview })
+    if (submitting) return
+    const validation = validateProjectForm({
+      ...form,
+      tags: tagsPreview,
+      images: imageFiles,
+      imagePaths: keptPaths,
+    })
     if (!validation.valid) {
       setErrors(validation.errors)
       return
@@ -76,6 +167,8 @@ export function ProjectFormModal({ open, project = null, submitting = false, onC
         projectUrl: form.projectUrl.trim(),
         githubUrl: form.githubUrl.trim(),
         tags: tagsPreview,
+        images: imageFiles,
+        imagePaths: keptPaths,
       },
       project,
     )
@@ -208,6 +301,89 @@ export function ProjectFormModal({ open, project = null, submitting = false, onC
               </div>
             )}
             {errors.tags && <p className="mt-1 text-xs font-bold text-red-500">{errors.tags}</p>}
+          </div>
+
+          <div>
+            <span className="mb-1 block text-sm font-bold text-primary">
+              Imagens{' '}
+              <span className="font-normal text-secondary">
+                (opcional, máx. {POST_IMAGES_MAX} · JPEG, PNG ou WebP · até 5 MB cada)
+              </span>
+            </span>
+
+            {(keptPaths.length > 0 || imageFiles.length > 0) && (
+              <div className="mb-2 grid grid-cols-4 gap-2">
+                {keptPaths.map((path) => (
+                  <div
+                    key={path}
+                    className="relative aspect-square overflow-hidden rounded-lg border-2 border-strong bg-accent-soft"
+                  >
+                    <img
+                      src={projectImageUrl(path)}
+                      alt="Imagem existente"
+                      className="h-full w-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      disabled={submitting}
+                      onClick={() => removeKeptPath(path)}
+                      aria-label="Remover imagem"
+                      className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white hover:bg-black/80 disabled:opacity-50"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ))}
+                {imageFiles.map((file, index) => (
+                  <div
+                    key={`${file.name}-${file.lastModified}-${index}`}
+                    className="relative aspect-square overflow-hidden rounded-lg border-2 border-strong bg-accent-soft"
+                  >
+                    <img
+                      src={fileUrls.get(file)}
+                      alt="Nova imagem seleccionada"
+                      className="h-full w-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      disabled={submitting}
+                      onClick={() => removeNewFile(file)}
+                      aria-label="Remover imagem"
+                      className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white hover:bg-black/80 disabled:opacity-50"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {imageTotal < POST_IMAGES_MAX ? (
+              <button
+                type="button"
+                disabled={submitting}
+                onClick={() => fileInputRef.current?.click()}
+                className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-strong px-3 py-3 text-sm font-bold text-secondary hover:bg-surface-hover hover:text-primary disabled:opacity-50"
+              >
+                <ImageIcon size={16} /> Adicionar imagens ({imageTotal}/{POST_IMAGES_MAX})
+              </button>
+            ) : (
+              <p className="text-xs text-secondary">Limite de {POST_IMAGES_MAX} imagens atingido.</p>
+            )}
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={POST_IMAGE_TYPES.join(',')}
+              multiple
+              className="hidden"
+              onChange={handleFilesSelected}
+            />
+
+            {errors.images && <p className="mt-1 text-xs font-bold text-red-500">{errors.images}</p>}
+            {imageErrors.map((message) => (
+              <p key={message} className="mt-1 text-xs font-bold text-red-500">{message}</p>
+            ))}
           </div>
 
           <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">

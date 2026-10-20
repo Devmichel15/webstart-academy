@@ -82,6 +82,68 @@ const PROFILE_OWNED_TABLES = new Set([
   "identity_links",
 ]);
 
+// ─── Storage (mirror of supabase/migrations/021_post_images.sql) ──────────
+
+export class FakeStorageBucket {
+  constructor(name, storage) {
+    this.name = name;
+    this.storage = storage;
+    this.objects = new Map();
+  }
+
+  async upload(path, file, options = {}) {
+    this.storage.calls.push({ op: "upload", bucket: this.name, path, file, options });
+    if (!options.upsert && this.objects.has(path)) {
+      return {
+        data: null,
+        error: postgrestError("The resource already exists", "409"),
+      };
+    }
+    this.objects.set(path, { file, contentType: options.contentType || file?.type || null });
+    return { data: { path }, error: null };
+  }
+
+  async remove(paths) {
+    this.storage.calls.push({ op: "remove", bucket: this.name, paths });
+    const list = Array.isArray(paths) ? paths : [paths];
+    const removed = [];
+    for (const path of list) {
+      if (this.objects.delete(path)) removed.push(path);
+    }
+    return { data: removed.map((name) => ({ name })), error: null };
+  }
+
+  async list(prefix = "") {
+    this.storage.calls.push({ op: "list", bucket: this.name, prefix });
+    const data = [...this.objects.keys()]
+      .filter((path) => path.startsWith(prefix))
+      .map((name) => ({ name }));
+    return { data, error: null };
+  }
+
+  getPublicUrl(path) {
+    this.storage.calls.push({ op: "getPublicUrl", bucket: this.name, path });
+    return {
+      data: { publicUrl: `https://test.supabase.co/storage/v1/object/public/${this.name}/${path}` },
+      error: null,
+    };
+  }
+}
+
+export class FakeStorage {
+  constructor() {
+    this.buckets = new Map();
+    this.calls = [];
+  }
+
+  from(name) {
+    if (!this.buckets.has(name)) {
+      this.buckets.set(name, new FakeStorageBucket(name, this));
+    }
+    return this.buckets.get(name);
+  }
+}
+
 class QueryBuilder {
   constructor(client, table, operation) {
     this.client = client;
@@ -99,6 +161,20 @@ class QueryBuilder {
     if (this.operation === "select") return this;
     this.returning = true;
     return this;
+  }
+
+  returningRows(rows) {
+    if (!this.returning) return { data: null, error: null, count: rows.length, status: 200 };
+    if (this.returnSingle) {
+      if (rows.length > 1) return { data: null, error: clone(MULTIPLE_ROWS_ERROR), count: null, status: 406 };
+      if (rows.length === 0) {
+        return this.returnSingle === "maybeSingle"
+          ? { data: null, error: null, count: 0, status: 200 }
+          : { data: null, error: clone(NO_ROWS_ERROR), count: null, status: 406 };
+      }
+      return { data: clone(rows[0]), error: null, count: 1, status: 200, statusText: "OK" };
+    }
+    return { data: clone(rows), error: null, count: rows.length, status: 200, statusText: "OK" };
   }
 
   eq(column, value) {
@@ -286,6 +362,11 @@ class QueryBuilder {
     if (table === "identity_links") return null;
     const exists = this.client.db.profiles.some((p) => p.id === row[column]);
     if (!exists) return fkError(table, column, row[column]);
+    // FK real (001_initial_schema.sql): lesson_progress.lesson_id → lessons.id.
+    if (table === "lesson_progress" && row.lesson_id != null) {
+      const lessonExists = this.client.db.lessons.some((l) => l.id === row.lesson_id);
+      if (!lessonExists) return fkError(table, "lesson_id", row.lesson_id);
+    }
     return null;
   }
 
@@ -410,6 +491,10 @@ class QueryBuilder {
         inserted.push(row);
       }
       this.client.emitRealtime(table, "INSERT", inserted);
+      if (this.returning) {
+        const result = this.returningRows(inserted);
+        return { ...result, count: result.count ?? inserted.length };
+      }
       return { data: null, error: null, count: inserted.length, status: 201, statusText: "Created" };
     }
 
@@ -453,6 +538,7 @@ class QueryBuilder {
         updated.push(rows[i]);
       }
       this.client.emitRealtime(table, "UPDATE", updated);
+      if (this.returning) return this.returningRows(updated);
       return { data: null, error: null, count: updated.length, status: 200, statusText: "OK" };
     }
 
@@ -661,6 +747,7 @@ export class FakeSupabase {
     this.queries = [];
     this.injectedError = null;
     this.auth = new FakeAuth(this);
+    this.storage = new FakeStorage();
     this.lastOAuthProvider = null;
   }
 

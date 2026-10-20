@@ -7,23 +7,33 @@ import { loginWithEmail, loginWithGoogle } from '../services/authService.js'
 import { useToast } from '../contexts/ToastContext.jsx'
 import { SEO } from '../components/seo/SEO'
 import { toUserMessage } from '../utils/errors.js'
+import { useAuth } from '../hooks/useAuth.js'
 
 export default function Login() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { user, loading: authLoading } = useAuth()
   const { showError, showSuccess } = useToast()
+  const redirectTo = location.state?.from || '/'
 
   useEffect(() => {
-    if (!localStorage.getItem('webstart_onboarding_done')) {
+    if (authLoading) {
+      return
+    }
+
+    if (user) {
+      navigate(redirectTo, { replace: true })
+      return
+    }
+
+    if (localStorage.getItem('webstart_onboarding_done') !== 'true') {
       navigate('/onboarding', { replace: true })
     }
-  }, [navigate])
+  }, [authLoading, user, navigate, redirectTo])
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
-
-  const redirectTo = location.state?.from || '/'
 
   const handleSubmit = async (event) => {
     event.preventDefault()

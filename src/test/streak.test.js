@@ -2,12 +2,19 @@
  * Tarefa 2 — Streak e XP com datas-limite.
  *
  * Nenhum teste toca na data real: `vi.useFakeTimers()` + `vi.setSystemTime()`
- * fixam o "agora" e o TZ do processo, para que os limites de meia-noite,
- * virada de dia e DST sejam determinísticos.
+ * fixam o "agora" para que os limites de meia-noite e virada de dia sejam
+ * determinísticos.
  *
- * Convenção: `D` = 2026-06-15 (UTC). Todas as expectativas são escritas em
- * termos de dias-calendário *do utilizador*, não de UTC — ver os testes
- * marcados "BUG" para o caso em que o código discorda.
+ * O dia civil NÃO é o do browser: `src/utils/dates.js` fixa o produto em
+ * `Africa/Luanda` (UTC+1 sem DST), para que "estudei hoje" signifique o mesmo
+ * para toda a gente e o painel admin não dependa da máquina de quem o abre.
+ * Consequência para estes testes: o `TZ` do processo é irrelevante para a chave
+ * do dia. Alguns testes mudam o TZ de propósito, para provar que isso já não
+ * muda nada — se um dia desses começar a falhar, é porque o pin de Luanda foi
+ * perdido pelo caminho.
+ *
+ * Convenção: `D` = 2026-06-15 em Africa/Luanda. Todas as expectativas são
+ * escritas em dias-civis de Luanda, nunca em UTC.
  */
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
 import { mockSupabase, loadUserService, loadProgressService } from "./harness.js";
@@ -26,7 +33,10 @@ let fake;
 let userService;
 let progressService;
 
-/** Sets the process timezone so Date's local calendar is deterministic. */
+/**
+ * Sets the process timezone. The day key is pinned to Africa/Luanda, so this
+ * exists to prove that the browser's timezone cannot move the streak.
+ */
 function setTz(tz) {
   // vi.stubEnv escreve em process.env por nós (evita `process` direto, que o
   // ESLint marca como no-undef neste ficheiro).
@@ -129,8 +139,9 @@ describe("updateUserStreak — dia consecutivo", () => {
     expect(row().last_study_date).toBe("2026-06-15");
   });
 
-  it("23:59 continua a contar como o mesmo dia", async () => {
-    vi.setSystemTime(at("2026-06-15T23:59:59.999Z"));
+  it("23:59 em Luanda continua a contar como o mesmo dia", async () => {
+    // 22:59:59.999Z = 23:59:59.999 em Luanda: o último segundo do dia civil.
+    vi.setSystemTime(at("2026-06-15T22:59:59.999Z"));
     seedProfile({ streak: 3, xp: 300, last_study_date: D });
 
     const result = await userService.updateUserStreak(AUTH_UID);
@@ -138,6 +149,21 @@ describe("updateUserStreak — dia consecutivo", () => {
     expect(result.streak).toBe(3);
     expect(result.broke).toBe(false);
     expect(row().last_study_date).toBe(D);
+  });
+
+  
+    it("23:59 UTC já é o dia seguinte em Luanda", async () => {
+    // Mesmo instante, outra leitura: em UTC é 15/06, em Luanda já é 16/06.
+    // O produto conta o dia de Luanda, por isso isto é um dia novo — e um
+    // streak de 3 que começou em 15/06 é uma sequência legítima.
+    vi.setSystemTime(at("2026-06-15T23:59:59.999Z"));
+    seedProfile({ streak: 3, xp: 300, last_study_date: D });
+
+    const result = await userService.updateUserStreak(AUTH_UID);
+
+    expect(result.streak).toBe(4);
+    expect(result.broke).toBe(false);
+    expect(row().last_study_date).toBe("2026-06-16");
   });
 });
 
@@ -214,65 +240,63 @@ describe("updateUserStreak — XP nunca negativo", () => {
   });
 });
 
-describe("BUG: a chave do dia é derivada de UTC, não do calendário local", () => {
-  // Documenta o comportamento ACTUAL (o teste passa). O contrato desejado
-  // seria "o dia do utilizador"; está registado como bug no relatório.
-  //
-  // Em Luanda (UTC+1), 2026-06-15T00:30 local = 2026-06-14T23:30Z. O código
-  // grava last_study_date = "2026-06-14", ou seja, o dia ANTERIOR ao que o
-  // utilizador vive. Consequência: o utilizador estuda à 00:30 e o sistema
-  // conta como "ontem"; se voltar a estudar às 20:00 do mesmo dia local, o
-  // sistema acha que é "dia seguinte" e aumenta o streak duas vezes no mesmo
-  // dia civil.
-  it("00:30 em UTC+1 (Luanda) é registado como o dia UTC anterior", async () => {
+describe("o dia civil é o de Luanda, não o do browser", () => {
+  // Bug #16. Antes, `getTodayKey()` era `toISOString().split("T")[0]`: em Luanda
+  // (UTC+1) quem estudasse às 00:30 era registado no dia ANTERIOR, e voltar a
+  // estudar às 20:00 do mesmo dia civil contava como dia seguinte — streak +2
+  // numa só noite. Estes testes fixam o contrato novo: o dia é o de Luanda,
+  // independentemente do fuso da máquina.
+  it("00:30 em Luanda é registado como 15/06, não como 14/06", async () => {
     setTz("Africa/Luanda"); // UTC+1, sem DST
-    // 2026-06-15T01:30Z = 2026-06-15T02:30 local. Para obter 00:30 local
-    // (= 2026-06-14T23:30Z) fixamos esse instante.
+    // 2026-06-14T23:30Z = 2026-06-15T00:30 em Luanda.
     vi.setSystemTime(at("2026-06-14T23:30:00.000Z"));
-    seedProfile({ streak: 3, xp: 300, last_study_date: "2026-06-13" });
+    seedProfile({ streak: 3, xp: 300, last_study_date: D_MINUS_1 });
 
     const result = await userService.updateUserStreak(AUTH_UID);
 
     expect(result.streak).toBe(4);
-    // A chave gravada é a data UTC, não a data local do utilizador.
-    expect(row().last_study_date).toBe("2026-06-14");
+    expect(row().last_study_date).toBe(D);
   });
 
-  it("o mesmo dia local pode ser contado duas vezes como dias distintos", async () => {
+  it("o mesmo dia civil não pode contar duas vezes", async () => {
     setTz("Africa/Luanda");
-    seedProfile({ streak: 3, xp: 300, last_study_date: "2026-06-13" });
+    seedProfile({ streak: 3, xp: 300, last_study_date: D_MINUS_1 });
 
-    // 00:30 local de 15/06 -> chave UTC 14/06, streak vai a 4
+    // 00:30 de 15/06 -> dia 15/06, streak vai a 4
     vi.setSystemTime(at("2026-06-14T23:30:00.000Z"));
     await userService.updateUserStreak(AUTH_UID);
-    expect(row().last_study_date).toBe("2026-06-14");
+    expect(row().last_study_date).toBe(D);
 
-    // 20:00 local de 15/06 (= 19:00Z) -> chave UTC 15/06, streak vai a 5
+    // 20:00 de 15/06 (= 19:00Z) -> o MESMO dia, streak fica em 4
     vi.setSystemTime(at("2026-06-15T19:00:00.000Z"));
     const second = await userService.updateUserStreak(AUTH_UID);
 
-    // Duas atividades no MESMO dia civil do utilizador, streak +2.
-    expect(second.streak).toBe(5);
+    expect(second.streak).toBe(4);
     expect(second.broke).toBe(false);
+    expect(row().last_study_date).toBe(D);
   });
 
-  it("UTC-1 (Cabo Verde): à noite a chave já é o dia seguinte", async () => {
+  it("num browser em Cabo Verde o dia continua a ser o de Luanda", async () => {
     setTz("Atlantic/Cape_Verde"); // UTC-1
-    // 2026-06-15T22:00 local de 14/06 = 23:00Z de 15/06
+    // 2026-06-15T23:00Z = 22:00 de 15/06 em Cabo Verde, mas 00:00 de 16/06 em
+    // Luanda. O produto conta Luanda, logo é um dia novo — e o browser não
+    // tem voto na matéria.
     vi.setSystemTime(at("2026-06-15T23:00:00.000Z"));
     seedProfile({ streak: 3, xp: 300, last_study_date: D_MINUS_1 });
 
     const result = await userService.updateUserStreak(AUTH_UID);
 
-    // O utilizador acha que é 14/06 (ontem); o sistema achou que era 15/06.
-    expect(result.streak).toBe(4);
-    expect(row().last_study_date).toBe(D);
+    // O browser em Cabo Verde ainda está em 15/06; o produto já passou para 16/06.
+    expect(result.streak).toBe(1);
+    expect(result.broke).toBe(true);
+    expect(row().last_study_date).toBe("2026-06-16");
   });
 });
 
-describe("BUG: mudança de hora / DST não é considerada", () => {
-  it("num salto de DST o diff de dias continua a ser comparado por string", async () => {
-    // Europa/Lisboa: DST avança a 2026-03-29 às 01:00 UTC (00:00 local).
+describe("mudança de hora / DST não afecta a contagem", () => {
+  it("num salto de DST o dia anterior continua a ser dia consecutivo", async () => {
+    // Europa/Lisboa: DST avança a 2026-03-29 às 01:00 UTC (00:00 local). Luanda
+    // não tem DST, por isso o produto nem se ressente.
     setTz("Europe/Lisbon");
     vi.setSystemTime(at("2026-03-29T12:00:00.000Z"));
     seedProfile({ streak: 6, xp: 600, last_study_date: "2026-03-28" });

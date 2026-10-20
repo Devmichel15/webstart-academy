@@ -43,6 +43,7 @@ describe("public profile projects", () => {
       tags: ["web"],
       projectUrl: "https://example.test",
       githubUrl: null,
+      imagePaths: [],
       likeCount: 2,
       commentCount: 1,
       createdAt: "2026-09-23T12:00:00.000Z",

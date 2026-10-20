@@ -30,6 +30,8 @@ import { Button } from '../../components/ui/Button'
 import {
   subscribeToAllUsersMerged,
   subscribeToAllProgress,
+  getAllUsers,
+  getAllProgressRecords,
   computeDashboardMetrics,
   computeRankings,
   computeChartData,
@@ -131,19 +133,36 @@ export default function AdminDashboard() {
   const [progressRecords, setProgressRecords] = useState([])
   const [loading, setLoading] = useState(true)
   const [lastRefresh, setLastRefresh] = useState(null)
+  const [loadErrors, setLoadErrors] = useState({ users: '', progress: '', refresh: '' })
 
   useEffect(() => {
-    setLoading(true)
     const unsubUsers = subscribeToAllUsersMerged(
       () => {},
       (merged) => {
         setUsers(merged)
         setLoading(false)
         setLastRefresh(new Date())
+        setLoadErrors((current) => ({ ...current, users: '' }))
       },
-      () => setLoading(false),
+      () => {
+        setLoading(false)
+        setLoadErrors((current) => ({
+          ...current,
+          users: 'Não foi possível carregar os utilizadores.',
+        }))
+      },
     )
-    const unsubProgress = subscribeToAllProgress(setProgressRecords, () => {})
+    const unsubProgress = subscribeToAllProgress(
+      (records) => {
+        setProgressRecords(records)
+        setLoadErrors((current) => ({ ...current, progress: '' }))
+      },
+      () =>
+        setLoadErrors((current) => ({
+          ...current,
+          progress: 'Não foi possível carregar o progresso dos utilizadores.',
+        })),
+    )
 
     return () => {
       unsubUsers()
@@ -158,7 +177,7 @@ export default function AdminDashboard() {
 
   const rankings = useMemo(
     () => computeRankings(users),
-    [users, progressRecords, metrics],
+    [users],
   )
 
   const chartData = useMemo(
@@ -171,9 +190,26 @@ export default function AdminDashboard() {
     [metrics, chartData],
   )
 
-  const handleRefresh = useCallback(() => {
+  const handleRefresh = useCallback(async () => {
     setLoading(true)
-    setTimeout(() => setLoading(false), 500)
+    setLoadErrors({ users: '', progress: '', refresh: '' })
+    try {
+      const [freshUsers, freshProgress] = await Promise.all([
+        getAllUsers(),
+        getAllProgressRecords(),
+      ])
+      setUsers(freshUsers)
+      setProgressRecords(freshProgress)
+      setLastRefresh(new Date())
+    } catch (error) {
+      console.error('[AdminDashboard] Failed to refresh dashboard:', error)
+      setLoadErrors((current) => ({
+        ...current,
+        refresh: 'Não foi possível atualizar os dados do painel.',
+      }))
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   return (
@@ -195,6 +231,12 @@ export default function AdminDashboard() {
           </Button>
         </div>
       </div>
+
+      {Object.values(loadErrors).filter(Boolean).map((error) => (
+        <p key={error} role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800">
+          {error}
+        </p>
+      ))}
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard icon={Users} label="Total Utilizadores" value={metrics.totalUsers} delay={0} />

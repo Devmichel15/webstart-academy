@@ -185,6 +185,21 @@ export function ProgressProvider({ children }) {
       }
       return result
     } catch (err) {
+      const isLessonFkMissing =
+        err?.code === '23503' &&
+        /lesson_progress_lesson_id_fkey/.test(String(err?.message || ''))
+      if (isLessonFkMissing) {
+        // Aula existe no catálogo estático do front mas não na tabela
+        // `lessons` da BD (seed da migration não executada). Não bloquear
+        // a navegação: o utilizador avança e o admin executa a seed.
+        console.error(
+          '[completeLesson] lesson_id ausente na tabela lessons da BD:',
+          lessonId,
+          err,
+        )
+        showError(toUserMessage(err, 'Erro ao salvar progresso.'))
+        return { alreadyCompleted: false, xpEarned: 0, progressSaved: false }
+      }
       console.error('[completeLesson error]', err.code, err.message, err)
       showError(toUserMessage(err, 'Erro ao salvar progresso.'))
       return null

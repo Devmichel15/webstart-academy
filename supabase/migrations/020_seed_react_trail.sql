@@ -6,7 +6,9 @@
 --
 -- Produção: WebStart Academy · Lecionado por Michel César
 -- Playlist: https://www.youtube.com/watch?v=XjJK7Gc_TDQ&list=PLSN1shsnVim8
--- Idempotente: usa INSERT ... ON CONFLICT DO NOTHING.
+-- Idempotente: módulos e aulas usam INSERT ... ON CONFLICT DO NOTHING;
+-- o curso usa DO UPDATE para substituir a linha placeholder "react"
+-- (status 'soon') que já existe em algumas bases de dados.
 -- ═══════════════════════════════════════════════════════════════
 
 -- ─── COURSE ──────────────────────────────────────────────────
@@ -27,7 +29,19 @@ values (
   'javascript',
   '{"level": 2, "xp": 800, "completion": null, "origin": "webstart", "producer": "WebStart"}'::jsonb
 )
-on conflict (id) do nothing;
+on conflict (id) do update set
+  title = excluded.title,
+  slug = excluded.slug,
+  description = excluded.description,
+  difficulty = excluded.difficulty,
+  estimated_hours = excluded.estimated_hours,
+  icon = excluded.icon,
+  color = excluded.color,
+  status = excluded.status,
+  sort_order = excluded.sort_order,
+  instructor = excluded.instructor,
+  required_trail = excluded.required_trail,
+  extra = excluded.extra;
 
 -- ─── MODULES ─────────────────────────────────────────────────
 

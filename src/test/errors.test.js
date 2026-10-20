@@ -304,7 +304,7 @@ describe("subscribeToUserProgress — callback de erro", () => {
       );
 
       expect(toUserMessage(error, "Erro ao salvar progresso.")).toMatch(
-        /016_seed_python_trail\.sql/,
+        /020_seed_react_trail\.sql/,
       );
       expect(consoleError).toHaveBeenCalled();
       consoleError.mockRestore();
