@@ -108,8 +108,8 @@ export function ProfileView({
           )}
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-xl font-black text-primary">{name}</h1>
-            {username && <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">@{username}</p>}
-            {bio && <p className="mt-2 whitespace-pre-wrap text-sm text-secondary">{bio}</p>}
+            {username && <p className="break-words text-sm font-semibold text-brand-700 dark:text-brand-300">@{username}</p>}
+            {bio && <p className="mt-2 whitespace-pre-wrap break-words text-sm text-secondary">{bio}</p>}
             {createdAt && (
               <p className="mt-2 text-xs text-secondary">
                 Membro desde {new Date(createdAt).toLocaleDateString("pt-PT")}

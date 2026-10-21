@@ -348,7 +348,7 @@ export default function CommunityPage() {
             </div>
 
             {availableTags.length > 0 && (
-              <div className="flex gap-4 overflow-x-auto px-4 py-2.5">
+              <div className="flex flex-wrap gap-x-4 gap-y-2 px-4 py-2.5">
                 <button
                   type="button"
                   onClick={() => setActiveTag(null)}

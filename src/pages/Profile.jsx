@@ -312,7 +312,7 @@ export default function Profile() {
       />
 
       <div className="mx-auto w-full max-w-[1120px]">
-        <div className="flex items-center gap-1 border-b border-border pt-2">
+        <div className="flex flex-wrap items-center gap-1 border-b border-border pt-2">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             const count =
@@ -326,7 +326,7 @@ export default function Profile() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`relative flex items-center gap-2 px-3.5 py-2.5 text-sm font-bold transition-colors ${
+                className={`relative flex shrink-0 items-center gap-2 px-3.5 py-2.5 text-sm font-bold transition-colors ${
                   isActive ? "text-primary" : "text-secondary hover:text-primary"
                 }`}
               >
@@ -345,7 +345,7 @@ export default function Profile() {
           {username && (
             <Link
               to={`/u/${username}`}
-              className="ml-auto flex items-center gap-2 self-center rounded-full border-2 border-strong px-3 py-1 text-xs font-bold text-secondary transition-colors hover:border-accent hover:text-accent"
+              className="ml-auto flex shrink-0 items-center gap-2 self-center rounded-full border-2 border-strong px-3 py-1 text-xs font-bold text-secondary transition-colors hover:border-accent hover:text-accent"
             >
               <Globe size={14} /> Ver como visitante
             </Link>
@@ -353,7 +353,7 @@ export default function Profile() {
         </div>
 
         <div className="mt-7 grid gap-8 lg:grid-cols-[272px_1fr]">
-          <aside className="space-y-4 lg:sticky lg:top-4 lg:self-start">
+          <aside className="min-w-0 space-y-4 lg:sticky lg:top-4 lg:self-start">
             {photoURL ? (
               <img
                 src={photoURL}
@@ -366,17 +366,17 @@ export default function Profile() {
               </div>
             )}
 
-            <div>
-              <h1 className="text-2xl font-black leading-tight text-primary">
+            <div className="min-w-0">
+              <h1 className="break-words text-2xl font-black leading-tight text-primary">
                 {displayName}
               </h1>
               {username && (
-                <p className="font-bold text-accent">@{username}</p>
+                <p className="break-words font-bold text-accent">@{username}</p>
               )}
             </div>
 
             {bio && (
-              <p className="whitespace-pre-wrap text-sm text-secondary">{bio}</p>
+              <p className="whitespace-pre-wrap break-words text-sm text-secondary">{bio}</p>
             )}
 
             <button
@@ -437,7 +437,7 @@ export default function Profile() {
                   </span>
                 </h3>
                 <div className="mt-2 flex items-center gap-2 rounded-lg border-2 border-strong px-2.5 py-1.5 text-xs text-secondary">
-                  <span className="flex-1 truncate">
+                  <span className="min-w-0 flex-1 truncate">
                     {publicProfileUrl.replace(/^https?:\/\//, "")}
                   </span>
                   <button
@@ -543,7 +543,7 @@ export default function Profile() {
                         <small className="block text-xs font-semibold text-secondary">
                           Continuar a aprender · só tu vês isto
                         </small>
-                        <b className="font-bold text-primary">
+                        <b className="break-words font-bold text-primary">
                           {firstIncompleteLesson.title}
                         </b>
                       </div>
@@ -588,7 +588,7 @@ export default function Profile() {
                           <Link
                             key={trail.id}
                             to={`/trilhas/${trail.id}`}
-                            className="block rounded-xl border-2 border-strong bg-surface p-4 transition-colors hover:border-accent"
+                            className="block min-w-0 rounded-xl border-2 border-strong bg-surface p-4 transition-colors hover:border-accent"
                           >
                             <div className="flex items-center gap-2.5">
                               <span
@@ -636,7 +636,7 @@ export default function Profile() {
                     {projects.slice(0, 3).map((project) => (
                       <div
                         key={project.id}
-                        className="rounded-xl border-2 border-strong bg-surface p-4"
+                        className="min-w-0 rounded-xl border-2 border-strong bg-surface p-4"
                       >
                         <div className="flex items-center gap-2.5">
                           <span className="truncate font-bold text-accent">
@@ -646,7 +646,7 @@ export default function Profile() {
                             {formatDatePtShort(project.createdAt)}
                           </span>
                         </div>
-                        <p className="my-2 line-clamp-2 text-sm text-secondary">
+                        <p className="my-2 line-clamp-2 break-words text-sm text-secondary">
                           {project.description}
                         </p>
                         {(project.tags || []).length > 0 && (
@@ -780,7 +780,7 @@ export default function Profile() {
                       <Link
                         key={trail.id}
                         to={`/trilhas/${trail.id}`}
-                        className="block rounded-xl border-2 border-strong bg-surface p-4 transition-colors hover:border-accent"
+                        className="block min-w-0 rounded-xl border-2 border-strong bg-surface p-4 transition-colors hover:border-accent"
                       >
                         <div className="flex items-center gap-2.5">
                           <span
@@ -852,7 +852,7 @@ export default function Profile() {
                     {projects.map((project) => (
                       <div
                         key={project.id}
-                        className="rounded-xl border-2 border-strong bg-surface p-4"
+                        className="min-w-0 rounded-xl border-2 border-strong bg-surface p-4"
                       >
                         <div className="flex items-center gap-2.5">
                           <span className="truncate font-bold text-accent">
@@ -862,7 +862,7 @@ export default function Profile() {
                             {formatDatePtShort(project.createdAt)}
                           </span>
                         </div>
-                        <p className="my-2 text-sm text-secondary">
+                        <p className="my-2 break-words text-sm text-secondary">
                           {project.description}
                         </p>
                         {(project.tags || []).length > 0 && (

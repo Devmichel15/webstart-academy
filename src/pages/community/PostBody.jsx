@@ -50,11 +50,11 @@ export function PostBody({
           fina e o radius. Alinha com o padding do card — sem coluna de avatar. */}
       <div className="mt-3 rounded-lg border border-border bg-surface px-4 sm:px-5">
         <div className={`pt-3 ${hasImages ? 'pb-3' : ''}`}>
-          <h2 className="text-base font-black leading-snug text-primary sm:text-lg">
+          <h2 className="break-words text-base font-black leading-snug text-primary sm:text-lg">
             {project.title}
           </h2>
           {project.description && (
-            <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-secondary">
+            <p className="mt-1 whitespace-pre-wrap break-words text-sm leading-relaxed text-secondary">
               {project.description}
             </p>
           )}
