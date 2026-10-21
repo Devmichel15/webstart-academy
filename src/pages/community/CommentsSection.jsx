@@ -85,7 +85,7 @@ export function CommentsSection({ projectId, currentUser, onCountChange }) {
   }
 
   return (
-    <div className="mt-3 border-t border-strong pt-3">
+    <div className="border-t border-border pt-3">
       {currentUser && (
         <form onSubmit={handleSubmit} className="mb-3 flex gap-2">
           <textarea
