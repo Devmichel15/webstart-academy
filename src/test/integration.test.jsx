@@ -26,7 +26,7 @@ const EMAIL = "maria@webstart.test";
 
 let fake;
 let mod;
-let Dashboard;
+let DashboardProbe;
 let AssessmentPage;
 let LearningProfileGuard;
 let FirstStepsGuard;
@@ -38,6 +38,20 @@ const COMBINED_LESSONS = [...allLessons, ...allVideoLessons];
 function LocationProbe() {
   const location = useLocation();
   return <p data-testid="path">{location.pathname}</p>;
+}
+
+function DashboardProbeImpl() {
+  const { name, xp, level, journeyProgress } = mod.useProgress();
+  return (
+    <div>
+      <p>Olá, {name || "Aluno"}!</p>
+      <p>{xp} XP</p>
+      <p>
+        Nível {level} · {xp} XP · {journeyProgress?.completedCount || 0}{" "}
+        trilha(s) concluída(s)
+      </p>
+    </div>
+  );
 }
 
 function Tree({ children, initialEntries = ["/"] }) {
@@ -72,7 +86,7 @@ beforeEach(async () => {
     ],
   });
   mod = await loadAppModules();
-  Dashboard = (await import("../pages/Dashboard.jsx")).default;
+  DashboardProbe = DashboardProbeImpl;
   AssessmentPage = (await import("../pages/AssessmentPage.jsx")).default;
   LearningProfileGuard = (await import("../components/auth/LearningProfileGuard.jsx"))
     .LearningProfileGuard;
@@ -116,7 +130,7 @@ function dashboardRoutes() {
     <Routes>
       <Route element={<LearningProfileGuard />}>
         <Route element={<FirstStepsGuard />}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<DashboardProbe />} />
         </Route>
         <Route path="/avaliacao-perfil" element={<p>avaliacao</p>} />
       </Route>
@@ -222,7 +236,7 @@ describe("FLUXO B — onboarding persiste e não reaparece após logout/login", 
         <Routes>
           <Route element={<LearningProfileGuard />}>
             <Route path="/avaliacao-perfil" element={<AssessmentPage />} />
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<DashboardProbe />} />
           </Route>
         </Routes>
       </Tree>,
@@ -273,7 +287,7 @@ describe("FLUXO B — onboarding persiste e não reaparece após logout/login", 
         <Routes>
           <Route element={<LearningProfileGuard />}>
             <Route path="/avaliacao-perfil" element={<p>avaliacao</p>} />
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<DashboardProbe />} />
           </Route>
         </Routes>
       </Tree>,

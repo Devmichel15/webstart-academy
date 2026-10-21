@@ -78,7 +78,7 @@ export default function PrimeirosPassos() {
             onClick={handleSkip}
             className="text-sm font-bold text-muted hover:text-secondary hover:underline"
           >
-            Ir para o Dashboard
+            Ir para o Feed
           </button>
         </div>
       </div>

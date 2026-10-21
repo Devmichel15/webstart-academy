@@ -5,9 +5,7 @@ import {
   BookOpen,
   Bot,
   Download,
-  GraduationCap,
-  LayoutDashboard,
-  Rocket,
+  Globe,
   Shield,
   Trophy,
   Users,
@@ -16,13 +14,11 @@ import {
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
 
 const baseNavItems = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/", label: "Feed", icon: Globe },
   { to: "/trilhas", label: "Trilhas", icon: BookOpen },
   { to: "/laboratorio", label: "Laboratório", icon: Beaker },
   { to: "/chat", label: "Tutor IA", icon: Bot },
-  { to: "/materiais", label: "Materiais", icon: GraduationCap },
   { to: "/perfil", label: "Perfil", icon: Award },
-  { to: "/feed", label: "Feed", icon: Rocket },
   { to: "/ranking", label: "Classificação", icon: Trophy },
   { to: "/instalar-app", label: "Instalar app", icon: Download },
 ];

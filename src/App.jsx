@@ -11,7 +11,6 @@ import { AdminRoute } from "./components/auth/AdminRoute.jsx";
 import { ToastContainer } from "./components/ui/Toast.jsx";
 import { HomeGate } from "./pages/PublicHome.jsx";
 import { AppLayout } from "./components/layout/AppLayout";
-import Dashboard from "./pages/Dashboard";
 import PrimeirosPassos from "./pages/PrimeirosPassos";
 import AssessmentPage from "./pages/AssessmentPage";
 import Journey from "./pages/Journey";
@@ -24,7 +23,6 @@ import ModuleMiniProject from "./pages/ModuleMiniProject";
 import Lesson from "./pages/Lesson";
 import VideoLesson from "./pages/VideoLesson";
 import Lab from "./pages/Lab";
-import Materials from "./pages/Materials";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import AIChat from "./pages/AIChat";
@@ -90,8 +88,8 @@ export default function App() {
                         <Route path="instalar-app" element={<InstallApp />} />
                         <Route path="primeiros-passos" element={<PrimeirosPassos />} />
                         <Route path="ranking" element={<Ranking />} />
-                        <Route path="feed" element={<CommunityPage />} />
-                        <Route index element={<Dashboard />} />
+                      <Route path="feed" element={<Navigate to="/" replace />} />
+                      <Route index element={<CommunityPage />} />
                         <Route element={<FirstStepsGuard />}>
                           <Route path="trilhas" element={<Journey />} />
                           <Route path="trilhas/:courseId" element={<CourseDetail />} />
@@ -102,9 +100,9 @@ export default function App() {
                           <Route path="trilhas/:courseId/modulo/:moduleId/mini-projeto" element={<ModuleMiniProject />} />
                           <Route path="aula/:lessonId" element={<Lesson />} />
                           <Route path="video-aula/:lessonId" element={<VideoLesson />} />
-                          <Route path="laboratorio" element={<Lab />} />
-                          <Route path="materiais" element={<Materials />} />
-                          <Route path="perfil" element={<Profile />} />
+                      <Route path="laboratorio" element={<Lab />} />
+                      <Route path="materiais" element={<Navigate to="/" replace />} />
+                      <Route path="perfil" element={<Profile />} />
                           <Route path="editar-perfil" element={<EditProfile />} />
                           <Route path="chat" element={<AIChat />} />
                         </Route>
