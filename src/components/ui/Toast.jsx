@@ -25,7 +25,7 @@ export function ToastContainer() {
             key={toast.id}
             type="button"
             onClick={() => removeToast(toast.id)}
-            className={`pointer-events-auto flex items-start gap-3 rounded-xl border-3 p-4 text-left shadow-[4px_4px_0_0_#064e3b] ${styles[toast.type] || styles.info}`}
+            className={`pointer-events-auto flex items-start gap-3 rounded-hard border-2 p-4 text-left shadow-hard ${styles[toast.type] || styles.info}`}
           >
             <Icon size={18} className="mt-0.5 shrink-0" />
             <span className="text-sm font-semibold">{toast.message}</span>

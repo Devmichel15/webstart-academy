@@ -31,7 +31,7 @@ export function ConfirmDialog({
       aria-modal="true"
     >
       <div
-        className="w-full max-w-sm rounded-xl border-3 border-strong bg-surface p-6 shadow-lg"
+        className="w-full max-w-sm rounded-hard border-2 border-strong bg-surface p-6 shadow-hard"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="mb-2 text-lg font-black text-primary">{title}</h3>
@@ -41,7 +41,7 @@ export function ConfirmDialog({
             type="button"
             disabled={loading}
             onClick={onCancel}
-            className="rounded-lg border-2 border-strong px-4 py-2 font-bold text-primary hover:bg-surface-hover disabled:opacity-50"
+            className="brutal-btn brutal-btn-hard rounded-lg px-4 py-2 font-bold text-primary hover:bg-surface-hover disabled:opacity-50"
           >
             {cancelLabel}
           </button>
@@ -49,8 +49,8 @@ export function ConfirmDialog({
             type="button"
             disabled={loading}
             onClick={onConfirm}
-            className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50 ${
-              danger ? 'bg-red-500 hover:bg-red-600' : 'bg-brand-500 hover:bg-brand-600'
+            className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-bold text-white shadow-hard-sm disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none ${
+              danger ? 'bg-red-500 hover:bg-red-600' : 'brutal-btn-brand bg-brand-500 hover:bg-brand-600'
             }`}
           >
             {loading && <Loader2 size={16} className="animate-spin" />}

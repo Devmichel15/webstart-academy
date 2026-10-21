@@ -22,6 +22,10 @@
   --accent: #10b981;
   --accent-hover: #059669;
   --accent-soft: #ecfdf5;
+
+  /* Sombras duras (hard shadow, blur 0) — ver @theme */
+  --shadow-color: #0e0e12;
+  --shadow-brand-color: #065f46;
 }
 
 /* ══════════════════════════════════════════════
@@ -44,6 +48,9 @@
   --accent: #34d399;
   --accent-hover: #6ee7b7;
   --accent-soft: #1a2e26;
+
+  --shadow-color: #0a0a0e;
+  --shadow-brand-color: #0b8f65;
 }
 
 /* ══════════════════════════════════════════════
@@ -96,16 +103,21 @@
   --font-mono:
     "Cascadia Code", "Fira Code", "JetBrains Mono", "Consolas", monospace;
 
-  --shadow-brutal: 4px 4px 0 0 #064e3b;
-  --shadow-brutal-sm: 3px 3px 0 0 #064e3b;
-  --shadow-brutal-lg: 6px 6px 0 0 #064e3b;
-  --border-width-3: 3px;
-}
+  /* Sombras duras — blur sempre 0, só direção baixo-direita.
+     shadow-hard: painéis/cards/modais | shadow-hard-sm: botões/itens pequenos
+     shadow-brand: botão primário e item ativo da sidebar */
+  --shadow-hard: 5px 5px 0 0 var(--shadow-color);
+  --shadow-hard-sm: 3px 3px 0 0 var(--shadow-color);
+  --shadow-brand: 3px 3px 0 0 var(--shadow-brand-color);
+  --shadow-brand-pressed: 1px 1px 0 0 var(--shadow-brand-color);
+  --radius-hard: 14px;
 
-.dark {
-  --shadow-brutal: 4px 4px 0 0 #3c3c44;
-  --shadow-brutal-sm: 3px 3px 0 0 #3c3c44;
-  --shadow-brutal-lg: 6px 6px 0 0 #3c3c44;
+  /* Aliados legados — redirecionados para os tokens duros acima.
+     A landing (.ws-landing) sobrescreve estes valores com a paleta própria. */
+  --shadow-brutal: 5px 5px 0 0 var(--shadow-color);
+  --shadow-brutal-sm: 3px 3px 0 0 var(--shadow-color);
+  --shadow-brutal-lg: 5px 5px 0 0 var(--shadow-color);
+  --border-width-3: 3px;
 }
 
 * {
@@ -177,30 +189,71 @@ body {
   color: #ce9178;
 }
 
-/* Brutalist Cards */
+/* Brutalist Cards — painel principal: borda 2px forte + radius 14px + sombra dura */
 .brutal-card {
-  border: 3px solid var(--border-strong);
-  box-shadow: var(--shadow-brutal);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-hard);
+  box-shadow: var(--shadow-hard);
   background: var(--bg-surface);
 }
 
-/* Brutalist Buttons */
-.brutal-btn {
-  border: 3px solid var(--border-strong);
-  box-shadow: var(--shadow-brutal-sm);
+/* Brutalist Buttons — base (moldura) + modificadores de sombra dura.
+   .brutal-btn-hard  → botão secundário: sombra 3px e hover só na cor da borda
+   .brutal-btn-brand → botão primário: sombra da marca e press de 1px
+   Ambos funcionam com ou sem .brutal-btn (moldura). */
+.brutal-btn,
+.brutal-btn-hard,
+.brutal-btn-brand {
   transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+    transform 0.1s ease,
+    box-shadow 0.1s ease,
+    background-color 0.1s ease,
+    border-color 0.1s ease,
+    filter 0.1s ease;
 }
 
-.brutal-btn:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: var(--shadow-brutal);
+.brutal-btn {
+  border: 2px solid var(--border-strong);
 }
 
-.brutal-btn:active {
+.brutal-btn-hard {
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.brutal-btn-hard:hover {
+  border-color: var(--accent);
+}
+
+.brutal-btn-brand {
+  box-shadow: var(--shadow-brand);
+}
+
+.brutal-btn:active,
+.brutal-btn-hard:active,
+.brutal-btn-brand:active {
   transform: translate(2px, 2px);
+}
+
+.brutal-btn-hard:active {
   box-shadow: none;
+}
+
+.brutal-btn-brand:active {
+  box-shadow: var(--shadow-brand-pressed);
+}
+
+.brutal-btn:disabled,
+.brutal-btn-hard:disabled,
+.brutal-btn-brand:disabled {
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brutal-btn:active,
+  .brutal-btn-hard:active,
+  .brutal-btn-brand:active {
+    transform: none;
+  }
 }
 
 /* Background helpers */
@@ -1212,6 +1265,8 @@ input[type="checkbox"] {
   accent-color: var(--accent);
 }
 
+/* A sombra do elemento é definida pelo token (shadow-hard);
+   o hover só levanta, sem aumentar a sombra. */
 .hover-lift {
   transition:
     transform 0.15s ease,
@@ -1220,11 +1275,6 @@ input[type="checkbox"] {
 
 .hover-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-}
-
-.dark .hover-lift:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 /* ══════════════════════════════════════════════
@@ -1241,28 +1291,8 @@ input[type="checkbox"] {
   transform: translateY(-3px);
 }
 
-.trail-badge-card:hover {
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.12),
-    4px 4px 0 0 var(--badge-color, #10b981) !important;
-}
-
-.dark .trail-badge-card:hover {
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.4),
-    4px 4px 0 0 var(--badge-color, #34d399) !important;
-}
-
 .trail-badge-icon-area {
   border-radius: 1rem 1rem 0 0;
-}
-
-.trail-badge-card .devicon {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
-}
-
-.dark .trail-badge-card .devicon {
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
 
 /* ══════════════════════════════════════════════
@@ -1296,6 +1326,11 @@ body.drawer-open {
   --accent: #34d399;
   --accent-hover: #6ee7b7;
   --accent-soft: #1a2e26;
+
+  /* A landing é dark-first: força os tokens de sombra do tema escuro,
+     mesmo com o tema claro ativo no app. */
+  --shadow-color: #0a0a0e;
+  --shadow-brand-color: #0b8f65;
 
   --color-canvas: var(--bg-canvas);
   --color-surface: var(--bg-surface);
