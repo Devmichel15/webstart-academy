@@ -17,15 +17,34 @@ vi.mock("../hooks/useProgress.js", () => ({
     username: "pessoa",
     createdAt: "2026-01-01T00:00:00.000Z",
     loading: false,
+    xp: 0,
+    level: 1,
+    streak: 0,
+    progressPercent: 0,
+    completedCount: 0,
+    totalLessons: 0,
+    studyHours: 0,
+    journeyProgress: { completedCount: 0, totalCount: 0 },
+    getCourseProgress: () => 0,
+    getTrailStatus: () => "available",
+    trails: [],
+    isLessonCompleted: () => false,
   }),
 }));
 
 vi.mock("../services/communityService.js", () => ({
   getUserProjects: mocks.getUserProjects,
+  createProject: vi.fn(),
+  updateProject: vi.fn(),
+  deleteProject: vi.fn(),
 }));
 
 vi.mock("../services/progressService.js", () => ({
   getMyActivityByDay: mocks.getMyActivityByDay,
+}));
+
+vi.mock("../contexts/ToastContext.jsx", () => ({
+  useToast: () => ({ showSuccess: vi.fn(), showError: vi.fn() }),
 }));
 
 vi.mock("../components/seo/SEO.jsx", () => ({ SEO: () => null }));
@@ -35,13 +54,17 @@ vi.mock("../components/layout/Header.jsx", () => ({
 vi.mock("../components/ui/Skeleton.jsx", () => ({
   ProfileSkeleton: () => <div>Loading profile</div>,
 }));
-vi.mock("../components/profile/ProfileView.jsx", () => ({
-  ProfileView: ({ projects, projectsError }) => (
-    <section>
-      {projectsError && <p role="alert">{projectsError}</p>}
-      {projects.map((project) => <p key={project.id}>{project.title}</p>)}
-    </section>
-  ),
+vi.mock("../components/assessment/AssessmentBanner.jsx", () => ({
+  AssessmentBanner: () => null,
+}));
+vi.mock("../components/profile/ProfileHeatmap.jsx", () => ({
+  ProfileHeatmap: () => null,
+}));
+vi.mock("../pages/community/ProjectFormModal.jsx", () => ({
+  ProjectFormModal: () => null,
+}));
+vi.mock("../components/ui/ConfirmDialog.jsx", () => ({
+  ConfirmDialog: () => null,
 }));
 
 import Profile from "../pages/Profile.jsx";

@@ -129,6 +129,54 @@ export function buildSixMonthActivityGraph(data = [], now = new Date()) {
   return { weeks, monthLabels, startDay: startKey, todayKey };
 }
 
+export function buildMonthActivityGraph(data = [], year, month) {
+  const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  const offset = new Date(Date.UTC(year, month, 1)).getUTCDay();
+  const todayKey = getLuandaDayKey(new Date());
+  const activityCounts = new Map();
+
+  for (const record of data || []) {
+    const dayKey = getLuandaDayKey(record?.day);
+    if (!dayKey) continue;
+    const [y, m] = dayKey.split("-").map(Number);
+    if (y !== year || m !== month + 1) continue;
+    activityCounts.set(
+      dayKey,
+      (activityCounts.get(dayKey) || 0) + (Number(record.count) || 0),
+    );
+  }
+
+  const cells = Array.from({ length: offset }, () => null);
+  let total = 0;
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const dayKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const count = activityCounts.get(dayKey) || 0;
+    total += count;
+    cells.push({
+      dayKey,
+      day,
+      count,
+      isToday: dayKey === todayKey,
+      isFuture: Boolean(todayKey) && dayKey > todayKey,
+    });
+  }
+
+  const weeks = [];
+  for (let index = 0; index < cells.length; index += 7) {
+    weeks.push(cells.slice(index, index + 7));
+  }
+
+  return {
+    weeks,
+    total,
+    label: new Intl.DateTimeFormat("pt-PT", {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(new Date(Date.UTC(year, month, 1))),
+  };
+}
+
 export function getActivityTotalForSixMonths(data = [], now = new Date()) {
   const todayKey = getLuandaDayKey(now);
   if (!todayKey) return 0;

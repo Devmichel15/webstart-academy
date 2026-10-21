@@ -11,7 +11,7 @@ import {
   Twitter,
   Copy,
 } from "lucide-react";
-import { ActivityHeatmap } from "./ActivityHeatmap.jsx";
+import { ProfileHeatmap } from "./ProfileHeatmap.jsx";
 import { copyToClipboard } from "../../utils/clipboard.js";
 import { useToast } from "../../contexts/ToastContext.jsx";
 import { formatDatePt as formatPostDate } from "../../utils/formatDate.js";
@@ -152,7 +152,7 @@ export function ProfileView({
       </div>
 
       <div className="rounded-xl border-2 border-strong bg-surface p-4 sm:p-6">
-        <ActivityHeatmap data={activity} createdAt={createdAt} />
+        <ProfileHeatmap data={activity} createdAt={createdAt} />
       </div>
 
       <div className="rounded-xl border-2 border-strong bg-surface p-6">

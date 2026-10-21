@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildMonthActivityGraph,
   buildSixMonthActivityGraph,
   formatActivityDay,
   formatActivityMonth,
@@ -84,3 +85,42 @@ describe("six-month activity graph", () => {
     ).toBe(5);
   });
 });
+
+describe("month activity graph", () => {
+  it("lays out a single month Sunday-first and counts its activity", () => {
+    const { weeks, total, label } = buildMonthActivityGraph(
+      [
+        { day: "2026-10-02", count: 3 },
+        { day: "2026-10-15", count: 1 },
+        { day: "2026-09-30", count: 5 },
+      ],
+      2026,
+      9,
+    );
+
+    const cells = weeks.flat().filter(Boolean);
+    expect(cells).toHaveLength(31);
+    expect(octoberTwo(cells)).toMatchObject({ day: 2, count: 3 });
+    expect(cells[0].day).toBe(1);
+    expect(total).toBe(4);
+    expect(label).toBe("outubro de 2026");
+  });
+
+  it("pads the first week and never drops trailing days", () => {
+    const { weeks } = buildMonthActivityGraph([], 2026, 5);
+    const cells = weeks.flat();
+    expect(cells).toHaveLength(31);
+    expect(cells.filter(Boolean)).toHaveLength(30);
+    expect(cells[0]).toBeNull();
+  });
+
+  it("marks future days relative to today", () => {
+    const { weeks } = buildMonthActivityGraph([], 2026, 9);
+    const cells = weeks.flat().filter(Boolean);
+    expect(cells.some((cell) => cell.isFuture)).toBe(true);
+  });
+});
+
+function octoberTwo(cells) {
+  return cells.find((cell) => cell.dayKey === "2026-10-02");
+}
