@@ -9,6 +9,7 @@ const officialVideoIds = [
   'TiRMcV0yuMk',
   'XjJK7Gc_TDQ',
   'q7X3F-O_ccA',
+  '_XIuODDXM8o',
 ]
 
 describe('React video lessons', () => {
@@ -28,6 +29,38 @@ describe('React video lessons', () => {
 
     expect(videoIds).toEqual(officialVideoIds)
     expect(new Set(videoIds).size).toBe(videoIds.length)
+  })
+
+  it('registers useEffect na Prática as Aula 05, immediately after Aula 04', () => {
+    const module = reactModules.find((item) => item.id === 'react-mod-interatividade')
+    const aula05 = reactLessons.find((lesson) => lesson.id === 'react-vid-5')
+
+    expect(aula05).toMatchObject({
+      title: 'useEffect na Prática',
+      courseId: 'react',
+      moduleId: 'react-mod-interatividade',
+      youtubeUrl: 'https://www.youtube.com/watch?v=_XIuODDXM8o',
+      embedUrl: 'https://www.youtube.com/embed/_XIuODDXM8o',
+      order: 3,
+    })
+    expect(module.lessons.slice(-2)).toEqual(['react-vid-4', 'react-vid-5'])
+  })
+
+  it('keeps the final weather project pending after Aula 05', () => {
+    const trail = getTrailById('react')
+    const finalProject = trail.completion?.finalProject
+
+    expect(finalProject).toMatchObject({
+      title: 'Aplicação de Previsão Meteorológica',
+      status: 'pending',
+    })
+    expect(finalProject.stack).toEqual([
+      'React',
+      'Vite',
+      'JavaScript',
+      'Tailwind CSS',
+      'OpenWeather API',
+    ])
   })
 
   it('references every video lesson exactly once across the modules', () => {

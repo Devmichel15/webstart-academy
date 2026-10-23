@@ -100,4 +100,24 @@ export const reactLessons = [
     ],
     materials: ['Node.js instalado', 'VS Code', 'Navegador web'],
   }),
+  createVideoLesson({
+    id: 'react-vid-5',
+    courseId: 'react',
+    moduleId: 'react-mod-interatividade',
+    title: 'useEffect na Prática',
+    description:
+      'Aprenda a usar o hook useEffect para executar efeitos colaterais em componentes React, como sincronizar dados e reagir a alterações de estado.' +
+      REACT_CREDIT,
+    youtubeUrl: 'https://www.youtube.com/watch?v=_XIuODDXM8o',
+    embedUrl: 'https://www.youtube.com/embed/_XIuODDXM8o',
+    duration: '20:29',
+    order: 3,
+    objectives: [
+      'Entender o conceito de efeitos colaterais em React',
+      'Usar o hook useEffect para executar efeitos',
+      'Controlar quando um efeito é executado',
+      'Aplicar useEffect em componentes na prática',
+    ],
+    materials: ['Node.js instalado', 'VS Code', 'Navegador web'],
+  }),
 ]

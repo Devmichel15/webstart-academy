@@ -27,9 +27,9 @@ export const reactModules = [
     courseId: 'react',
     title: 'Interatividade com Hooks',
     description:
-      'Torne as interfaces dinâmicas com estado (useState) e renderização condicional em JSX.',
+      'Torne as interfaces dinâmicas com estado (useState), renderização condicional e efeitos colaterais com useEffect em JSX.',
     order: 2,
-    lessons: ['react-vid-3', 'react-vid-4'],
+    lessons: ['react-vid-3', 'react-vid-4', 'react-vid-5'],
     quiz: null,
     lab: null,
     miniProject: null,

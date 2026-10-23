@@ -300,7 +300,7 @@ export const trails = [
     slug: 'react',
     title: 'ReactJS para Iniciantes',
     description:
-      'Formação prática para aprender ReactJS desde o zero: configuração do ambiente com Node.js, npm e Vite, JSX, componentização, props, estado com useState e renderização condicional, com explicações aprofundadas, exemplos de código e projetos progressivos.',
+      'Formação prática para aprender ReactJS desde o zero: configuração do ambiente com Node.js, npm e Vite, JSX, componentização, props, estado com useState, renderização condicional e efeitos colaterais com useEffect, com explicações aprofundadas, exemplos de código e projetos progressivos.',
     instructor: 'Michel César',
     origin: 'webstart',
     producer: 'WebStart',
@@ -315,6 +315,37 @@ export const trails = [
     xp: 800,
     level: 2,
     cover: null,
+    completion: {
+      finalProject: createFinalProject({
+        title: 'Aplicação de Previsão Meteorológica',
+        description:
+          'Desenvolva uma aplicação React que permita pesquisar uma cidade e consultar os dados meteorológicos atuais através da API do OpenWeather.',
+        context:
+          'Projeto final da trilha ReactJS para Iniciantes. A aplicação será desenvolvida com React, Vite, JavaScript e Tailwind CSS, consumindo a API atual do OpenWeather.',
+        requirements: [
+          'Pesquisar uma cidade',
+          'Mostrar a temperatura em Celsius',
+          'Mostrar a sensação térmica',
+          'Mostrar a descrição do estado do tempo',
+          'Mostrar a humidade',
+          'Mostrar o vento',
+          'Integrar a API atual do OpenWeather',
+          'Construir a interface com Tailwind CSS',
+        ],
+        deliverables: ['Aplicação React funcional', 'Código-fonte do projeto'],
+        rubric: [
+          'Pesquisa de cidades funcional',
+          'Dados meteorológicos corretos e atualizados',
+          'Interface responsiva e clara',
+          'Tratamento de estados de carregamento e erro',
+          'Código organizado em componentes',
+        ],
+        stack: ['React', 'Vite', 'JavaScript', 'Tailwind CSS', 'OpenWeather API'],
+        status: 'pending',
+      }),
+      finalEvaluation: null,
+      nextSteps: null,
+    },
   }),
   createTrail({
     id: 'backend',

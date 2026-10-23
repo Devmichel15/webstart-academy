@@ -59,7 +59,14 @@ export default function CourseCompletion() {
               </div>
               <h2 className="text-lg font-black">Projeto Final</h2>
             </div>
-            <h3 className="mb-2 font-bold">{completion.finalProject.title}</h3>
+            <h3 className="mb-2 flex flex-wrap items-center gap-2 font-bold">
+              {completion.finalProject.title}
+              {completion.finalProject.status === 'pending' && (
+                <span className="rounded-full border-2 border-amber-500 px-2 py-0.5 text-[10px] font-black uppercase text-amber-700 dark:text-amber-300">
+                  Em preparação
+                </span>
+              )}
+            </h3>
             <p className="mb-3 text-sm text-brand-700 dark:text-brand-300">{completion.finalProject.description}</p>
             {completion.finalProject.requirements && (
               <ul className="mb-4 space-y-1">

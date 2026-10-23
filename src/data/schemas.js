@@ -190,8 +190,10 @@ export function createFinalProject({
   requirements = [],
   deliverables = [],
   rubric = [],
+  stack = [],
+  status = 'available',
 }) {
-  return { title, description, context, requirements, deliverables, rubric }
+  return { title, description, context, requirements, deliverables, rubric, stack, status }
 }
 
 export function createFinalEvaluation({ questions = [] }) {
