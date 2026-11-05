@@ -5,6 +5,7 @@ import { AuthLayout } from '../components/auth/AuthLayout.jsx'
 import { Button } from '../components/ui/Button.jsx'
 import { loginWithGoogle, registerWithEmail } from '../services/authService.js'
 import { useToast } from '../contexts/ToastContext.jsx'
+import { markRegistrationPending } from '../utils/installInvite.js'
 import { SEO } from '../components/seo/SEO'
 import { toUserMessage } from '../utils/errors.js'
 
@@ -22,7 +23,10 @@ export default function Register() {
     setLoading(true)
 
     try {
-      await registerWithEmail({ name, email, password })
+      const user = await registerWithEmail({ name, email, password })
+      // Marca a conta como "acabada de criar" para que a experiência de
+      // boas-vindas (convite a instalar a app) seja oferecida uma única vez.
+      markRegistrationPending(user?.id || null)
       showSuccess('Conta criada com sucesso!')
       navigate('/avaliacao-perfil', { replace: true })
     } catch (error) {
@@ -36,6 +40,10 @@ export default function Register() {
     setGoogleLoading(true)
 
     try {
+      // O id da conta só se sabe depois do redireccionamento do Google, por
+      // isso o convite fica associado a "qualquer conta nova" — a data de
+      // criação é o que separa uma conta nova de uma conta que já existia.
+      markRegistrationPending(null)
       await loginWithGoogle()
       showSuccess('Conta criada com Google!')
       navigate('/avaliacao-perfil', { replace: true })

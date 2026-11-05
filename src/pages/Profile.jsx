@@ -24,6 +24,8 @@ import { ConfirmDialog } from "../components/ui/ConfirmDialog.jsx";
 import { ProfileSkeleton } from "../components/ui/Skeleton.jsx";
 import { AssessmentBanner } from "../components/assessment/AssessmentBanner";
 import { ProfileHeatmap } from "../components/profile/ProfileHeatmap.jsx";
+import { NotificationSettings } from "../components/notifications/NotificationSettings.jsx";
+import { NotificationProvider } from "../contexts/NotificationContext.jsx";
 import { ProjectFormModal } from "./community/ProjectFormModal.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { useProgress } from "../hooks/useProgress.js";
@@ -54,6 +56,7 @@ const TABS = [
   { id: "overview", label: "Visão geral" },
   { id: "trails", label: "Trilhas" },
   { id: "projects", label: "Projetos" },
+  { id: "notifications", label: "Notificações" },
 ];
 
 function trailColor(trailId) {
@@ -924,6 +927,17 @@ export default function Profile() {
                     ))}
                   </div>
                 )}
+              </section>
+            )}
+
+            {activeTab === "notifications" && (
+              <section>
+                <h2 className="mb-3 text-base font-bold text-primary">
+                  Notificações
+                </h2>
+                <NotificationProvider>
+                  <NotificationSettings />
+                </NotificationProvider>
               </section>
             )}
           </main>

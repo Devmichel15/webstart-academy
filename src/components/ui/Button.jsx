@@ -15,10 +15,12 @@ export function Button({
   variant = 'primary',
   size = 'md',
   className = '',
+  ref,
   ...props
 }) {
   return (
     <button
+      ref={ref}
       className={`brutal-btn inline-flex items-center justify-center gap-2 rounded-lg font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >

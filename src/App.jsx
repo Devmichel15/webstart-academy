@@ -4,6 +4,7 @@ import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { ToastProvider } from "./contexts/ToastContext.jsx";
 import { ProgressProvider } from "./contexts/ProgressContext.jsx";
 import { InstallProvider } from "./contexts/InstallContext.jsx";
+import { NotificationProvider } from "./contexts/NotificationContext.jsx";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute.jsx";
 import { FirstStepsGuard } from "./components/auth/FirstStepsGuard.jsx";
 import { LearningProfileGuard } from "./components/auth/LearningProfileGuard.jsx";
@@ -37,6 +38,8 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminReports from "./pages/admin/AdminReports";
 import { InstallPrompt } from "./components/pwa/InstallPrompt.jsx";
+import { InstallWelcomeModal } from "./components/pwa/InstallWelcomeModal.jsx";
+import { PushOnboarding } from "./components/notifications/PushOnboarding.jsx";
 import InstallApp from "./pages/InstallApp.jsx";
 import Ranking from "./pages/Ranking.jsx";
 import CommunityPage from "./pages/community/CommunityPage.jsx";
@@ -49,10 +52,13 @@ export default function App() {
         <AuthProvider>
           <ProgressProvider>
             <InstallProvider>
-              <BrowserRouter>
-                <ToastContainer />
-                <InstallPrompt />
-                <Routes>
+              <NotificationProvider>
+                <BrowserRouter>
+                  <ToastContainer />
+                  <InstallPrompt />
+                  <InstallWelcomeModal />
+                  <PushOnboarding />
+                  <Routes>
                   <Route path="/onboarding" element={<Onboarding />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/registro" element={<Register />} />
@@ -126,7 +132,8 @@ export default function App() {
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </BrowserRouter>
-            </InstallProvider>
+            </NotificationProvider>
+          </InstallProvider>
           </ProgressProvider>
         </AuthProvider>
       </ToastProvider>

@@ -68,9 +68,36 @@ export const DEFAULT_TABLES = () => ({
   project_likes: [],
   project_comments: [],
   post_reports: [],
+  push_subscriptions: [],
+  push_preferences: [],
 });
 
-// Tables whose `user_id` is a FK to profiles.id (migrations 001 + 007).
+// Defaults espelham a migration 022 (public.get_push_preferences).
+const DEFAULT_PUSH_PREFERENCES = {
+  push_enabled: false,
+  learning_enabled: true,
+  streak_enabled: true,
+  community_enabled: true,
+  comments_enabled: true,
+  reminders_enabled: false,
+  reminder_hour: 19,
+  reminder_days: [1, 2, 3, 4, 5],
+  last_test_sent_at: null,
+};
+
+const PUSH_PREFERENCE_KEYS = new Set([
+  "push_enabled",
+  "learning_enabled",
+  "streak_enabled",
+  "community_enabled",
+  "comments_enabled",
+  "reminders_enabled",
+  "reminder_hour",
+  "reminder_days",
+]);
+
+
+// Tables whose `user_id` is a FK to profiles.id (migrations 001 + 007 + 022).
 const PROFILE_OWNED_TABLES = new Set([
   "learning_profiles",
   "email_preferences",
@@ -80,6 +107,8 @@ const PROFILE_OWNED_TABLES = new Set([
   "user_achievements",
   "xp_transactions",
   "identity_links",
+  "push_subscriptions",
+  "push_preferences",
 ]);
 
 // ─── Storage (mirror of supabase/migrations/021_post_images.sql) ──────────
@@ -749,6 +778,27 @@ export class FakeSupabase {
     this.auth = new FakeAuth(this);
     this.storage = new FakeStorage();
     this.lastOAuthProvider = null;
+    // Edge Functions (supabase.functions.invoke): resposta configurável por
+    // teste, com o mesmo formato { data, error } do supabase-js.
+    const client = this;
+    this.functions = {
+      calls: [],
+      responses: {},
+      errors: {},
+      async invoke(name, options = {}) {
+        client.functions.calls.push({ name, body: clone(options.body) });
+        if (client.functions.errors[name]) {
+          const error = client.functions.errors[name];
+          delete client.functions.errors[name];
+          return { data: null, error };
+        }
+        const response = client.functions.responses[name];
+        if (typeof response === "function") {
+          return { data: clone(await response(options.body)), error: null };
+        }
+        return { data: clone(response ?? { ok: true }), error: null };
+      },
+    };
   }
 
   currentUserId() {
@@ -783,10 +833,131 @@ export class FakeSupabase {
     if (fnName === "update_own_profile") {
       return Promise.resolve(this.updateOwnProfile(args));
     }
+    if (fnName === "get_push_preferences") {
+      return Promise.resolve(this.getPushPreferences());
+    }
+    if (fnName === "upsert_push_preferences") {
+      return Promise.resolve(this.upsertPushPreferences(args));
+    }
+    if (fnName === "list_push_devices") {
+      return Promise.resolve(this.listPushDevices());
+    }
     if (fnName !== "link_legacy_profile") {
       return Promise.resolve({ data: null, error: postgrestError(`unknown function ${fnName}`, "42883") });
     }
     return Promise.resolve({ data: this.linkLegacyProfile(args), error: null });
+  }
+
+  /**
+   * profiles.id real do utilizador (perfis migrados têm id != auth.uid(),
+   * ver supabase/migrations/015).
+   */
+  resolveProfileId(uid) {
+    const row = this.db.profiles.find(
+      (p) => p.id === uid || p.auth_user_id === uid,
+    );
+    return row?.id ?? null;
+  }
+
+  /** Mirror of public.get_push_preferences (migration 022). */
+  getPushPreferences() {
+    const uid = this.currentUserId();
+    const fail = (message, code) => ({ data: null, error: postgrestError(message, code) });
+    if (!uid) return fail("Sessão inválida.", "42501");
+
+    const profileId = this.resolveProfileId(uid);
+    if (!profileId) return fail("Sessão inválida.", "42501");
+
+    const row = this.db.push_preferences.find((r) => r.user_id === profileId);
+    if (!row) {
+      return { data: clone(DEFAULT_PUSH_PREFERENCES), error: null };
+    }
+
+    const data = clone(DEFAULT_PUSH_PREFERENCES);
+    for (const key of Object.keys(DEFAULT_PUSH_PREFERENCES)) {
+      if (row[key] !== undefined) data[key] = row[key];
+    }
+    return { data, error: null };
+  }
+
+  /** Mirror of public.upsert_push_preferences (migration 022). */
+  upsertPushPreferences({ p_patch: patch } = {}) {
+    const uid = this.currentUserId();
+    const fail = (message, code) => ({ data: null, error: postgrestError(message, code) });
+    if (!uid) return fail("Sessão inválida.", "42501");
+
+    const profileId = this.resolveProfileId(uid);
+    if (!profileId) return fail("Sessão inválida.", "42501");
+
+    if (!patch || typeof patch !== "object" || Array.isArray(patch)) {
+      return fail("Dados inválidos.", "22023");
+    }
+
+    for (const key of Object.keys(patch)) {
+      if (!PUSH_PREFERENCE_KEYS.has(key)) {
+        return fail("Campo não editável pelo utilizador.", "42501");
+      }
+    }
+
+    for (const key of [
+      "push_enabled",
+      "learning_enabled",
+      "streak_enabled",
+      "community_enabled",
+      "comments_enabled",
+      "reminders_enabled",
+    ]) {
+      if (key in patch && typeof patch[key] !== "boolean") {
+        return fail(`Valor inválido para ${key}.`, "22023");
+      }
+    }
+    if ("reminder_hour" in patch) {
+      const hour = patch.reminder_hour;
+      if (typeof hour !== "number" || hour < 0 || hour > 23) {
+        return fail("A hora do lembrete tem de estar entre 0 e 23.", "22023");
+      }
+    }
+    if ("reminder_days" in patch) {
+      const days = patch.reminder_days;
+      if (!Array.isArray(days)) {
+        return fail("Valor inválido para os dias do lembrete.", "22023");
+      }
+      if (days.some((day) => !Number.isInteger(day) || day < 0 || day > 6)) {
+        return fail("Os dias do lembrete têm de estar entre 0 e 6.", "22023");
+      }
+    }
+
+    const rows = this.db.push_preferences;
+    const index = rows.findIndex((row) => row.user_id === profileId);
+    const next = { ...(index >= 0 ? rows[index] : {}), ...patch, user_id: profileId };
+    if (index >= 0) rows[index] = next;
+    else rows.push(next);
+
+    return this.getPushPreferences();
+  }
+
+  /** Mirror of public.list_push_devices (migration 022): só metadados. */
+  listPushDevices() {
+    const uid = this.currentUserId();
+    const fail = (message, code) => ({ data: null, error: postgrestError(message, code) });
+    if (!uid) return fail("Sessão inválida.", "42501");
+
+    const profileId = this.resolveProfileId(uid);
+    if (!profileId) return fail("Sessão inválida.", "42501");
+
+    const devices = this.db.push_subscriptions
+      .filter((row) => row.user_id === profileId)
+      .map((row) => ({
+        id: row.id,
+        platform: row.platform,
+        user_agent: row.user_agent,
+        created_at: row.created_at,
+        last_success_at: row.last_success_at,
+        last_failure_at: row.last_failure_at,
+        failure_count: row.failure_count,
+      }));
+
+    return { data: devices, error: null };
   }
 
   /**

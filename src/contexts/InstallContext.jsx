@@ -7,13 +7,21 @@ import {
   useRef,
   useState,
 } from "react";
+import {
+  clearInstallDismissal,
+  isInstallDismissed,
+  markInstallDismissed,
+} from "../utils/installInvite.js";
 
 const InstallContext = createContext(null);
 
 const GRACE_MS = 6000;
 
-export const INSTALL_DISMISSED_KEY = "webstart-pwa-install-dismissed";
-
+/**
+ * O `beforeinstallprompt` pode chegar antes de o React montar (o evento
+ * dispara quando o service worker fica pronto). Capturá-lo ao nível do módulo
+ * evita perdê-lo; os subscritores do provider recebem-no depois.
+ */
 let capturedPrompt = null;
 const promptSubscribers = new Set();
 
@@ -47,10 +55,21 @@ function detectDevice() {
   };
 }
 
+/**
+ * A app está a correr instalada (standalone)?
+ *
+ * `display-mode` é a forma padronizada (Chrome/Edge/Android); no iOS o
+ * `navigator.standalone` é o indicador oficial do "Adicionar ao ecrã
+ * principal". Os dois são verificados — e `minimal-ui` também conta, porque o
+ * iOS serve a app instalada com esse display-mode em algumas versões.
+ */
 function isStandalone() {
-  return (
-    window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true
+  if (typeof window === "undefined") return false;
+  const nav = window.navigator;
+  if (nav.standalone === true) return true;
+  const modes = ["standalone", "fullscreen", "minimal-ui"];
+  return modes.some(
+    (mode) => window.matchMedia?.(`(display-mode: ${mode})`)?.matches === true,
   );
 }
 
@@ -66,6 +85,8 @@ export function InstallProvider({ children }) {
   const [deferredPrompt, setDeferredPrompt] = useState(() => capturedPrompt);
   const [installed, setInstalled] = useState(() => isStandalone());
   const [graceElapsed, setGraceElapsed] = useState(false);
+  const [dismissed, setDismissed] = useState(() => isInstallDismissed());
+  const [welcomeOpen, setWelcomeOpen] = useState(false);
 
   useEffect(() => {
     const handlePromptCaptured = (event) => {
@@ -79,35 +100,76 @@ export function InstallProvider({ children }) {
       capturedPrompt = null;
       setDeferredPrompt(null);
       setInstalled(true);
-      try {
-        localStorage.removeItem(INSTALL_DISMISSED_KEY);
-      } catch {
-        // ignore
-      }
+      // A app está instalada: o pedido já não faz sentido. Liberta a recusa
+      // anterior para que uma futura desinstalação volte a poder convidar.
+      clearInstallDismissal();
+      setDismissed(false);
     };
     window.addEventListener("appinstalled", handleAppInstalled);
 
     const graceTimer = window.setTimeout(() => setGraceElapsed(true), GRACE_MS);
 
+    // A app pode ser aberta já em modo standalone depois de instalada:
+    // o `display-mode` só é verdade no momento em que a app arranca, por isso
+    // também o ouvimos para atualizar o estado.
+    const displayModeQueries = ["standalone", "fullscreen", "minimal-ui"]
+      .map((mode) => window.matchMedia?.(`(display-mode: ${mode})`))
+      .filter(Boolean);
+    const handleDisplayModeChange = () => setInstalled(isStandalone());
+    for (const query of displayModeQueries) {
+      query.addEventListener?.("change", handleDisplayModeChange);
+    }
+
     return () => {
       promptSubscribers.delete(handlePromptCaptured);
       window.removeEventListener("appinstalled", handleAppInstalled);
       window.clearTimeout(graceTimer);
+      for (const query of displayModeQueries) {
+        query.removeEventListener?.("change", handleDisplayModeChange);
+      }
     };
   }, []);
 
+  /**
+   * Lança o diálogo nativo de instalação.
+   *
+   * Devolve sempre um resultado normalizado, para a UI nunca ficar à espera
+   * de um `undefined`:
+   *   - `{ status: "accepted" }`  → o utilizador aceitou instalar.
+   *   - `{ status: "dismissed" }` → o utilizador fechou o diálogo.
+   *   - `{ status: "unavailable" }` → não há evento guardado (o navegador só
+   *     permite um diálogo por gesto, ou nunca o ofereceu).
+   */
   const install = useCallback(async () => {
     const prompt = deferredPromptRef.current;
-    if (!prompt) return null;
+    if (!prompt) return { status: "unavailable", platform: null };
+
     try {
       await prompt.prompt();
-      return await prompt.userChoice;
+      const choice = await prompt.userChoice;
+      const status = choice?.outcome === "accepted" ? "accepted" : "dismissed";
+      if (status === "accepted") setInstalled(true);
+      return { status, platform: choice?.platform || null };
+    } catch (error) {
+      console.warn("[InstallContext] native install prompt failed:", error);
+      return { status: "unavailable", platform: null };
     } finally {
+      // O evento só pode ser usado uma vez: o navegador ignora os seguintes.
       deferredPromptRef.current = null;
       capturedPrompt = null;
       setDeferredPrompt(null);
     }
   }, []);
+
+  /** O utilizador recusou o convite: não voltamos a chazar neste dispositivo. */
+  const dismissInstall = useCallback(() => {
+    markInstallDismissed();
+    setDismissed(true);
+    setWelcomeOpen(false);
+  }, []);
+
+  const openWelcome = useCallback(() => setWelcomeOpen(true), []);
+  const closeWelcome = useCallback(() => setWelcomeOpen(false), []);
 
   const value = useMemo(
     () => ({
@@ -118,9 +180,25 @@ export function InstallProvider({ children }) {
       supports: supportsBeforeInstallPrompt(),
       canPrompt: deferredPrompt !== null,
       graceElapsed,
+      dismissed,
+      welcomeOpen,
+      openWelcome,
+      closeWelcome,
+      dismissInstall,
       install,
     }),
-    [deferredPrompt, installed, device, graceElapsed, install],
+    [
+      deferredPrompt,
+      installed,
+      device,
+      graceElapsed,
+      dismissed,
+      welcomeOpen,
+      openWelcome,
+      closeWelcome,
+      dismissInstall,
+      install,
+    ],
   );
 
   return (

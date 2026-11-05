@@ -62,8 +62,16 @@ export default defineConfig(({ command, mode }) => {
         manifest: {
           name: "Webstart",
           short_name: "Webstart",
+          // `id` dá à app uma identidade estável entre versões do manifest.
+          // Sem ele o browser deriva-o de `start_url`, que muda se o
+          // `start_url` mudar — e o "instalar" passava a ser outra app.
+          id: "/",
           start_url: "/",
+          scope: "/",
           display: "standalone",
+          lang: "pt-AO",
+          dir: "ltr",
+          categories: ["education", "productivity"],
           background_color: "#f8fffb",
           theme_color: "#10B981",
           icons: [

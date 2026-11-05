@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   CheckCircle2,
   Download,
@@ -7,11 +8,13 @@ import {
   MoreVertical,
   Share2,
   Smartphone,
+  Sparkles,
 } from "lucide-react";
 import { SEO } from "../components/seo/SEO.jsx";
 import { Header } from "../components/layout/Header.jsx";
 import { Card } from "../components/ui/Card.jsx";
 import { useInstall } from "../contexts/InstallContext.jsx";
+import { useToast } from "../contexts/ToastContext.jsx";
 
 const androidSteps = [
   "Abre a Webstart no Chrome.",
@@ -51,11 +54,33 @@ function StepList({ steps }) {
 function InstallAction() {
   const { canPrompt, installed, isIos, supports, graceElapsed, install } =
     useInstall();
+  const { showSuccess, showInfo } = useToast();
+  const [busy, setBusy] = useState(false);
 
   const scrollToGuide = () => {
     document
       .getElementById("guia-manual")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleInstall = async () => {
+    setBusy(true);
+    try {
+      const result = await install();
+      if (result.status === "accepted") {
+        showSuccess("WebStart instalada! Abre-a pelo ícone no teu ecrã.");
+        return;
+      }
+      if (result.status === "dismissed") {
+        showInfo("Podes voltar a tentar quando quiseres — o guia fica abaixo.");
+        return;
+      }
+      showInfo(
+        "Este navegador não abre a instalação automaticamente. Segue os passos manuais abaixo.",
+      );
+    } finally {
+      setBusy(false);
+    }
   };
 
   if (installed) {
@@ -68,14 +93,12 @@ function InstallAction() {
   }
 
   if (canPrompt) {
-    const handleInstall = () => {
-      install();
-    };
     return (
       <button
         type="button"
         onClick={handleInstall}
-        className="brutal-btn inline-flex items-center justify-center gap-2 bg-accent px-5 py-3 font-black text-white"
+        disabled={busy}
+        className="brutal-btn inline-flex items-center justify-center gap-2 bg-accent px-5 py-3 font-black text-white disabled:opacity-60"
       >
         <Download size={19} />
         Instalar agora
@@ -131,7 +154,7 @@ function DeviceBadge({ active }) {
 }
 
 export default function InstallApp() {
-  const { device } = useInstall();
+  const { device, installed, openWelcome } = useInstall();
   const androidCardClass = device.android
     ? "border-3 border-accent"
     : "";
@@ -151,6 +174,23 @@ export default function InstallApp() {
           title="Instalar a Webstart"
           subtitle="A Webstart fica no teu ecrã como uma aplicação normal. Não precisas de ir à Play Store ou App Store."
         />
+
+        {!installed && (
+          <div className="mb-6 flex flex-col items-start gap-3 border-3 border-strong bg-surface p-4 shadow-brutal sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm leading-6 text-reading">
+              Ainda não instalaste? Vê o convite de boas-vindas e decide com
+              calma.
+            </p>
+            <button
+              type="button"
+              onClick={openWelcome}
+              className="brutal-btn inline-flex shrink-0 items-center gap-2 bg-brand-500 px-4 py-2 text-sm font-black text-white"
+            >
+              <Sparkles size={16} />
+              Ver o convite
+            </button>
+          </div>
+        )}
 
         <section className="mb-8 border-3 border-strong bg-accent-soft p-5 shadow-brutal md:p-7">
           <div className="flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between">

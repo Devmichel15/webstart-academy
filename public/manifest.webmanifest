@@ -1,8 +1,13 @@
 {
   "name": "Webstart",
   "short_name": "Webstart",
+  "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "lang": "pt-AO",
+  "dir": "ltr",
+  "categories": ["education", "productivity"],
   "background_color": "#f8fffb",
   "theme_color": "#10B981",
   "icons": [
