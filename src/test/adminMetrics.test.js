@@ -303,3 +303,81 @@ describe("BUG #20: current_course tem prioridade; fallback usa lesson_progress e
     ).toBeNull();
   });
 });
+
+describe("App instalada: métricas do painel (migration 027)", () => {
+  it("getAllUsers expõe appInstalled, data e plataforma", async () => {
+    fake.db.profiles.push(
+      makeProfile({
+        id: AUTH_UID,
+        app_installed: true,
+        app_installed_at: "2026-10-01T10:00:00.000Z",
+        app_installed_platform: "android",
+      }),
+    );
+
+    const users = await adminService.getAllUsers();
+
+    expect(users[0].appInstalled).toBe(true);
+    expect(users[0].appInstalledAt).toBe("2026-10-01T10:00:00.000Z");
+    expect(users[0].appInstalledPlatform).toBe("android");
+  });
+
+  it("conta PESSOAS com a app instalada e calcula a percentagem", () => {
+    const metrics = adminService.computeDashboardMetrics(
+      [
+        {
+          id: AUTH_UID,
+          authUserId: AUTH_UID,
+          appInstalled: true,
+          completedLessons: [],
+          completedCourses: [],
+        },
+        {
+          id: LEGACY_PROFILE_ID,
+          authUserId: AUTH_UID,
+          appInstalled: true,
+          completedLessons: ["html-1"],
+          completedCourses: ["html"],
+        },
+        {
+          id: "33333333-3333-4333-8333-333333333333",
+          authUserId: null,
+          appInstalled: false,
+          completedLessons: [],
+          completedCourses: [],
+        },
+      ],
+      [],
+    );
+
+    expect(metrics.appInstalledUsers).toBe(1);
+    expect(metrics.totalPeople).toBe(2);
+    expect(metrics.appInstalledPct).toBe(50);
+  });
+
+  it("não conta duas linhas da mesma pessoa como duas instalações", () => {
+    const metrics = adminService.computeDashboardMetrics(
+      [
+        {
+          id: AUTH_UID,
+          authUserId: AUTH_UID,
+          appInstalled: true,
+          completedLessons: [],
+          completedCourses: [],
+        },
+        {
+          id: LEGACY_PROFILE_ID,
+          authUserId: AUTH_UID,
+          appInstalled: false,
+          completedLessons: ["html-1"],
+          completedCourses: ["html"],
+        },
+      ],
+      [],
+    );
+
+    expect(metrics.appInstalledUsers).toBe(1);
+    expect(metrics.totalPeople).toBe(1);
+    expect(metrics.appInstalledPct).toBe(100);
+  });
+});

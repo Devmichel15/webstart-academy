@@ -49,6 +49,9 @@ function mapProfileRow(row) {
     createdAt: row.created_at,
     lastLogin: row.last_login,
     totalStudyTime: row.total_study_time || 0,
+    appInstalled: row.app_installed === true,
+    appInstalledAt: row.app_installed_at || null,
+    appInstalledPlatform: row.app_installed_platform || null,
   }
 }
 
@@ -397,6 +400,19 @@ export function computeDashboardMetrics(users, progressRecords) {
     return availableTrails.every((t) => (u.completedCourses || []).includes(t.id))
   }).length
 
+  // A instalação é por PESSOA, não por linha: um perfil migrado pode ter duas
+  // linhas e não deve contar duas vezes. A RPC marca as duas, mas o Set por
+  // `authUserId || id` torna o cálculo correto mesmo com dados antigos.
+  const installedPeople = new Set()
+  for (const u of profileRows) {
+    if (u.appInstalled) installedPeople.add(u.authUserId || u.id)
+  }
+  const appInstalledUsers = installedPeople.size
+  const totalPeople = people.length
+  const appInstalledPct = totalPeople > 0
+    ? Math.round((appInstalledUsers / totalPeople) * 100)
+    : 0
+
   let totalProgressSum = 0
   let activeUsersCount = 0
   const accessibleCount = getAccessibleTrails().length
@@ -427,6 +443,9 @@ export function computeDashboardMetrics(users, progressRecords) {
     activeUsers: activeUsersCount,
     usersCompletedAnyTrail,
     usersCompletedAllTrails,
+    appInstalledUsers,
+    appInstalledPct,
+    totalPeople,
     userLessonCounts,
     userCourseCompletions,
   }

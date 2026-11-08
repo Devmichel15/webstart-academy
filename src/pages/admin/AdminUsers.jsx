@@ -5,6 +5,7 @@ import {
   ChevronDown,
   ChevronUp,
   X,
+  Smartphone,
 } from 'lucide-react'
 import { Card } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
@@ -66,7 +67,17 @@ function UserRow({ user, progressRecords, progressLoaded, progressError, expande
               </div>
             )}
             <div className="min-w-0">
-              <p className="truncate font-bold text-primary">{user.name || 'Sem nome'}</p>
+              <p className="flex items-center gap-1.5 truncate font-bold text-primary">
+                {user.name || 'Sem nome'}
+                {user.appInstalled && (
+                  <span
+                    title="Tem a app instalada"
+                    className="inline-flex shrink-0 text-brand-500"
+                  >
+                    <Smartphone size={13} />
+                  </span>
+                )}
+              </p>
               <p className="truncate text-xs text-muted">{user.email}</p>
             </div>
           </div>
@@ -133,6 +144,23 @@ function UserRow({ user, progressRecords, progressLoaded, progressError, expande
                 <Badge variant={provider === 'google' ? 'success' : 'default'}>
                   {provider === 'google' ? 'Google' : 'Email/Senha'}
                 </Badge>
+              </div>
+              <div>
+                <p className="text-xs font-bold uppercase text-secondary">App Instalada</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant={user.appInstalled ? 'success' : 'default'}>
+                    {user.appInstalled ? 'Sim' : 'Não'}
+                  </Badge>
+                  {user.appInstalledAt && (
+                    <span className="text-xs text-muted">
+                      {toDate(user.appInstalledAt)?.toLocaleDateString('pt-PT', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                      })}
+                    </span>
+                  )}
+                </div>
               </div>
               <div>
                 <p className="text-xs font-bold uppercase text-secondary">XP Total</p>

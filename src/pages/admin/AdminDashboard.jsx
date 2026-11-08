@@ -13,6 +13,7 @@ import {
   Target,
   Flame,
   ArrowRight,
+  Smartphone,
 } from 'lucide-react'
 import {
   AreaChart,
@@ -124,6 +125,38 @@ function InsightItem({ text }) {
       <TrendingUp size={16} className="mt-0.5 shrink-0 text-brand-500" />
       <span className="font-semibold text-primary">{text}</span>
     </li>
+  )
+}
+
+function InstallIndicator({ count, pct }) {
+  return (
+    <Card>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="mb-1 text-xs font-bold uppercase tracking-wide text-secondary">
+            App Instalada
+          </p>
+          <p className="text-3xl font-black text-primary">{count}</p>
+          <p className="mt-1 text-xs font-semibold text-muted">
+            {pct}% dos utilizadores já instalaram a Webstart
+          </p>
+        </div>
+        <div className="rounded-lg bg-surface-hover p-2 text-brand-500">
+          <Smartphone size={20} />
+        </div>
+      </div>
+      <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-surface-hover">
+        <div
+          className="h-full rounded-full bg-brand-500 transition-all"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <p className="mt-3 text-xs leading-5 text-muted">
+        Conta quem abriu a app instalada ou concluiu a instalação com sessão
+        iniciada. Instalações feitas sem sessão só são contadas quando a conta
+        abrir a app instalada.
+      </p>
+    </Card>
   )
 }
 
@@ -258,6 +291,18 @@ export default function AdminDashboard() {
         <StatCard icon={Award} label="Concluíram ≥1 Trilha" value={metrics.usersCompletedAnyTrail} delay={0.5} color="text-green-500" />
         <StatCard icon={Crown} label="Concluíram Todas" value={metrics.usersCompletedAllTrails} delay={0.55} color="text-yellow-500" />
       </div>
+
+      <motion.div
+        className="mb-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.58 }}
+      >
+        <InstallIndicator
+          count={metrics.appInstalledUsers}
+          pct={metrics.appInstalledPct}
+        />
+      </motion.div>
 
       <div className="mb-8 grid gap-6 lg:grid-cols-2">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>

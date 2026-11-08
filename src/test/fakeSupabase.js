@@ -842,6 +842,9 @@ export class FakeSupabase {
     if (fnName === "list_push_devices") {
       return Promise.resolve(this.listPushDevices());
     }
+    if (fnName === "mark_app_installed") {
+      return Promise.resolve(this.markAppInstalled(args));
+    }
     if (fnName !== "link_legacy_profile") {
       return Promise.resolve({ data: null, error: postgrestError(`unknown function ${fnName}`, "42883") });
     }
@@ -934,6 +937,36 @@ export class FakeSupabase {
     else rows.push(next);
 
     return this.getPushPreferences();
+  }
+
+  /**
+   * Mirror of public.mark_app_installed (migration 027).
+   * Idempotente: preserva a data e a plataforma da primeira instalação.
+   */
+  markAppInstalled({ p_platform: platform } = {}) {
+    const uid = this.currentUserId();
+    if (!uid) {
+      return { data: null, error: postgrestError("Sessão inválida.", "42501") };
+    }
+
+    const rows = this.db.profiles.filter(
+      (row) => row.id === uid || row.auth_user_id === uid,
+    );
+    if (rows.length === 0) {
+      return {
+        data: null,
+        error: postgrestError("Perfil do utilizador não encontrado.", "P0002"),
+      };
+    }
+
+    for (const row of rows) {
+      row.app_installed = true;
+      row.app_installed_at = row.app_installed_at || new Date().toISOString();
+      row.app_installed_platform = row.app_installed_platform || platform || null;
+    }
+
+    this.emitRealtime("profiles", "UPDATE", rows.map(clone));
+    return { data: null, error: null };
   }
 
   /** Mirror of public.list_push_devices (migration 022): só metadados. */
@@ -1262,6 +1295,9 @@ export function makeProfile(overrides = {}) {
     total_study_time: 0,
     is_public: true,
     first_steps_done: false,
+    app_installed: false,
+    app_installed_at: null,
+    app_installed_platform: null,
     created_at: "2024-01-01T00:00:00.000Z",
     last_login: null,
     welcome_email_sent: false,

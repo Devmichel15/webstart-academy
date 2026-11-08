@@ -39,6 +39,7 @@ import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminReports from "./pages/admin/AdminReports";
 import { InstallPrompt } from "./components/pwa/InstallPrompt.jsx";
 import { InstallWelcomeModal } from "./components/pwa/InstallWelcomeModal.jsx";
+import { AppInstallTracker } from "./components/pwa/AppInstallTracker.jsx";
 import { PushOnboarding } from "./components/notifications/PushOnboarding.jsx";
 import InstallApp from "./pages/InstallApp.jsx";
 import Ranking from "./pages/Ranking.jsx";
@@ -52,6 +53,7 @@ export default function App() {
         <AuthProvider>
           <ProgressProvider>
             <InstallProvider>
+              <AppInstallTracker />
               <NotificationProvider>
                 <BrowserRouter>
                   <ToastContainer />
