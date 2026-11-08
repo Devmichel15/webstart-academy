@@ -1,5 +1,5 @@
 /**
- * pushService — suporte, permissão, subscrição e envio de teste.
+ * pushService Â— suporte, permissÃ£o, subscriÃ§Ã£o e envio de teste.
  */
 
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
@@ -73,4 +73,4 @@ beforeEach(() => {
       requestPermission: vi.fn(),
     };
   });
-'});
+'});

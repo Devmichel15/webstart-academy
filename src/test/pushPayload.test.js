@@ -16,7 +16,7 @@ describe("pushPayload - destinos internos", () => {
     expect(isInternalPath("/trilhas/javascript")).toBe(true);
   });
 
-  it("recusa URLs absolutas, esquemas perigosos e valores inválidos", () => {
+  it("recusa URLs absolutas, esquemas perigosos e valores invÃ¡lidos", () => {
     expect(isInternalPath("https://exemplo.com")).toBe(false);
     expect(isInternalPath("http://exemplo.com/x")).toBe(false);
     expect(isInternalPath("//exemplo.com")).toBe(false);
@@ -30,7 +30,7 @@ describe("pushPayload - destinos internos", () => {
     expect(isInternalPath({})).toBe(false);
   });
 
-  it("normaliza destinos não internos para a raiz", () => {
+  it("normaliza destinos nÃ£o internos para a raiz", () => {
     expect(normalizeInternalPath("/perfil")).toBe("/perfil");
     expect(normalizeInternalPath("  /perfil  ")).toBe("/perfil");
     expect(normalizeInternalPath("https://exemplo.com")).toBe("/");
@@ -48,28 +48,28 @@ describe("pushPayload - destinos internos", () => {
 });
 
 describe("pushPayload - payload", () => {
-  it("limpa título, corpo e destino", () => {
+  it("limpa tÃ­tulo, corpo e destino", () => {
     const payload = buildPushPayload({
       title: "  Teste  ",
-      body: "  Olá  ",
+      body: "  OlÃ¡  ",
       url: "  /perfil  ",
     });
 
     expect(payload.title).toBe("Teste");
-    expect(payload.body).toBe("Olá");
+    expect(payload.body).toBe("OlÃ¡");
     expect(payload.url).toBe("/perfil");
   });
 
-  it("usa valores por omissão quando falta informação", () => {
+  it("usa valores por omissÃ£o quando falta informaÃ§Ã£o", () => {
     const payload = buildPushPayload();
     expect(payload.title).toBe("WebStart Academy");
-    expect(payload.body).toBe("Tens uma nova notificação.");
+    expect(payload.body).toBe("Tens uma nova notificaÃ§Ã£o.");
     expect(payload.url).toBe("/");
     expect(payload.category).toBe("learning");
     expect(payload.tag).toBe("webstart-learning");
   });
 
-  it("recusa categorias desconhecidas e cai na categoria por omissão", () => {
+  it("recusa categorias desconhecidas e cai na categoria por omissÃ£o", () => {
     expect(buildPushPayload({ category: "inventada" }).category).toBe("learning");
     expect(buildPushPayload({ category: "streak" }).category).toBe("streak");
     expect(buildPushPayload({ category: "streak" }).tag).toBe("webstart-streak");
@@ -79,7 +79,7 @@ describe("pushPayload - payload", () => {
     expect(buildPushPayload({ url: "https://exemplo.com" }).url).toBe("/");
   });
 
-  it("expõe as categorias e os defaults usados pelo servidor", () => {
+  it("expÃµe as categorias e os defaults usados pelo servidor", () => {
     expect(PUSH_CATEGORIES).toContain("learning");
     expect(PUSH_CATEGORIES).toContain("reminders");
     expect(PUSH_CATEGORIES).toContain("study_activity");
@@ -91,4 +91,4 @@ describe("pushPayload - payload", () => {
     expect(DEFAULT_PUSH_PREFERENCES.learning_enabled).toBe(true);
     expect(DEFAULT_PUSH_PREFERENCES.study_activity_enabled).toBe(true);
   });
-});
+});

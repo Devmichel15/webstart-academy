@@ -59,12 +59,12 @@ describe("NotificationSettings", () => {
     await renderSettings();
 
     expect(
-      screen.getByText(/Notificações push indisponíveis/i),
+      screen.getByText(/NotificaÃ§Ãµes push indisponÃ­veis/i),
     ).toBeTruthy();
     expect(screen.queryByRole("button", { name: /Ativar/i })).toBeNull();
   });
 
-  it("pede a activação ao utilizador, sem pedir permissão sozinho", async () => {
+  it("pede a activaÃ§Ã£o ao utilizador, sem pedir permissÃ£o sozinho", async () => {
     const context = makeContext();
     await renderSettings();
 
@@ -74,7 +74,7 @@ describe("NotificationSettings", () => {
     expect(context.enable).toHaveBeenCalledTimes(1);
   });
 
-  it("com as notificações ativas mostra desativar e permite o teste", async () => {
+  it("com as notificaÃ§Ãµes ativas mostra desativar e permite o teste", async () => {
     const context = makeContext({
       permission: "granted",
       preferences: {
@@ -97,16 +97,16 @@ describe("NotificationSettings", () => {
     expect(context.disable).toHaveBeenCalledTimes(1);
 
     await userEvent.click(
-      screen.getByRole("button", { name: /notificação de teste/i }),
+      screen.getByRole("button", { name: /notificaÃ§Ã£o de teste/i }),
     );
     expect(context.sendTest).toHaveBeenCalledTimes(1);
   });
 
-  it("o teste fica indisponível enquanto as notificações estão desligadas", async () => {
+  it("o teste fica indisponÃ­vel enquanto as notificaÃ§Ãµes estÃ£o desligadas", async () => {
     makeContext();
     await renderSettings();
 
-    const testButton = screen.getByRole("button", { name: /notificação de teste/i });
+    const testButton = screen.getByRole("button", { name: /notificaÃ§Ã£o de teste/i });
     expect(testButton.disabled).toBe(true);
   });
 
@@ -125,15 +125,15 @@ describe("NotificationSettings", () => {
 
   it("mostra o erro devolvido pelo servidor", async () => {
     makeContext({
-      error: "As notificações push estão desligadas nas tuas preferências.",
+      error: "As notificaÃ§Ãµes push estÃ£o desligadas nas tuas preferÃªncias.",
     });
     await renderSettings();
 
     expect(screen.getByRole("alert").textContent).toMatch(/desligadas/i);
   });
 
-  it("mostra a confirmação depois de uma acção com sucesso", async () => {
-    makeContext({ notice: "Notificações ativadas neste dispositivo." });
+  it("mostra a confirmaÃ§Ã£o depois de uma acÃ§Ã£o com sucesso", async () => {
+    makeContext({ notice: "NotificaÃ§Ãµes ativadas neste dispositivo." });
     await renderSettings();
 
     expect(screen.getByRole("status").textContent).toMatch(/ativadas/i);
@@ -155,4 +155,4 @@ describe("NotificationSettings", () => {
     expect(screen.getByText("Android")).toBeTruthy();
     expect(screen.getByText("Android Chrome")).toBeTruthy();
   });
-});
+});
