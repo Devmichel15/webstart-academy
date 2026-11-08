@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-// push-dispatch � dispara notifica��es push por a��o (outbox)
+// push-dispatch — dispara notificações push por ação (outbox)
 // -----------------------------------------------------------------------------
 
 import {
@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
       return json({ ok: true, message: "event_not_found_or_processed" });
     }
 
-    let actorName = "Algu�m";
+    let actorName = "Alguém";
     if (event.actor_profile_id) {
       const { data: actor } = await client
         .from("profiles")
@@ -93,8 +93,8 @@ Deno.serve(async (req) => {
       throttleMinutes = THROTTLE_NEW_POST_MINUTES;
     } else if (event.type === "lesson_completed") {
       payload = buildPushPayload({
-        title: "Algu�m est� a estudar",
-        body: `${actorName} concluiu uma aula agora. E voc�, quando vai estudar?`,
+        title: "Alguém está a estudar",
+        body: `${actorName} concluiu uma aula agora. E tu, quando vais estudar?`,
         url: "/dashboard",
         category: "study_activity",
         tag: "webstart-study",

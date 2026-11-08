@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------
-// _shared/push ó utilit·rios partilhados pelas Edge Functions de push.
+// _shared/push ‚Äî utilit√°rios partilhados pelas Edge Functions de push.
 // ---------------------------------------------------------------
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -70,7 +70,7 @@ export function buildPushPayload(input: {
     : "WebStart Academy";
   const body = typeof input.body === "string" && input.body.trim()
     ? input.body.trim().slice(0, 240)
-    : "Tens uma nova notificaÁ„o.";
+    : "Tens uma nova notifica√ß√£o.";
   const category = PUSH_CATEGORIES.includes(input.category as PushCategory)
     ? (input.category as PushCategory)
     : "learning";
@@ -102,7 +102,7 @@ export function validateSubscription(input: unknown): {
   error: string;
 } {
   if (!input || typeof input !== "object") {
-    return { ok: false, error: " subscriÁ„o inv·lida." };
+    return { ok: false, error: " subscri√ß√£o inv√°lida." };
   }
   const raw = input as Record<string, unknown>;
   const endpoint = typeof raw.endpoint === "string" ? raw.endpoint.trim() : "";
@@ -111,19 +111,19 @@ export function validateSubscription(input: unknown): {
   const auth = typeof keys.auth === "string" ? keys.auth.trim() : "";
 
   if (!endpoint.startsWith("https://")) {
-    return { ok: false, error: "endpoint inv·lido." };
+    return { ok: false, error: "endpoint inv√°lido." };
   }
   if (endpoint.length > 2048) {
     return { ok: false, error: "endpoint demasiado longo." };
   }
   if (!p256dh || p256dh.length > 256) {
-    return { ok: false, error: "chave p256dh inv·lida." };
+    return { ok: false, error: "chave p256dh inv√°lida." };
   }
   if (!auth || auth.length > 256) {
-    return { ok: false, error: "chave auth inv·lida." };
+    return { ok: false, error: "chave auth inv√°lida." };
   }
   if (!/^[A-Za-z0-9_-]+={0,2}$/.test(p256dh) || !/^[A-Za-z0-9_-]+={0,2}$/.test(auth)) {
-    return { ok: false, error: "chaves de subscriÁ„o inv·lidas." };
+    return { ok: false, error: "chaves de subscri√ß√£o inv√°lidas." };
   }
 
   return {
