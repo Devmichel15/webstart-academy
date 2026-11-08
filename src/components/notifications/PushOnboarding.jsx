@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNotificationContext } from "../../contexts/NotificationContext.jsx";
 import { useAuthContext } from "../../contexts/AuthContext.jsx";
+import { useToast } from "../../contexts/ToastContext.jsx";
 
 const DISMISS_KEY = "webstart:push-onboarding-dismissed";
 
@@ -21,6 +22,7 @@ export function PushOnboarding({
   } =
     useNotificationContext();
   const { isAuthenticated } = useAuthContext();
+  const { showSuccess } = useToast();
   const location = useLocation();
   const [visible, setVisible] = useState(false);
   const controlled = typeof onClose === "function";
@@ -82,6 +84,11 @@ export function PushOnboarding({
     if (res) {
       if (controlled) onClose();
       else setVisible(false);
+      showSuccess(
+        beforeSignIn && !isAuthenticated
+          ? "Permissão guardada. As notificações serão associadas à tua conta quando entrares."
+          : "Notificações ativadas com sucesso neste dispositivo.",
+      );
     } else if (permission === "denied" && !controlled) {
       dismiss(30);
     }

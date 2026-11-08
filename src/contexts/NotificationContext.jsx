@@ -4,9 +4,11 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useAuthContext } from "./AuthContext.jsx";
+import { useToast } from "./ToastContext.jsx";
 import {
   disableNotifications,
   enableNotifications,
@@ -21,6 +23,11 @@ import {
   savePreferences,
   sendTestNotification,
 } from "../services/pushService.js";
+import {
+  getNotificationInbox,
+  markAllInboxNotificationsRead,
+  markInboxNotificationRead,
+} from "../services/notificationInboxService.js";
 import { DEFAULT_PUSH_PREFERENCES } from "../utils/pushPayload.js";
 import { toUserMessage } from "../utils/errors.js";
 
@@ -33,11 +40,26 @@ const NotificationContext = createContext(null);
  * `enable()` na plataforma ou `enableBeforeSignIn()` no onboarding público.
  */
 export function NotificationProvider({ children }) {
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, user } = useAuthContext();
+  const userId = user?.id;
+  const { showSuccess } = useToast();
   const [supported] = useState(() => isPushSupported());
   const [permission, setPermission] = useState(() => getNotificationPermission());
   const [preferences, setPreferences] = useState(DEFAULT_PUSH_PREFERENCES);
   const [devices, setDevices] = useState([]);
+  const [inboxData, setInboxData] = useState({
+    userId: null,
+    notifications: [],
+    unreadCount: 0,
+  });
+  const [inboxLoading, setInboxLoading] = useState(false);
+  const [inboxError, setInboxError] = useState("");
+  const inboxRequest = useRef(0);
+  const inbox = useMemo(
+    () => (inboxData.userId === userId ? inboxData.notifications : []),
+    [inboxData.notifications, inboxData.userId, userId],
+  );
+  const unreadCount = inboxData.userId === userId ? inboxData.unreadCount : 0;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -49,6 +71,26 @@ export function NotificationProvider({ children }) {
     setPermission(getNotificationPermission());
     return { preferences: prefs, devices: list };
   }, []);
+
+  const refreshInbox = useCallback(async () => {
+    if (!isAuthenticated || !userId) return;
+    const requestId = ++inboxRequest.current;
+    setInboxLoading(true);
+    setInboxError("");
+    try {
+      const { notifications, unreadCount: unread } =
+        await getNotificationInbox();
+      if (inboxRequest.current !== requestId) return;
+      setInboxData({ userId, notifications, unreadCount: unread });
+    } catch (err) {
+      if (inboxRequest.current !== requestId) return;
+      setInboxError(
+        toUserMessage(err, "Não foi possível carregar as notificações."),
+      );
+    } finally {
+      if (inboxRequest.current === requestId) setInboxLoading(false);
+    }
+  }, [isAuthenticated, userId]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -78,7 +120,9 @@ export function NotificationProvider({ children }) {
         setPreferences(updatedPreferences);
         setDevices(updatedDevices);
         setPermission(getNotificationPermission());
-        setNotice("Notificações ativadas neste dispositivo.");
+        const message = "Notificações associadas à tua conta com sucesso.";
+        setNotice(message);
+        showSuccess(message);
       } catch (err) {
         if (!active) return;
         setError(
@@ -94,7 +138,28 @@ export function NotificationProvider({ children }) {
     return () => {
       active = false;
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, showSuccess]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !userId) return undefined;
+
+    const initialRefresh = window.setTimeout(() => {
+      void refreshInbox();
+    }, 0);
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") void refreshInbox();
+    };
+    window.addEventListener("focus", refreshWhenVisible);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+    const intervalId = window.setInterval(refreshWhenVisible, 60_000);
+
+    return () => {
+      window.removeEventListener("focus", refreshWhenVisible);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+      window.clearInterval(intervalId);
+      window.clearTimeout(initialRefresh);
+    };
+  }, [isAuthenticated, userId, refreshInbox]);
 
   // O Service Worker avisa quando a subscrição fica inválida (chaves VAPID
   // novas, expiração): Volta a subscrever e a registar o dispositivo.
@@ -207,12 +272,70 @@ export function NotificationProvider({ children }) {
     [],
   );
 
+  const markNotificationRead = useCallback(async (notificationId) => {
+    setInboxError("");
+    try {
+      await markInboxNotificationRead(notificationId);
+      setInboxData((current) => {
+        if (current.userId !== userId) return current;
+        const wasUnread = current.notifications.some(
+          (notification) =>
+            notification.id === notificationId && !notification.is_read,
+        );
+        return {
+          ...current,
+          notifications: current.notifications.map((notification) =>
+            notification.id === notificationId
+              ? { ...notification, is_read: true }
+              : notification,
+          ),
+          unreadCount: Math.max(0, current.unreadCount - (wasUnread ? 1 : 0)),
+        };
+      });
+      return true;
+    } catch (err) {
+      setInboxError(
+        toUserMessage(err, "Não foi possível marcar a notificação como lida."),
+      );
+      return false;
+    }
+  }, [userId]);
+
+  const markAllNotificationsRead = useCallback(async () => {
+    setInboxError("");
+    try {
+      await markAllInboxNotificationsRead();
+      setInboxData((current) =>
+        current.userId === userId
+          ? {
+              ...current,
+              notifications: current.notifications.map((notification) => ({
+                ...notification,
+                is_read: true,
+              })),
+              unreadCount: 0,
+            }
+          : current,
+      );
+      return true;
+    } catch (err) {
+      setInboxError(
+        toUserMessage(err, "Não foi possível marcar as notificações como lidas."),
+      );
+      return false;
+    }
+  }, [userId]);
+
   const value = useMemo(
     () => ({
       supported,
       permission,
       preferences,
       devices,
+      inbox,
+      unreadCount,
+      inboxLoading,
+      inboxError,
       busy,
       error,
       notice,
@@ -222,12 +345,19 @@ export function NotificationProvider({ children }) {
       sendTest,
       updatePreferences,
       refresh,
+      refreshInbox,
+      markNotificationRead,
+      markAllNotificationsRead,
     }),
     [
       supported,
       permission,
       preferences,
       devices,
+      inbox,
+      unreadCount,
+      inboxLoading,
+      inboxError,
       busy,
       error,
       notice,
@@ -237,6 +367,9 @@ export function NotificationProvider({ children }) {
       sendTest,
       updatePreferences,
       refresh,
+      refreshInbox,
+      markNotificationRead,
+      markAllNotificationsRead,
     ],
   );
 

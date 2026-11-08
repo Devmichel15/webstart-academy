@@ -2,6 +2,7 @@ import { Menu } from 'lucide-react'
 import { ThemeToggle } from '../ui/ThemeToggle'
 import { Badge } from '../ui/Badge'
 import { useProgress } from '../../hooks/useProgress.js'
+import { NotificationBell } from '../notifications/NotificationBell.jsx'
 
 export function MobileHeader({ onMenuToggle }) {
   const { level, xp, streak } = useProgress()
@@ -18,6 +19,7 @@ export function MobileHeader({ onMenuToggle }) {
         </div>
 
         <div className="flex items-center gap-2">
+          <NotificationBell />
           <ThemeToggle />
           <button
             type="button"

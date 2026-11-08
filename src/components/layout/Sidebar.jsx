@@ -8,6 +8,7 @@ import { useToast } from '../../contexts/ToastContext.jsx'
 import { getNavItems } from '../../data/navItems.js'
 import { InstallNavItem } from '../pwa/InstallNavItem.jsx'
 import { toUserMessage } from '../../utils/errors.js'
+import { NotificationBell } from '../notifications/NotificationBell.jsx'
 
 export function UserBadge() {
   const { user } = useAuth()
@@ -61,14 +62,17 @@ export function Sidebar() {
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-strong bg-surface text-primary lg:flex">
-      <div className="mb-8 flex items-center gap-3 px-2 pt-4">
-        <div className="flex h-10 w-10 items-center justify-center">
-          <img src="/logo.svg" alt="" />
+      <div className="mb-8 flex items-center justify-between gap-2 px-2 pt-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center">
+            <img src="/logo.svg" alt="" />
+          </div>
+          <div>
+            <p className="text-lg font-black leading-none text-primary">WebStart</p>
+            <p className="text-xs font-semibold text-secondary">Academy</p>
+          </div>
         </div>
-        <div>
-          <p className="text-lg font-black leading-none text-primary">WebStart</p>
-          <p className="text-xs font-semibold text-secondary">Academy</p>
-        </div>
+        <NotificationBell />
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-2">

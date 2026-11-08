@@ -48,6 +48,16 @@ Regras que valem em todo o sistema:
 - Contas existentes sem permissão recebem o mesmo convite ao entrar na área da
   plataforma. A opção **Talvez mais tarde** adia o convite por sete dias.
 
+### Histórico no sininho
+
+- Os eventos automáticos enviados pelo `push-dispatch` também ficam guardados
+  na caixa de notificações da conta quando as notificações push e a categoria
+  estão ativas, mesmo que não haja um dispositivo push registado.
+- O sininho mostra as 30 notificações mais recentes e o total de não lidas;
+  abrir uma notificação marca-a como lida e navega para o respetivo destino.
+- As notificações são privadas por conta (RLS) e sincronizam entre dispositivos.
+  Eventos push manuais de teste não entram no histórico.
+
 ---
 
 ## 2. Gerar as chaves VAPID
@@ -100,13 +110,12 @@ VITE_VAPID_PUBLIC_KEY=<chave pública>
 
 ### 3.3 Base de dados
 
-```bash
-supabase db push          # aplica supabase/migrations/022_push_notifications.sql
-```
-
-A migration cria `push_subscriptions`, `push_preferences`, as políticas RLS,
-o trigger `set_push_updated_at` e as RPCs `get_push_preferences`,
-`upsert_push_preferences` e `list_push_devices`.
+As migrations `022_push_notifications.sql` e `026_in_app_notifications.sql`
+criam, respetivamente, as subscrições/preferências push e a caixa de entrada
+privada do sininho. Em projetos cuja tabela de histórico de migrations não
+esteja configurada, não executar `supabase db push`: o comando pode tentar
+reaplicar migrations antigas. A migration 026 foi aplicada diretamente no
+projeto de produção.
 
 ---
 
@@ -115,10 +124,13 @@ o trigger `set_push_updated_at` e as RPCs `get_push_preferences`,
 ```bash
 supabase functions deploy push-subscribe
 supabase functions deploy push-send
+supabase functions deploy push-dispatch --no-verify-jwt
 ```
 
 A pasta `supabase/functions/_shared/` **não** é deployed (o CLI ignora o que
 começa por `_`): é apenas o módulo comum importado pelas duas funções.
+`push-dispatch` autentica os pedidos internos através de `PUSH_DISPATCH_SECRET`;
+por isso, a verificação JWT da gateway fica desativada nessa função.
 
 ### Biblioteca de envio
 

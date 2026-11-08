@@ -3,9 +3,10 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 
-const { authRef, notificationRef } = vi.hoisted(() => ({
+const { authRef, notificationRef, showSuccess } = vi.hoisted(() => ({
   authRef: { current: false },
   notificationRef: { current: null },
+  showSuccess: vi.fn(),
 }));
 
 vi.mock("../contexts/AuthContext.jsx", () => ({
@@ -14,6 +15,10 @@ vi.mock("../contexts/AuthContext.jsx", () => ({
 
 vi.mock("../contexts/NotificationContext.jsx", () => ({
   useNotificationContext: () => notificationRef.current,
+}));
+
+vi.mock("../contexts/ToastContext.jsx", () => ({
+  useToast: () => ({ showSuccess }),
 }));
 
 function makeNotificationContext(overrides = {}) {
@@ -33,6 +38,7 @@ function makeNotificationContext(overrides = {}) {
 beforeEach(() => {
   localStorage.clear();
   authRef.current = false;
+  showSuccess.mockReset();
 });
 
 describe("convite de notificações", () => {
@@ -80,13 +86,16 @@ describe("convite de notificações", () => {
     );
 
     expect(context.enableBeforeSignIn).toHaveBeenCalledTimes(1);
+    expect(showSuccess).toHaveBeenCalledWith(
+      expect.stringMatching(/Permissão guardada/),
+    );
     expect(await screen.findByText("Entrar na WebStart")).not.toBeNull();
     expect(localStorage.getItem("webstart_onboarding_done")).toBe("true");
   });
 
-  it("convida uma conta existente ao entrar na plataforma", async () => {
+  it("convida uma conta existente e confirma quando a ativação termina", async () => {
     authRef.current = true;
-    makeNotificationContext();
+    const context = makeNotificationContext();
     const { PushOnboarding } = await import(
       "../components/notifications/PushOnboarding.jsx"
     );
@@ -99,5 +108,14 @@ describe("convite de notificações", () => {
     await waitFor(() => {
       expect(screen.getByRole("dialog")).not.toBeNull();
     });
+
+    await userEvent.click(
+      screen.getByRole("button", { name: /Ativar notificações/i }),
+    );
+
+    expect(context.enable).toHaveBeenCalledTimes(1);
+    expect(showSuccess).toHaveBeenCalledWith(
+      "Notificações ativadas com sucesso neste dispositivo.",
+    );
   });
 });

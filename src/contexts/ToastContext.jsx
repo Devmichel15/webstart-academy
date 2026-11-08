@@ -27,22 +27,35 @@ export function ToastProvider({ children }) {
     },
     [removeToast],
   )
+  const showSuccess = useCallback(
+    (message) => showToast(message, 'success'),
+    [showToast],
+  )
+  const showError = useCallback(
+    (message) => showToast(message, 'error'),
+    [showToast],
+  )
+  const showInfo = useCallback(
+    (message) => showToast(message, 'info'),
+    [showToast],
+  )
 
   const value = useMemo(
     () => ({
       toasts,
       showToast,
-      showSuccess: (message) => showToast(message, 'success'),
-      showError: (message) => showToast(message, 'error'),
-      showInfo: (message) => showToast(message, 'info'),
+      showSuccess,
+      showError,
+      showInfo,
       removeToast,
     }),
-    [toasts, showToast, removeToast],
+    [toasts, showToast, showSuccess, showError, showInfo, removeToast],
   )
 
   return <ToastContext.Provider value={value}>{children}</ToastContext.Provider>
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useToast() {
   const context = useContext(ToastContext)
   if (!context) throw new Error('useToast must be used within ToastProvider')

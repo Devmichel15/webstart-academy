@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-// push-dispatch — dispara notificações push por ação (outbox)
+// push-dispatch ï¿½ dispara notificaï¿½ï¿½es push por aï¿½ï¿½o (outbox)
 // -----------------------------------------------------------------------------
 
 import {
@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
       return json({ ok: true, message: "event_not_found_or_processed" });
     }
 
-    let actorName = "Alguém";
+    let actorName = "Alguï¿½m";
     if (event.actor_profile_id) {
       const { data: actor } = await client
         .from("profiles")
@@ -93,8 +93,8 @@ Deno.serve(async (req) => {
       throttleMinutes = THROTTLE_NEW_POST_MINUTES;
     } else if (event.type === "lesson_completed") {
       payload = buildPushPayload({
-        title: "Alguém está a estudar",
-        body: `${actorName} concluiu uma aula agora. E você, quando vai estudar?`,
+        title: "Alguï¿½m estï¿½ a estudar",
+        body: `${actorName} concluiu uma aula agora. E vocï¿½, quando vai estudar?`,
         url: "/dashboard",
         category: "study_activity",
         tag: "webstart-study",
@@ -151,6 +151,33 @@ Deno.serve(async (req) => {
         if (elapsedMinutes < throttleMinutes) {
           continue;
         }
+      }
+
+      const { error: inboxError } = await client
+        .from("in_app_notifications")
+        .upsert(
+          {
+            user_id: pref.user_id,
+            source_event_id: eventId,
+            title: payload.title,
+            body: payload.body,
+            url: payload.url,
+            category,
+          },
+          {
+            onConflict: "user_id,source_event_id",
+            ignoreDuplicates: true,
+          },
+        );
+
+      if (inboxError) {
+        console.error(JSON.stringify({
+          level: "error",
+          msg: "inbox_notification_save_failed",
+          eventId,
+          userId: pref.user_id,
+        }));
+        return json({ error: "server_error" }, 500);
       }
 
       const { data: subscriptions } = await client
