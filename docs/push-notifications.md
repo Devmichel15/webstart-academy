@@ -61,6 +61,11 @@ Regras que valem em todo o sistema:
   pela primeira vez como quando uma linha existente passa a concluída.
 - Novos projetos na comunidade criam eventos através do autor (`author_id`)
   associado ao projeto.
+- Curtidas e comentários em projetos notificam os utilizadores com push e a
+  categoria correspondente ativos, exceto quem realizou a ação. Curtidas usam
+  a categoria **Comunidade**; comentários usam **Comentários**. Estas
+  interações não têm throttle e ações do próprio autor no seu projeto são
+  ignoradas.
 
 ---
 
@@ -115,12 +120,13 @@ VITE_VAPID_PUBLIC_KEY=<chave pública>
 ### 3.3 Base de dados
 
 As migrations `022_push_notifications.sql`, `026_in_app_notifications.sql`,
-`028_fix_lesson_push_dispatch.sql` e `029_fix_new_post_push_trigger.sql`
-criam as subscrições/preferências, o histórico do sininho e corrigem os
-triggers e o URL de fallback do dispatcher. Em projetos cuja tabela de
-histórico de migrations não esteja configurada, não executar `supabase db
-push`: o comando pode tentar reaplicar migrations antigas. As migrations
-026, 028 e 029 foram aplicadas diretamente no projeto de produção.
+`028_fix_lesson_push_dispatch.sql`, `029_fix_new_post_push_trigger.sql` e
+`030_community_interaction_notifications.sql` criam as
+subscrições/preferências, o histórico do sininho e os triggers de eventos.
+Em projetos cuja tabela de histórico de migrations não esteja configurada,
+não executar `supabase db push`: o comando pode tentar reaplicar migrations
+antigas. As migrations 026, 028, 029 e 030 foram aplicadas diretamente no
+projeto de produção.
 
 ---
 

@@ -4,7 +4,6 @@
 
 import {
   CATEGORY_PREFERENCE,
-  PUSH_CATEGORIES,
   buildPushPayload,
   isSafeEndpoint,
   json,
@@ -85,12 +84,32 @@ Deno.serve(async (req) => {
       payload = buildPushPayload({
         title: "Novo projeto na comunidade",
         body: `${actorName} publicou um projeto novo`,
-        url: "/feed",
+        url: "/",
         category: "community",
         tag: "webstart-community",
       });
       category = "community";
       throttleMinutes = THROTTLE_NEW_POST_MINUTES;
+    } else if (event.type === "project_liked") {
+      payload = buildPushPayload({
+        title: "Alguém gostou de um projeto",
+        body: `${actorName} gostou de um projeto na comunidade`,
+        url: "/",
+        category: "community",
+        tag: `webstart-like-${event.id}`,
+      });
+      category = "community";
+      throttleMinutes = 0;
+    } else if (event.type === "project_commented") {
+      payload = buildPushPayload({
+        title: "Novo comentário num projeto",
+        body: `${actorName} comentou num projeto na comunidade`,
+        url: "/",
+        category: "comments",
+        tag: `webstart-comment-${event.id}`,
+      });
+      category = "comments";
+      throttleMinutes = 0;
     } else if (event.type === "lesson_completed") {
       payload = buildPushPayload({
         title: "Alguém está a estudar",
@@ -139,17 +158,19 @@ Deno.serve(async (req) => {
     let totalFailed = 0;
 
     for (const pref of eligible as any[]) {
-      const { data: throttle } = await client
-        .from("push_throttle")
-        .select("last_sent_at")
-        .eq("user_id", pref.user_id)
-        .eq("category", category)
-        .maybeSingle();
+      if (throttleMinutes > 0) {
+        const { data: throttle } = await client
+          .from("push_throttle")
+          .select("last_sent_at")
+          .eq("user_id", pref.user_id)
+          .eq("category", category)
+          .maybeSingle();
 
-      if (throttle?.last_sent_at) {
-        const elapsedMinutes = (Date.now() - new Date(throttle.last_sent_at).getTime()) / 60000;
-        if (elapsedMinutes < throttleMinutes) {
-          continue;
+        if (throttle?.last_sent_at) {
+          const elapsedMinutes = (Date.now() - new Date(throttle.last_sent_at).getTime()) / 60000;
+          if (elapsedMinutes < throttleMinutes) {
+            continue;
+          }
         }
       }
 
@@ -251,7 +272,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      if (userSent > 0) {
+      if (userSent > 0 && throttleMinutes > 0) {
         await client
           .from("push_throttle")
           .upsert(
