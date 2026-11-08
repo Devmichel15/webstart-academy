@@ -49,6 +49,10 @@ export default defineConfig(({ command, mode }) => {
         strategies: "injectManifest",
         srcDir: "public",
         filename: "sw.js",
+        devOptions: {
+          enabled: true,
+          type: "module",
+        },
         includeAssets: ["offline.html", "icons/*.png"],
         injectManifest: {
           globPatterns: ["**/*.{js,css,html,svg,png,ico}"],

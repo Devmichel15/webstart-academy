@@ -1,47 +1,88 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNotificationContext } from "../../contexts/NotificationContext.jsx";
+import { useAuthContext } from "../../contexts/AuthContext.jsx";
 
 const DISMISS_KEY = "webstart:push-onboarding-dismissed";
 
-export function PushOnboarding() {
-  const { supported, permission, devices, busy, enable, error } =
+export function PushOnboarding({
+  open = false,
+  beforeSignIn = false,
+  onClose,
+} = {}) {
+  const {
+    supported,
+    permission,
+    devices,
+    busy,
+    enable,
+    enableBeforeSignIn,
+    error,
+  } =
     useNotificationContext();
+  const { isAuthenticated } = useAuthContext();
   const location = useLocation();
   const [visible, setVisible] = useState(false);
+  const controlled = typeof onClose === "function";
 
   useEffect(() => {
-    if (!supported) return;
-    if (permission !== "default") return;
+    if (controlled) return;
+    if (!isAuthenticated || !supported || permission !== "default") return;
     if (devices && devices.length > 0) return;
-    if (location.pathname.includes("/aula") || location.pathname.includes("/video-aula")) return;
+    if (
+      ["/onboarding", "/login", "/registro", "/avaliacao-perfil", "/recuperar-senha", "/email-preferences"].includes(
+        location.pathname,
+      ) ||
+      location.pathname.startsWith("/u/")
+    ) {
+      return;
+    }
 
     const dismissedUntil = Number(localStorage.getItem(DISMISS_KEY) || 0);
     if (Date.now() < dismissedUntil) return;
 
-    const t = setTimeout(() => setVisible(true), 1500);
+    const t = setTimeout(() => setVisible(true), 250);
     return () => clearTimeout(t);
-  }, [supported, permission, devices, location.pathname]);
+  }, [
+    controlled,
+    open,
+    isAuthenticated,
+    supported,
+    permission,
+    devices,
+    location.pathname,
+  ]);
 
   useEffect(() => {
-    if (permission === "granted" || permission === "denied") {
+    if (!controlled && (permission === "granted" || permission === "denied")) {
       const t = setTimeout(() => setVisible(false), 0);
       return () => clearTimeout(t);
     }
-  }, [permission]);
+  }, [controlled, permission]);
 
-  if (!visible) return null;
+  if (!(controlled ? open : visible)) return null;
 
   const dismiss = (days = 7) => {
+    if (controlled) {
+      localStorage.setItem(
+        DISMISS_KEY,
+        String(Date.now() + days * 86400000),
+      );
+      onClose();
+      return;
+    }
     localStorage.setItem(DISMISS_KEY, String(Date.now() + days * 86400000));
     setVisible(false);
   };
 
   const handleEnable = async () => {
-    const res = await enable();
+    const res = beforeSignIn && !isAuthenticated
+      ? await enableBeforeSignIn()
+      : await enable();
     if (res) {
-      setVisible(false);
-    } else if (permission === "denied") {
+      if (controlled) onClose();
+      else setVisible(false);
+    } else if (permission === "denied" && !controlled) {
       dismiss(30);
     }
   };
@@ -57,16 +98,35 @@ export function PushOnboarding() {
         Recebe lembretes para continuar os teus cursos, conquistas e novidades da
         comunidade. Só pedimos permissão quando clicares em ativar.
       </p>
+      {controlled && !isAuthenticated ? (
+        <p className="mt-2 text-xs text-zinc-300">
+          Se ativares agora, associamos as notificações à tua conta quando
+          terminares o registo.
+        </p>
+      ) : null}
+      {!supported ? (
+        <p className="mt-2 text-xs text-zinc-300">
+          Este browser não suporta notificações push. Podes continuar e ativá-las
+          mais tarde noutro dispositivo.
+        </p>
+      ) : null}
+      {permission === "denied" ? (
+        <p className="mt-2 text-xs text-zinc-400">
+          A permissão foi recusada. Podes alterá-la nas definições do browser.
+        </p>
+      ) : null}
       {error ? <p className="mt-2 text-xs text-red-400">{error}</p> : null}
       <div className="mt-3 flex gap-2">
-        <button
-          type="button"
-          onClick={handleEnable}
-          disabled={busy}
-          className="flex-1 rounded-lg bg-emerald-500 px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
-        >
-          {busy ? "A ativar..." : "Ativar notificações"}
-        </button>
+        {supported && permission !== "denied" ? (
+          <button
+            type="button"
+            onClick={handleEnable}
+            disabled={busy}
+            className="flex-1 rounded-lg bg-emerald-500 px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
+          >
+            {busy ? "A ativar..." : "Ativar notificações"}
+          </button>
+        ) : null}
         <button
           type="button"
           onClick={() => dismiss(7)}
@@ -75,11 +135,6 @@ export function PushOnboarding() {
           Talvez mais tarde
         </button>
       </div>
-      {permission === "denied" ? (
-        <p className="mt-2 text-xs text-zinc-400">
-          A permissão foi recusada. Podes alterá-la nas definições do browser.
-        </p>
-      ) : null}
     </div>
   );
 }

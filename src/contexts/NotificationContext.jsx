@@ -10,11 +10,13 @@ import { useAuthContext } from "./AuthContext.jsx";
 import {
   disableNotifications,
   enableNotifications,
+  completePendingPushSubscription,
   getNotificationPermission,
   getPreferences,
   isPushSupported,
   listDevices,
   onSubscriptionChanged,
+  prepareNotificationsBeforeSignIn,
   resubscribeNotifications,
   savePreferences,
   sendTestNotification,
@@ -27,10 +29,8 @@ const NotificationContext = createContext(null);
 /**
  * Estado das notificações push da conta.
  *
- * Regra importante: este provider NUNCA pede permissão. Só lê o estado
- * actual e as preferências guardadas. A permissão é pedida dentro de
- * `enable()`, que só é chamada a partir de um clique explícito do utilizador
- * (botão "Ativar notificações").
+ * A permissão só é pedida nos métodos chamados por um clique explícito:
+ * `enable()` na plataforma ou `enableBeforeSignIn()` no onboarding público.
  */
 export function NotificationProvider({ children }) {
   const { isAuthenticated } = useAuthContext();
@@ -66,6 +66,19 @@ export function NotificationProvider({ children }) {
         setPreferences(prefs);
         setDevices(list);
         setPermission(getNotificationPermission());
+
+        const pendingSubscription = await completePendingPushSubscription();
+        if (!active || !pendingSubscription) return;
+
+        const [updatedPreferences, updatedDevices] = await Promise.all([
+          getPreferences(),
+          listDevices(),
+        ]);
+        if (!active) return;
+        setPreferences(updatedPreferences);
+        setDevices(updatedDevices);
+        setPermission(getNotificationPermission());
+        setNotice("Notificações ativadas neste dispositivo.");
       } catch (err) {
         if (!active) return;
         setError(
@@ -132,6 +145,27 @@ export function NotificationProvider({ children }) {
     [run],
   );
 
+  const enableBeforeSignIn = useCallback(async () => {
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const result = await prepareNotificationsBeforeSignIn();
+      setPermission(getNotificationPermission());
+      setNotice(
+        "Permissão guardada. Vamos associar as notificações à tua conta quando entrares.",
+      );
+      return result;
+    } catch (err) {
+      setError(
+        toUserMessage(err, "Não foi possível ativar as notificações."),
+      );
+      return null;
+    } finally {
+      setBusy(false);
+    }
+  }, []);
+
   const disable = useCallback(
     () =>
       run(
@@ -183,6 +217,7 @@ export function NotificationProvider({ children }) {
       error,
       notice,
       enable,
+      enableBeforeSignIn,
       disable,
       sendTest,
       updatePreferences,
@@ -197,6 +232,7 @@ export function NotificationProvider({ children }) {
       error,
       notice,
       enable,
+      enableBeforeSignIn,
       disable,
       sendTest,
       updatePreferences,

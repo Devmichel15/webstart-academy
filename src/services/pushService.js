@@ -8,6 +8,8 @@ import {
 
 export const PUSH_SUBSCRIBE_FUNCTION = "push-subscribe";
 export const PUSH_SEND_FUNCTION = "push-send";
+export const PENDING_PUSH_SUBSCRIPTION_KEY = "webstart:pending-push-subscription";
+const PENDING_PUSH_SUBSCRIPTION_TTL_MS = 24 * 60 * 60 * 1000;
 
 export function getVapidPublicKey() {
   const key = import.meta.env.VITE_VAPID_PUBLIC_KEY;
@@ -73,12 +75,137 @@ export async function getServiceWorkerRegistration() {
   if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) {
     throw new Error("Este navegador não suporta notificações push.");
   }
-  const existing = await navigator.serviceWorker.getRegistration();
+  if (import.meta.env.DEV) {
+    return navigator.serviceWorker.register("/dev-sw.js?dev-sw", {
+      type: "module",
+    });
+  }
+  const existing = await navigator.serviceWorker.getRegistration();
   if (existing) return existing;
   return navigator.serviceWorker.register("/sw.js");
 }
-
-async function functionErrorMessage(error, fallback) {
+
+function markPendingPushSubscription() {
+  try {
+    localStorage.setItem(
+      PENDING_PUSH_SUBSCRIPTION_KEY,
+      String(Date.now()),
+    );
+  } catch {
+    throw new Error(
+      "Não foi possível guardar a ativação neste dispositivo. Verifica as definições de armazenamento do browser.",
+    );
+  }
+}
+
+function readPendingPushSubscription() {
+  if (typeof localStorage === "undefined") return false;
+  try {
+    const requestedAt = Number(
+      localStorage.getItem(PENDING_PUSH_SUBSCRIPTION_KEY),
+    );
+    if (!Number.isFinite(requestedAt) || requestedAt <= 0) return false;
+    if (Date.now() - requestedAt > PENDING_PUSH_SUBSCRIPTION_TTL_MS) {
+      localStorage.removeItem(PENDING_PUSH_SUBSCRIPTION_KEY);
+      return false;
+    }
+    return true;
+  } catch {
+    throw new Error(
+      "Não foi possível verificar a ativação pendente das notificações neste dispositivo.",
+    );
+  }
+}
+
+function clearPendingPushSubscription() {
+  try {
+    localStorage.removeItem(PENDING_PUSH_SUBSCRIPTION_KEY);
+  } catch {
+    console.warn("[push] não foi possível limpar a ativação pendente.");
+  }
+}
+
+export async function prepareNotificationsBeforeSignIn() {
+  if (!isPushSupported()) {
+    throw new Error("Este navegador não suporta notificações push.");
+  }
+  if (isIosWithoutInstalledApp()) {
+    throw new Error(
+      "No iPhone e iPad, instala a WebStart no ecrã principal para receberes notificações.",
+    );
+  }
+
+  const vapidKey = getVapidPublicKey();
+  if (!vapidKey) {
+    throw new Error(
+      "As notificações push ainda não estão configuradas nesta instalação.",
+    );
+  }
+
+  const permission =
+    Notification.permission === "granted"
+      ? "granted"
+      : await Notification.requestPermission();
+  if (permission !== "granted") {
+    throw new Error(
+      permission === "denied"
+        ? "Permissão de notificações não concedida. Reativa as notificações nas permissões do site e tenta de novo."
+        : "Permissão de notificações não concedida.",
+    );
+  }
+
+  const registration = await getServiceWorkerRegistration();
+  let subscription = await registration.pushManager.getSubscription();
+  if (!subscription) {
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(vapidKey),
+    });
+  }
+
+  markPendingPushSubscription();
+  return { endpoint: subscription.endpoint };
+}
+
+export async function completePendingPushSubscription() {
+  if (!readPendingPushSubscription()) return null;
+
+  if (!isPushSupported() || Notification.permission !== "granted") {
+    throw new Error(
+      "A ativação pendente das notificações já não está disponível neste dispositivo. Ativa novamente nas definições.",
+    );
+  }
+
+  const vapidKey = getVapidPublicKey();
+  if (!vapidKey) {
+    throw new Error(
+      "As notificações push ainda não estão configuradas nesta instalação.",
+    );
+  }
+
+  const registration = await getServiceWorkerRegistration();
+  let subscription = await registration.pushManager.getSubscription();
+  if (!subscription) {
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(vapidKey),
+    });
+  }
+
+  await invoke(PUSH_SUBSCRIBE_FUNCTION, {
+    action: "subscribe",
+    subscription: subscription.toJSON(),
+    platform: detectPlatform(),
+    userAgent:
+      typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+  });
+  await savePreferences({ push_enabled: true });
+  clearPendingPushSubscription();
+
+  return { platform: detectPlatform(), endpoint: subscription.endpoint };
+}
+
+async function functionErrorMessage(error, fallback) {
   const context = error?.context;
   if (context && typeof context.json === "function") {
     try {
@@ -152,10 +279,13 @@ export async function enableNotifications() {
   }
 
   const registration = await getServiceWorkerRegistration();
-  const subscription = await registration.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(vapidKey),
-  });
+  let subscription = await registration.pushManager.getSubscription();
+  if (!subscription) {
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(vapidKey),
+    });
+  }
 
   await invoke(PUSH_SUBSCRIBE_FUNCTION, {
     action: "subscribe",

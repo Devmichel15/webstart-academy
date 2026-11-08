@@ -35,6 +35,19 @@ Regras que valem em todo o sistema:
 - As subscrições são **segredos**: o cliente não tem acesso à tabela; quem
   lê/escreve é a Edge Function com service role, depois de validar o JWT.
 
+### Convite no onboarding e antes do registo
+
+- No fim do carrossel público (`/onboarding`), o aluno pode escolher ativar as
+  notificações ou continuar sem elas. A permissão do browser só é pedida depois
+  de clicar em **Ativar notificações**.
+- Se ainda não tiver conta, a subscrição fica apenas no Service Worker do
+  dispositivo e é marcada localmente como pendente; nenhum endpoint ou chave da
+  subscrição é guardado em `localStorage`.
+- Depois da autenticação, a aplicação associa a subscrição à conta e ativa a
+  preferência push. A marca pendente expira após 24 horas.
+- Contas existentes sem permissão recebem o mesmo convite ao entrar na área da
+  plataforma. A opção **Talvez mais tarde** adia o convite por sete dias.
+
 ---
 
 ## 2. Gerar as chaves VAPID

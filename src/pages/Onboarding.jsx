@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowRight, Check, Code2, Map, Target } from 'lucide-react'
 import { Button } from '../components/ui/Button.jsx'
 import { SEO } from '../components/seo/SEO'
+import { PushOnboarding } from '../components/notifications/PushOnboarding.jsx'
 
 const slides = [
   {
@@ -27,27 +28,36 @@ const slides = [
 
 export default function Onboarding() {
   const [step, setStep] = useState(0)
+  const [showPushOnboarding, setShowPushOnboarding] = useState(false)
   const navigate = useNavigate()
   const slide = slides[step]
   const isLast = step === slides.length - 1
 
+  const finishOnboarding = () => {
+    localStorage.setItem('webstart_onboarding_done', 'true')
+    navigate('/login')
+  }
+
   const handleNext = () => {
     if (isLast) {
-      localStorage.setItem('webstart_onboarding_done', 'true')
-      navigate('/login')
+      setShowPushOnboarding(true)
     } else {
       setStep((s) => s + 1)
     }
   }
 
   const handleSkip = () => {
-    localStorage.setItem('webstart_onboarding_done', 'true')
-    navigate('/login')
+    setShowPushOnboarding(true)
   }
 
   return (
     <>
     <SEO title="Boas-Vindas" description="Primeiros passos na WebStart Academy - descubra roadmaps, laboratório de código e tutor IA." url="/onboarding" />
+    <PushOnboarding
+      open={showPushOnboarding}
+      beforeSignIn
+      onClose={finishOnboarding}
+    />
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-950 via-brand-900 to-brand-950 p-4">
       <div className="brutal-card w-full max-w-md rounded-2xl p-8 text-center">
         {/* Dots */}
