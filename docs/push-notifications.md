@@ -57,6 +57,8 @@ Regras que valem em todo o sistema:
   abrir uma notificação marca-a como lida e navega para o respetivo destino.
 - As notificações são privadas por conta (RLS) e sincronizam entre dispositivos.
   Eventos push manuais de teste não entram no histórico.
+- As conclusões de aulas são detetadas tanto quando o progresso é inserido
+  pela primeira vez como quando uma linha existente passa a concluída.
 
 ---
 
@@ -110,11 +112,12 @@ VITE_VAPID_PUBLIC_KEY=<chave pública>
 
 ### 3.3 Base de dados
 
-As migrations `022_push_notifications.sql` e `026_in_app_notifications.sql`
-criam, respetivamente, as subscrições/preferências push e a caixa de entrada
-privada do sininho. Em projetos cuja tabela de histórico de migrations não
-esteja configurada, não executar `supabase db push`: o comando pode tentar
-reaplicar migrations antigas. A migration 026 foi aplicada diretamente no
+As migrations `022_push_notifications.sql`, `026_in_app_notifications.sql` e
+`028_fix_lesson_push_dispatch.sql` criam as subscrições/preferências, o
+histórico do sininho e corrigem o trigger de aulas e o URL de fallback do
+dispatcher. Em projetos cuja tabela de histórico de migrations não esteja
+configurada, não executar `supabase db push`: o comando pode tentar reaplicar
+migrations antigas. As migrations 026 e 028 foram aplicadas diretamente no
 projeto de produção.
 
 ---
