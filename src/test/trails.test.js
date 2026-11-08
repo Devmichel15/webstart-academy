@@ -11,7 +11,12 @@ import { describe, expect, it, beforeEach, vi } from "vitest";
 import { mockSupabase, loadProgressService, loadTrailProgressService, loadUserService } from "./harness.js";
 import { makeProfile } from "./fakeSupabase.js";
 import { allLessons, allVideoLessons } from "../data/lessons/index.js";
-import { getModuleData, getTrailById, trails } from "../data/trails.js";
+import {
+  getModuleData,
+  getModuleLessons,
+  getTrailById,
+  trails,
+} from "../data/trails.js";
 
 const AUTH_UID = "11111111-1111-4111-8111-111111111111";
 const LEGACY_PROFILE_ID = "22222222-2222-4222-8222-222222222222";
@@ -32,6 +37,30 @@ beforeEach(async () => {
 function lessonsOf(trailId) {
   return [...allLessons, ...allVideoLessons].filter((l) => l.courseId === trailId);
 }
+
+describe("trilha SQL intensiva", () => {
+  it("fica disponível como curso independente de uma hora com o vídeo indicado", () => {
+    const trail = getTrailById("sql-intensive");
+    const module = getModuleData("sql-intensive-module");
+    const [lesson] = getModuleLessons("sql-intensive-module");
+
+    expect(trail).toMatchObject({
+      title: "SQL Intensivo com PostgreSQL",
+      status: "available",
+      estimatedHours: 1,
+      requiredTrail: null,
+      modules: ["sql-intensive-module"],
+    });
+    expect(module.lessons).toEqual(["sql-intensive-video-1"]);
+    expect(lesson).toMatchObject({
+      id: "sql-intensive-video-1",
+      courseId: "sql-intensive",
+      moduleId: "sql-intensive-module",
+      duration: "1:00:00",
+      embedUrl: "https://www.youtube.com/embed/9cAKQWodpvM",
+    });
+  });
+});
 
 describe("getJourneyProgress — trilha atual derivada", () => {
   it("utilizador sem progresso: currentTrail = primeira trilha acessível", () => {

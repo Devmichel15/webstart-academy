@@ -52,9 +52,7 @@ export function isTrailUnlocked() {
 export function getJourneyProgress(completedCourses, completedLessons = [], completedQuizzes = []) {
   let completedCount = 0
 
-  const accessibleTrails = getAccessibleTrails()
-
-  const journeys = trails
+  const journeys = [...trails]
     .sort((a, b) => a.order - b.order)
     .map((trail) => {
       const isCompleted = completedCourses.includes(trail.id)
@@ -82,10 +80,9 @@ export function getJourneyProgress(completedCourses, completedLessons = [], comp
       }
     })
 
-  const totalAccessible = accessibleTrails.length
-  // `journeys` já está ordenado por `order`; indexar `trails` diretamente
-  // ignorava essa ordenação.
-  const orderedIds = journeys.map((trail) => trail.id)
+  const accessibleJourneys = journeys.filter((trail) => trail.status !== 'soon')
+  const totalAccessible = accessibleJourneys.length
+  const orderedIds = accessibleJourneys.map((trail) => trail.id)
 
   // `currentTrail` é a trilha EM CURSO: a próxima a concluir, não a última
   // concluída. Quando o percurso acaba, mantém-se a última.

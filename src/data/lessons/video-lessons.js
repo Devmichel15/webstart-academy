@@ -1423,4 +1423,22 @@ export const videoLessons = [
     objectives: ['Criar layout completo como desafio'],
     materials: ['VS Code', 'Navegador web'],
   }),
+  createVideoLesson({
+    id: 'sql-intensive-video-1',
+    courseId: 'sql-intensive',
+    moduleId: 'sql-intensive-module',
+    title: 'Curso Completo de SQL com PostgreSQL — Do Zero ao Avançado',
+    description:
+      'Curso intensivo de SQL com PostgreSQL, do zero ao avançado, numa sessão de aproximadamente uma hora. Vídeo original: Stack Mobile (https://www.youtube.com/watch?v=9cAKQWodpvM)',
+    youtubeUrl: 'https://www.youtube.com/watch?v=9cAKQWodpvM',
+    embedUrl: 'https://www.youtube.com/embed/9cAKQWodpvM',
+    duration: '1:00:00',
+    order: 1,
+    objectives: [
+      'Conhecer os fundamentos de SQL',
+      'Praticar consultas numa base de dados PostgreSQL',
+      'Acompanhar um percurso intensivo do básico a conceitos avançados',
+    ],
+    materials: ['Navegador web'],
+  }),
 ]

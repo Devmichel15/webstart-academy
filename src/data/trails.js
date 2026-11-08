@@ -7,6 +7,7 @@ import { phpModules } from './modules/php-modules.js'
 import { gitModules } from './modules/git-modules.js'
 import { pythonModules } from './modules/python-modules.js'
 import { reactModules } from './modules/react-modules.js'
+import { sqlModules } from './modules/sql-modules.js'
 import { htmlLessons } from './lessons/html-lessons.js'
 import { cssLessons } from './lessons/css-lessons.js'
 import { fundamentosLessons } from './lessons/fundamentos-lessons.js'
@@ -31,6 +32,7 @@ export const TRAIL_ORDER = [
   'database',
   'apis',
   'deploy',
+  'sql-intensive',
 ]
 
 export const trails = [
@@ -415,6 +417,25 @@ export const trails = [
     level: 4,
     cover: null,
   }),
+  createTrail({
+    id: 'sql-intensive',
+    slug: 'sql-intensivo',
+    title: 'SQL Intensivo com PostgreSQL',
+    description:
+      'Aprende SQL num curso intensivo de uma hora, do zero ao avançado, com exemplos em PostgreSQL.',
+    instructor: 'Stack Mobile',
+    icon: 'database',
+    color: 'brand',
+    order: 13,
+    difficulty: 'beginner',
+    estimatedHours: 1,
+    modules: ['sql-intensive-module'],
+    status: 'available',
+    requiredTrail: null,
+    xp: 500,
+    level: 1,
+    cover: null,
+  }),
 ]
 
 export function getTrailById(id) {
@@ -437,7 +458,7 @@ export function getTrailWithModules(trailId) {
 }
 
 export function getModuleData(moduleId) {
-  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules, ...reactModules]
+  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules, ...reactModules, ...sqlModules]
   return allMods.find((m) => m.id === moduleId) || null
 }
 
