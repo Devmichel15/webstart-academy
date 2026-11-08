@@ -69,6 +69,12 @@ export const trailTechConfig = {
     brandColorDark: '#60A5FA',
     label: 'PostgreSQL',
   },
+  'sql-intensive': {
+    deviconClass: 'devicon-postgresql-plain',
+    brandColor: '#336791',
+    brandColorDark: '#60A5FA',
+    label: 'PostgreSQL',
+  },
   apis: {
     deviconClass: null,
     brandColor: '#FF6C37',
