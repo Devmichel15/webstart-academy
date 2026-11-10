@@ -7,11 +7,19 @@ import { phpLessons } from './php-lessons.js'
 import { gitLessons } from './git-lessons.js'
 import { pythonLessons } from './python-lessons.js'
 import { reactLessons } from './react-lessons.js'
+import { javaSpringLessons } from './java-spring-lessons.js'
 
 // fundamentosLessons são agora videoLessons (Lógica de Programação — Curso em Vídeo)
-export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons, phpLessons, gitLessons, pythonLessons, reactLessons }
+export { htmlLessons, cssLessons, fundamentosLessons, videoLessons, javascriptLessons, phpLessons, gitLessons, pythonLessons, reactLessons, javaSpringLessons }
 export const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...javascriptLessons, ...phpLessons, ...gitLessons]
-export const allVideoLessons = [...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons, ...pythonLessons, ...reactLessons]
+export const allVideoLessons = [...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons, ...pythonLessons, ...reactLessons, ...javaSpringLessons]
+
+function getCombinedLessons() {
+  const lessonsById = new Map(
+    [...allLessons, ...allVideoLessons].map((lesson) => [lesson.id, lesson]),
+  )
+  return [...lessonsById.values()]
+}
 
 export function getLessonById(id) {
   return allLessons.find((l) => l.id === id) || allVideoLessons.find((l) => l.id === id) || null
@@ -22,7 +30,9 @@ export function getVideoLessonById(id) {
 }
 
 export function getLessonsByModule(moduleId) {
-  return allLessons.filter((l) => l.moduleId === moduleId).sort((a, b) => a.order - b.order)
+  return getCombinedLessons()
+    .filter((lesson) => lesson.moduleId === moduleId)
+    .sort((a, b) => a.order - b.order)
 }
 
 export function getVideoLessonsByModule(moduleId) {
@@ -30,7 +40,9 @@ export function getVideoLessonsByModule(moduleId) {
 }
 
 export function getLessonsByCourse(courseId) {
-  return allLessons.filter((l) => l.courseId === courseId).sort((a, b) => a.order - b.order)
+  return getCombinedLessons()
+    .filter((lesson) => lesson.courseId === courseId)
+    .sort((a, b) => a.order - b.order)
 }
 
 export function getVideoLessonsByCourse(courseId) {

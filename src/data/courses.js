@@ -1,11 +1,15 @@
 import { trails as sourceTrails } from './trails.js'
-import { allLessons as newLessons, getLessonById as getNewLessonById } from './lessons/index.js'
+import {
+  allLessons as newLessons,
+  getLessonById as getNewLessonById,
+  getLessonsByCourse as getNewLessonsByCourse,
+} from './lessons/index.js'
 
 export const allLessons = newLessons
 
 export const courses = sourceTrails.map((c) => ({
   ...c,
-  lessons: newLessons.filter((l) => l.courseId === c.id),
+  lessons: getNewLessonsByCourse(c.id),
 }))
 
 export function getLessonById(lessonId) {

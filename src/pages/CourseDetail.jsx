@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { CheckCircle2, Circle, ArrowRight, FlaskConical, HelpCircle, Trophy, Award } from 'lucide-react'
+import { CheckCircle2, Circle, ArrowRight, FlaskConical, HelpCircle, Trophy, Award, LockKeyhole } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SEO } from '../components/seo/SEO'
@@ -13,6 +13,8 @@ import { getLessonById } from '../data/lessons/index.js'
 import { WebStartOfficialBadge } from '../components/WebStartOfficialBadge.jsx'
 import { useProgress } from '../hooks/useProgress.js'
 import { XP_LESSON } from '../utils/xp.js'
+import { getVideoLessonsByCourse } from '../data/lessons/index.js'
+import { isLessonUnlockedInSequence } from '../utils/lessonSequence.js'
 
 
 export default function CourseDetail() {
@@ -74,6 +76,7 @@ export default function CourseDetail() {
   }
 
   const modules = (trail.modules || []).map((mId) => getModuleData(mId)).filter(Boolean)
+  const courseLessonSequence = trail.id === 'java-spring' ? getVideoLessonsByCourse(trail.id) : null
   const progress = getCourseProgress(trail.id)
   const totalLessons = modules.reduce((sum, m) => sum + (m.lessons?.length || 0), 0)
   const completedLessons = modules.reduce((sum, m) => sum + (m.lessons?.filter((lId) => isLessonCompleted(lId)).length || 0), 0)
@@ -153,25 +156,37 @@ export default function CourseDetail() {
                     if (!lesson) return null
 
                     const isBuilding = trail.status === 'building'
+                    const unlocked =
+                      !courseLessonSequence ||
+                      isLessonUnlockedInSequence(courseLessonSequence, lessonId, isLessonCompleted)
                     const lessonContent = (
                       <div className={`flex items-center justify-between rounded-lg border-2 p-3 transition ${
                         isBuilding
                           ? 'border bg-surface opacity-60'
                           : completed
                             ? 'border-accent bg-accent-soft'
-                            : 'border hover:border-strong'
+                            : unlocked
+                              ? 'border hover:border-strong'
+                              : 'border bg-surface-hover opacity-60'
                       } ${isBuilding ? '' : ''}`}>
                         <div className="flex items-center gap-3">
                           {completed ? (
                             <CheckCircle2 className="shrink-0 text-green-500" size={20} />
-                          ) : (
+                          ) : unlocked ? (
                             <Circle className="shrink-0 text-secondary" size={20} />
+                          ) : (
+                            <LockKeyhole className="shrink-0 text-muted" size={20} />
                           )}
                           <div>
                             <p className={`text-sm font-bold ${isBuilding ? 'text-muted' : ''}`}>{lesson.title}</p>
                             <span className="text-xs font-semibold text-secondary">
-                              {lesson.duration} min · +{XP_LESSON} XP
+                              {lesson.type === 'videoLesson' ? lesson.duration : `${lesson.duration} min`} · +{XP_LESSON} XP
                             </span>
+                            {!unlocked && (
+                              <p className="mt-1 text-xs font-semibold text-muted">
+                                Conclua as aulas anteriores para desbloquear.
+                              </p>
+                            )}
                           </div>
                         </div>
                         {isBuilding ? (
@@ -179,12 +194,14 @@ export default function CourseDetail() {
                             Em construção
                           </span>
                         ) : (
-                          <Button variant="secondary" size="sm">{completed ? 'Revisar' : 'Iniciar'}</Button>
+                          <Button variant="secondary" size="sm" disabled={!unlocked}>
+                            {!unlocked ? 'Bloqueada' : completed ? 'Revisar' : 'Iniciar'}
+                          </Button>
                         )}
                       </div>
                     )
 
-                    return isBuilding ? (
+                    return isBuilding || !unlocked ? (
                       <div key={lessonId} className="block cursor-not-allowed">
                         {lessonContent}
                       </div>

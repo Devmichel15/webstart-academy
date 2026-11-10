@@ -7,9 +7,10 @@ import { gitModules } from './git-modules.js'
 import { pythonModules } from './python-modules.js'
 import { reactModules } from './react-modules.js'
 import { sqlModules } from './sql-modules.js'
+import { javaSpringModules } from './java-spring-modules.js'
 
-export { htmlModules, cssModules, fundamentosModules, javascriptModules, phpModules, gitModules, pythonModules, reactModules, sqlModules }
-export const allModules = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules, ...reactModules, ...sqlModules]
+export { htmlModules, cssModules, fundamentosModules, javascriptModules, phpModules, gitModules, pythonModules, reactModules, sqlModules, javaSpringModules }
+export const allModules = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules, ...reactModules, ...sqlModules, ...javaSpringModules]
 
 export function getModuleById(id) {
   return allModules.find((m) => m.id === id) || null

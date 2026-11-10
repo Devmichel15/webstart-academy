@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, CheckCircle2, Circle, Clock, FlaskConical, HelpCircle, PlayCircle, Trophy } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Circle, Clock, FlaskConical, HelpCircle, PlayCircle, Trophy, LockKeyhole } from 'lucide-react'
 import { SEO } from '../components/seo/SEO'
 import { Header } from '../components/layout/Header'
 import { Card } from '../components/ui/Card'
@@ -12,6 +12,8 @@ import { getModuleData, getTrailById, getModuleLessons } from '../data/trails.js
 import { useProgressContext } from '../contexts/ProgressContext.jsx'
 import { getModuleProgressPercent, isModuleComplete } from '../services/progressService.js'
 import { XP_LESSON, XP_MODULE } from '../utils/xp.js'
+import { getVideoLessonsByCourse } from '../data/lessons/index.js'
+import { isLessonUnlockedInSequence } from '../utils/lessonSequence.js'
 
 
 export default function ModuleDetail() {
@@ -55,6 +57,7 @@ export default function ModuleDetail() {
   }
 
   const completedLessonsFiltered = lessons.filter((l) => isLessonCompleted(l.id))
+  const courseLessonSequence = courseId === 'java-spring' ? getVideoLessonsByCourse(courseId) : null
   const progress = getModuleProgressPercent(completedLessons, completedQuizzes, moduleId)
   const quizCompleted = completedQuizzes?.includes(moduleId) || false
   const moduleDone = isModuleComplete(completedLessons, completedQuizzes, moduleId)
@@ -121,6 +124,51 @@ export default function ModuleDetail() {
         <h2 className="text-lg font-black">Aulas</h2>
         {lessons.map((lesson, index) => {
           const completed = isLessonCompleted(lesson.id)
+          const unlocked =
+            !courseLessonSequence ||
+            isLessonUnlockedInSequence(courseLessonSequence, lesson.id, isLessonCompleted)
+          const lessonCard = (
+            <Card hover={unlocked} className={`!p-4 ${unlocked ? '' : 'opacity-60'}`}>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  {completed ? (
+                    <CheckCircle2 className="mt-1 shrink-0 text-brand-500" size={22} />
+                  ) : unlocked ? (
+                    <Circle className="mt-1 shrink-0 text-brand-300" size={22} />
+                  ) : (
+                    <LockKeyhole className="mt-1 shrink-0 text-brand-300" size={22} />
+                  )}
+                  <div>
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
+                      {lesson.type === 'videoLesson' ? (
+                        <span className="flex items-center gap-1 text-xs font-semibold text-brand-600">
+                          <PlayCircle size={12} />
+                          Vídeo
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1 text-xs font-semibold text-brand-600">
+                          <Clock size={12} />
+                          {lesson.duration} min
+                        </span>
+                      )}
+                      <span className="text-xs font-semibold text-brand-600">+{XP_LESSON} XP</span>
+                    </div>
+                    <h3 className="font-black">{lesson.title}</h3>
+                    <p className="text-sm text-brand-700 dark:text-brand-300">{lesson.description}</p>
+                    {!unlocked && (
+                      <p className="mt-1 text-xs font-semibold text-brand-500">
+                        Conclua as aulas anteriores para desbloquear.
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <Button variant="secondary" size="sm" disabled={!unlocked}>
+                  {!unlocked ? 'Bloqueada' : completed ? 'Revisar' : lesson.type === 'videoLesson' ? 'Assistir' : 'Iniciar'}
+                </Button>
+              </div>
+            </Card>
+          )
+
           return (
             <motion.div
               key={lesson.id}
@@ -128,40 +176,18 @@ export default function ModuleDetail() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Link to={lesson.type === 'videoLesson' ? `/video-aula/${lesson.id}` : `/aula/${lesson.id}`} className="block">
-                <Card hover className="!p-4">
-                  <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-start gap-3">
-                      {completed ? (
-                        <CheckCircle2 className="mt-1 shrink-0 text-brand-500" size={22} />
-                      ) : (
-                        <Circle className="mt-1 shrink-0 text-brand-300" size={22} />
-                      )}
-                      <div>
-                        <div className="mb-1 flex flex-wrap items-center gap-2">
-                          {lesson.type === 'videoLesson' ? (
-                            <span className="flex items-center gap-1 text-xs font-semibold text-brand-600">
-                              <PlayCircle size={12} />
-                              Vídeo
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1 text-xs font-semibold text-brand-600">
-                              <Clock size={12} />
-                              {lesson.duration} min
-                            </span>
-                          )}
-                          <span className="text-xs font-semibold text-brand-600">+{XP_LESSON} XP</span>
-                        </div>
-                        <h3 className="font-black">{lesson.title}</h3>
-                        <p className="text-sm text-brand-700 dark:text-brand-300">{lesson.description}</p>
-                      </div>
-                    </div>
-                    <Button variant="secondary" size="sm">
-                      {completed ? 'Revisar' : lesson.type === 'videoLesson' ? 'Assistir' : 'Iniciar'}
-                    </Button>
-                  </div>
-                </Card>
-              </Link>
+              {unlocked ? (
+                <Link
+                  to={lesson.type === 'videoLesson' ? `/video-aula/${lesson.id}` : `/aula/${lesson.id}`}
+                  className="block"
+                >
+                  {lessonCard}
+                </Link>
+              ) : (
+                <div className="block cursor-not-allowed" aria-disabled="true">
+                  {lessonCard}
+                </div>
+              )}
             </motion.div>
           )
         })}

@@ -322,6 +322,43 @@ describe("completeLesson — persistência", () => {
     expect(fake.db.profiles[0].completed_lessons).toContain(pythonLesson.id);
   });
 
+  it("conclui a trilha Java + Spring no progresso individual e actualiza estatísticas", async () => {
+    const javaLessons = allVideoLessons
+      .filter((item) => item.courseId === "java-spring")
+      .sort((a, b) => a.order - b.order);
+    fake.db.profiles.push(makeProfile({ id: AUTH_UID }));
+    fake.db.lessons.push(
+      ...javaLessons.map((lesson) => ({
+        id: lesson.id,
+        course_id: lesson.courseId,
+        module_id: lesson.moduleId,
+      })),
+    );
+    fake.setSession({ id: AUTH_UID });
+
+    const results = [];
+    for (const lesson of javaLessons) {
+      results.push(await progressService.completeLesson(AUTH_UID, lesson.id));
+    }
+
+    expect(javaLessons).toHaveLength(15);
+    expect(results.filter((result) => result.moduleComplete)).toHaveLength(5);
+    expect(results.at(-1)).toMatchObject({
+      moduleComplete: true,
+      courseComplete: true,
+    });
+    expect(fake.db.lesson_progress.filter((row) => row.course_id === "java-spring"))
+      .toHaveLength(15);
+    expect(fake.db.lesson_progress.every((row) => row.user_id === AUTH_UID))
+      .toBe(true);
+    expect(fake.db.profiles[0].completed_lessons).toEqual(
+      expect.arrayContaining(javaLessons.map((lesson) => lesson.id)),
+    );
+    expect(fake.db.profiles[0].completed_courses).toContain("java-spring");
+    expect(fake.db.profiles[0].xp).toBeGreaterThan(0);
+    expect(fake.db.profiles[0].current_lesson).toBe("java-spring-vid-15");
+  });
+
   it("não volta a dar XP quando a aula já estava concluída", async () => {
     fake.db.profiles.push(makeProfile({ id: AUTH_UID }));
     fake.db.lessons.push({

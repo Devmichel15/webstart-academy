@@ -8,6 +8,7 @@ import { gitModules } from './modules/git-modules.js'
 import { pythonModules } from './modules/python-modules.js'
 import { reactModules } from './modules/react-modules.js'
 import { sqlModules } from './modules/sql-modules.js'
+import { javaSpringModules } from './modules/java-spring-modules.js'
 import { htmlLessons } from './lessons/html-lessons.js'
 import { cssLessons } from './lessons/css-lessons.js'
 import { fundamentosLessons } from './lessons/fundamentos-lessons.js'
@@ -17,6 +18,7 @@ import { phpLessons } from './lessons/php-lessons.js'
 import { gitLessons } from './lessons/git-lessons.js'
 import { pythonLessons } from './lessons/python-lessons.js'
 import { reactLessons } from './lessons/react-lessons.js'
+import { javaSpringLessons } from './lessons/java-spring-lessons.js'
 
 export const TRAIL_ORDER = [
   'fundamentos-web',
@@ -33,6 +35,7 @@ export const TRAIL_ORDER = [
   'apis',
   'deploy',
   'sql-intensive',
+  'java-spring',
 ]
 
 export const trails = [
@@ -436,6 +439,31 @@ export const trails = [
     level: 1,
     cover: null,
   }),
+  createTrail({
+    id: 'java-spring',
+    slug: 'java-spring',
+    title: 'Java + Spring: Fundamentos a Back-end em Produção',
+    description:
+      'Trilha de 15 vídeos públicos de Fernanda Kipper, começando pelos fundamentos de Java e orientação a objetos e avançando por Spring Boot, segurança com JWT, PostgreSQL e Flyway, projetos de back-end, deploy em AWS, microsserviços, cloud e threads. Sem pré-requisito formal identificado; a sequência começa em fundamentos. Ao concluir, o aluno deverá conseguir acompanhar e construir back-ends Java com Spring, integrar autenticação e persistência e compreender os conceitos de deploy, microsserviços e programação paralela. Três vídeos exclusivos para membros da playlist original foram omitidos.',
+    instructor: 'Fernanda Kipper',
+    icon: 'coffee',
+    color: 'brand',
+    order: 14,
+    difficulty: 'intermediate',
+    estimatedHours: 16,
+    modules: [
+      'java-spring-mod-fundamentos',
+      'java-spring-mod-spring',
+      'java-spring-mod-backend',
+      'java-spring-mod-cloud',
+      'java-spring-mod-threads',
+    ],
+    status: 'available',
+    requiredTrail: null,
+    xp: 1500,
+    level: 3,
+    cover: null,
+  }),
 ]
 
 export function getTrailById(id) {
@@ -458,14 +486,14 @@ export function getTrailWithModules(trailId) {
 }
 
 export function getModuleData(moduleId) {
-  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules, ...reactModules, ...sqlModules]
+  const allMods = [...htmlModules, ...cssModules, ...fundamentosModules, ...javascriptModules, ...phpModules, ...gitModules, ...pythonModules, ...reactModules, ...sqlModules, ...javaSpringModules]
   return allMods.find((m) => m.id === moduleId) || null
 }
 
 export function getModuleLessons(moduleId) {
   const mod = getModuleData(moduleId)
   if (!mod) return []
-  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons, ...pythonLessons, ...reactLessons]
+  const allLessons = [...htmlLessons, ...cssLessons, ...fundamentosLessons, ...videoLessons, ...javascriptLessons, ...phpLessons, ...gitLessons, ...pythonLessons, ...reactLessons, ...javaSpringLessons]
   return mod.lessons.map((lId) => allLessons.find((l) => l.id === lId)).filter(Boolean)
 }
 

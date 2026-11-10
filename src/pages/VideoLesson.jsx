@@ -9,8 +9,9 @@ import { Badge } from '../components/ui/Badge'
 import { Card } from '../components/ui/Card'
 import { PageSkeleton } from '../components/ui/Skeleton.jsx'
 import { getTrailById, getModuleData } from '../data/trails.js'
-import { getVideoLessonById, getVideoLessonsByModule } from '../data/lessons/index.js'
+import { getVideoLessonById, getVideoLessonsByCourse, getVideoLessonsByModule } from '../data/lessons/index.js'
 import { useProgress } from '../hooks/useProgress.js'
+import { getFirstIncompleteLesson, isLessonUnlockedInSequence } from '../utils/lessonSequence.js'
 
 export default function VideoLesson() {
   const { lessonId } = useParams()
@@ -22,7 +23,13 @@ export default function VideoLesson() {
   const [loading, setLoading] = useState(true)
   const [completingLesson, setCompletingLesson] = useState(false)
   const goingNext = useRef(false)
-  const { completeLesson, visitLesson, getCourseProgress } = useProgress()
+  const {
+    completeLesson,
+    visitLesson,
+    getCourseProgress,
+    isLessonCompleted,
+    loading: progressLoading,
+  } = useProgress()
 
   useEffect(() => {
     async function loadLesson() {
@@ -50,13 +57,36 @@ export default function VideoLesson() {
   }, [lessonId])
 
   useEffect(() => {
-    if (lesson) visitLesson(lesson.id)
-  }, [lesson, visitLesson])
+    if (!lesson) return
+
+    if (lesson.courseId === 'java-spring') {
+      if (progressLoading) return
+      const courseLessons = getVideoLessonsByCourse(lesson.courseId)
+      if (!isLessonUnlockedInSequence(courseLessons, lesson.id, isLessonCompleted)) {
+        const firstIncomplete = getFirstIncompleteLesson(courseLessons, isLessonCompleted)
+        if (firstIncomplete) {
+          navigate(`/video-aula/${firstIncomplete.id}`, { replace: true })
+          return
+        }
+      }
+    }
+
+    visitLesson(lesson.id)
+  }, [lesson, progressLoading, isLessonCompleted, navigate, visitLesson])
 
   if (loading) {
     return (
       <div>
         <Header title="Aula" subtitle="Carregando..." />
+        <PageSkeleton />
+      </div>
+    )
+  }
+
+  if (lesson?.courseId === 'java-spring' && progressLoading) {
+    return (
+      <div>
+        <Header title="Aula" subtitle="A verificar o progresso..." />
         <PageSkeleton />
       </div>
     )

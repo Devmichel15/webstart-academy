@@ -75,6 +75,12 @@ export const trailTechConfig = {
     brandColorDark: '#60A5FA',
     label: 'PostgreSQL',
   },
+  'java-spring': {
+    deviconClass: 'devicon-java-plain',
+    brandColor: '#5382A1',
+    brandColorDark: '#7FB3D5',
+    label: 'Java + Spring',
+  },
   apis: {
     deviconClass: null,
     brandColor: '#FF6C37',
