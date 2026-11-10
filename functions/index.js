@@ -16,6 +16,7 @@ const { buildReactivationEmail } = require('./templates/reactivation')
 const { buildNewLessonEmail } = require('./templates/newLesson')
 const { buildWelcomeEmail } = require('./templates/welcome')
 const { sendNewLessonNotifications } = require('./services/notifications')
+const { selectNotificationMessage } = require('./services/notificationMessages')
 const { parseWebhookBatch, processWebhookEvent } = require('./services/webhookHandler')
 
 function buildDefaultUser(userRecord) {
@@ -169,19 +170,32 @@ exports.syncAuthUser = onDocumentCreated('users/{userId}', async (event) => {
   try {
     const userObj = { uid, name: userData.name || 'Aluno' }
     userObj._unsubscribeUrl = buildUnsubscribeUrl(uid)
+    const message = selectNotificationMessage('welcome', {
+      previousMessageId: userData.notificationMessageHistory?.welcome,
+      variables: {
+        name:
+          typeof userData.name === 'string' && userData.name.trim()
+            ? userData.name.trim().split(/\s+/)[0]
+            : '',
+      },
+    })
 
-    const html = buildWelcomeEmail(userObj)
+    const html = buildWelcomeEmail(userObj, message)
 
     await sendEmail({
       to: userData.email,
       toName: userData.name || 'Aluno',
-      subject: `Bem-vindo(a) à WebStart Academy, ${(userData.name || 'Aluno').split(' ')[0]}! 🎉`,
+      subject: message.title,
       htmlContent: html,
     })
 
     await snap.ref.update({
       welcomeEmailSent: true,
       welcomeEmailSentAt: admin.firestore.FieldValue.serverTimestamp(),
+      notificationMessageHistory: {
+        ...(userData.notificationMessageHistory || {}),
+        welcome: message.id,
+      },
     })
 
     logger.info(`[welcome] email sent to ${userData.email}`)
@@ -214,22 +228,36 @@ exports.sendReactivationEmails = onSchedule(
       try {
         const courseName =
           (await getCourseTitle(user.currentCourse)) ||
-          (user.currentCourse || 'web')
-            .replace(/-/g, ' ')
-            .replace(/\b\w/g, (c) => c.toUpperCase())
+          (user.currentCourse
+            ? user.currentCourse
+                .replace(/-/g, ' ')
+                .replace(/\b\w/g, (c) => c.toUpperCase())
+            : null)
 
         user._unsubscribeUrl = buildUnsubscribeUrl(user.uid)
-        const html = buildReactivationEmail(user, courseName, user.currentLesson)
+        const message = selectNotificationMessage('inactivity', {
+          previousMessageId: user.notificationMessageHistory?.inactivity,
+        })
+        const html = buildReactivationEmail(
+          user,
+          courseName,
+          user.currentLesson,
+          message,
+        )
 
         await sendEmail({
           to: user.email,
-          toName: user.name,
-          subject: `${user.name}, a tua trilha está te esperando! 🚀`,
+          toName: user.name || 'Aluno',
+          subject: message.title,
           htmlContent: html,
         })
 
         await db.collection('users').doc(user.uid).update({
           lastReactivationEmail: now,
+          notificationMessageHistory: {
+            ...(user.notificationMessageHistory || {}),
+            inactivity: message.id,
+          },
         })
 
         sentCount++

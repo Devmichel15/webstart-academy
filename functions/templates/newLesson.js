@@ -1,5 +1,17 @@
-function buildNewLessonEmail(user, courseName, lessonTitle, lessonId) {
-  const firstName = (user.name || 'Aluno').split(' ')[0]
+const { selectNotificationMessage } = require('../services/notificationMessages')
+
+function buildNewLessonEmail(
+  user,
+  courseName,
+  lessonTitle,
+  lessonId,
+  message = selectNotificationMessage('learning'),
+) {
+  const firstName =
+    typeof user.name === 'string' && user.name.trim()
+      ? user.name.trim().split(/\s+/)[0]
+      : ''
+  const greeting = firstName ? `Olá, ${firstName}! ` : ''
   const appUrl = process.env.APP_URL || 'https://webstart-academy.web.app'
   const lessonUrl = lessonId ? `${appUrl}/aula/${lessonId}` : appUrl
   const unsubscribeUrl = user._unsubscribeUrl || `${appUrl}/email-preferences?uid=${user.uid || ''}`
@@ -10,8 +22,8 @@ function buildNewLessonEmail(user, courseName, lessonTitle, lessonId) {
     <head><meta charset="utf-8"></head>
     <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1a1a1a;">
       <div style="background: linear-gradient(135deg, #064e3b, #065f46); padding: 32px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
-        <h1 style="color: white; margin: 0; font-size: 24px;">Nova aula disponivel! 🎓</h1>
-        <p style="color: #a7f3d0; margin: 8px 0 0;">Ola, ${firstName}! Temos conteudo novo para ti.</p>
+        <h1 style="color: white; margin: 0; font-size: 24px;">${message.title}</h1>
+        <p style="color: #a7f3d0; margin: 8px 0 0;">${greeting}${message.body}</p>
       </div>
 
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
@@ -24,7 +36,7 @@ function buildNewLessonEmail(user, courseName, lessonTitle, lessonId) {
         </div>
 
         <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.5;">
-          Esta aula foi adicionada recentemente a plataforma. Nao percas a oportunidade de aprender algo novo!
+          Esta aula chegou agora à plataforma. Aproveita para aprender algo novo!
         </p>
       </div>
 

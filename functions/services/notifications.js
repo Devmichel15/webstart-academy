@@ -1,6 +1,7 @@
 const { logger } = require('firebase-functions/v2')
 const admin = require('firebase-admin')
 const crypto = require('crypto')
+const { selectNotificationMessage } = require('./notificationMessages')
 
 const db = admin.firestore()
 
@@ -26,7 +27,8 @@ async function getCourseEnrolledUsers(courseId) {
       users.push({
         uid: doc.id,
         email: data.email,
-        name: data.name || 'Aluno',
+        name: data.name || '',
+        notificationMessageHistory: data.notificationMessageHistory || {},
       })
     }
   })
@@ -85,14 +87,32 @@ async function sendNewLessonNotifications(lessonData, buildEmailFn, sendEmailFn)
     for (const user of batch) {
       try {
         user._unsubscribeUrl = generateUnsubscribeUrl(user.uid)
-        const html = buildEmailFn(user, courseName, lessonTitle, lessonId)
+        const message = selectNotificationMessage('learning', {
+          previousMessageId: user.notificationMessageHistory?.learning,
+          variables: { name: (user.name || '').trim().split(/\s+/)[0] },
+        })
+        const html = buildEmailFn(user, courseName, lessonTitle, lessonId, message)
 
         await sendEmailFn({
           to: user.email,
-          toName: user.name,
-          subject: `Nova aula: ${lessonTitle}`,
+          toName: user.name || 'Aluno',
+          subject: message.title,
           htmlContent: html,
         })
+
+        try {
+          await db.collection('users').doc(user.uid).update({
+            notificationMessageHistory: {
+              ...user.notificationMessageHistory,
+              learning: message.id,
+            },
+          })
+        } catch (historyError) {
+          logger.warn(
+            `[newLesson] Could not save message history for ${user.uid}:`,
+            historyError,
+          )
+        }
 
         sentCount++
       } catch (error) {

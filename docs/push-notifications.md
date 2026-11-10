@@ -20,7 +20,8 @@ Supabase (Postgres)
   ▲
 Supabase Edge Functions
   ├─ push-subscribe  → subscribe / unsubscribe / list
-  └─ push-send       → envia a notificação de teste (VAPID)
+  ├─ push-send       → envia a notificação de teste (VAPID)
+  └─ push-dispatch   → processa eventos e grava na inbox
   ▼
 Push service (FCM / Mozilla autopush / WNS) → Service Worker → notificação
 ```
@@ -209,15 +210,52 @@ Checklist completo em `docs/pwa-testing-checklist.md`.
 
 ---
 
-## 7. O que ainda não existe (Etapa 3)
+## 7. Eventos e funcionalidades pendentes
 
-- Envio agendado (lembretes de streak, "continua a tua trilha", etc.).
-- Broadcast para outros utilizadores (o `push-send` hoje é só para o próprio).
-- Notificações disparadas por eventos da aplicação (comentário, like,
-  resposta numa trilha).
-- Preferências por categoria com horários diferentes do que existe hoje
-  (`reminder_hour` / `reminder_days` já estão guardados, mas nada os usa).
+O `push-send` continua reservado às notificações de teste da própria conta.
+Os eventos de negócio usam o outbox e o `push-dispatch`: conclusão de aula
+(motivação para outros alunos), novo projeto, like e comentário. O dispatch
+respeita as preferências atuais, exclui o autor e mantém as categorias
+`study_activity`, `community` e `comments` na infraestrutura existente.
 
-O que já está preparado para a Etapa 3: colunas `reminder_hour`/`reminder_days`
-nas preferências, `last_test_sent_at` para cooldown, e a categoria `reminders`
-já existente nas preferências e no payload.
+Ainda não existem disparadores push para boas-vindas, progresso individual,
+conclusão de módulo/curso, novidades da plataforma ou lembretes agendados.
+As preferências `reminder_hour`/`reminder_days` e a categoria `reminders`
+continuam preparadas, mas não enviam notificações. Os emails Firebase têm
+disparadores próprios e não são convertidos em push nem em itens da inbox.
+
+## 8. Identidade verbal
+
+As mensagens são escolhidas nas bibliotecas do runtime que já envia cada
+notificação:
+
+- Push e inbox Supabase: `supabase/functions/_shared/notificationMessages.ts`.
+- Emails Firebase: `functions/services/notificationMessages.js`.
+
+Os dois catálogos incluem `welcome`, `motivation`, `inactivity`, `progress`,
+`learning`, `completion`, `reminders` e `announcements`. Também incluem
+contextos específicos de comunidade e comentários para não reutilizar uma
+mensagem de aprendizagem num evento social. Os eventos existentes integram:
+
+| Categoria de mensagem | Disparador atual | Canal |
+| --- | --- | --- |
+| `welcome` | Criação de utilizador Firebase | Email |
+| `motivation` | Aula concluída por outro aluno | Push e inbox |
+| `inactivity` | Agendamento Firebase de reativação | Email |
+| `learning` | Publicação de nova aula | Email |
+| `completion` e `announcements` | Script manual de conclusão de CSS e novidade | Email |
+| `progress` | Sem disparador de progresso individual | Não integrado |
+| `reminders` | Sem agendamento de push | Não integrado |
+
+Cada envio escolhe uma mensagem aleatória adequada ao evento. O dispatch
+Supabase compara o título com a notificação mais recente do aluno; os emails
+guardam o último identificador escolhido por categoria em
+`users.notificationMessageHistory`. Se houver mais do que uma opção, a
+mensagem imediatamente anterior é excluída.
+
+Para acrescentar uma mensagem, adicione uma entrada com `id`, `title` e `body`
+à categoria correspondente nos dois catálogos; em eventos sociais, indique
+também o `context`. Use `{{name}}` apenas quando o nome estiver disponível.
+Os modelos de email continuam a apresentar os dados já existentes, como curso,
+aula e módulo. As categorias sem disparador só ficam disponíveis no catálogo:
+não criam eventos ou envios novos.

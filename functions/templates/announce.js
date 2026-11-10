@@ -1,5 +1,14 @@
-function buildAnnounceEmail(user) {
-  const firstName = (user.name || 'Aluno').split(' ')[0]
+const { selectNotificationMessage } = require('../services/notificationMessages')
+
+function buildAnnounceEmail(
+  user,
+  completionMessage = selectNotificationMessage('completion'),
+  announcementMessage = selectNotificationMessage('announcements'),
+) {
+  const firstName =
+    typeof user.name === 'string' && user.name.trim()
+      ? user.name.trim().split(/\s+/)[0]
+      : ''
   const appUrl = process.env.APP_URL || 'https://webstart-academy.web.app'
   const unsubscribeUrl = user._unsubscribeUrl || `${appUrl}/email-preferences?uid=${user.uid || ''}`
 
@@ -9,14 +18,15 @@ function buildAnnounceEmail(user) {
     <head><meta charset="utf-8"></head>
     <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1a1a1a;">
       <div style="background: linear-gradient(135deg, #064e3b, #065f46); padding: 32px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
-        <h1 style="color: white; margin: 0; font-size: 24px;">🎉 Parabéns, ${firstName}!</h1>
-        <p style="color: #a7f3d0; margin: 8px 0 0;">O módulo de CSS da plataforma está completo.</p>
+        <h1 style="color: white; margin: 0; font-size: 24px;">${firstName ? `${firstName}, ` : ''}${completionMessage.title}</h1>
+        <p style="color: #a7f3d0; margin: 8px 0 0;">${completionMessage.body}</p>
       </div>
 
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
         <p style="margin: 0 0 12px;">A trilha de <strong>CSS3</strong> da WebStart Academy está agora completa com todas as video-aulas disponiveis.</p>
-        <p style="margin: 0 0 12px;">E há mais uma novidade: <strong>a partir de agora, todas as trilhas da WebStart passam a ser em formato video</strong>. Mais conteúdo, mais prático, mais facil de acompanhar.</p>
-        <p style="margin: 0;">Continua a aprender — o proximo modulo está a espera de ti!</p>
+        <p style="margin: 0 0 8px; font-weight: 700;">${announcementMessage.title}</p>
+        <p style="margin: 0 0 12px;">${announcementMessage.body} A partir de agora, todas as trilhas da WebStart passam a ser em formato de vídeo: mais conteúdo prático e fácil de acompanhar.</p>
+        <p style="margin: 0;">O próximo módulo está à tua espera!</p>
       </div>
 
       <div style="text-align: center; margin-bottom: 32px;">

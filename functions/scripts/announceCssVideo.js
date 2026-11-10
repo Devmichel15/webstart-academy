@@ -14,6 +14,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '..', '..', '.env') })
 const { firebaseAdmin: admin, db } = require('../services/firebase')
 const { sendEmail } = require('../services/brevo')
 const { buildAnnounceEmail } = require('../templates/announce')
+const { selectNotificationMessage } = require('../services/notificationMessages')
 const crypto = require('crypto')
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
@@ -51,6 +52,7 @@ async function getRecipients(testMode) {
       uid: 'test',
       email,
       name: 'Teste',
+      notificationMessageHistory: {},
     }))
   }
 
@@ -67,7 +69,8 @@ async function getRecipients(testMode) {
     recipients.push({
       uid: doc.id,
       email: data.email,
-      name: data.name || 'Aluno',
+      name: data.name || '',
+      notificationMessageHistory: data.notificationMessageHistory || {},
     })
   })
 
@@ -152,14 +155,44 @@ async function main() {
     for (const user of batch) {
       try {
         user._unsubscribeUrl = generateUnsubscribeUrl(user.uid)
-        const html = buildAnnounceEmail(user)
+        const variables = { name: (user.name || '').trim().split(/\s+/)[0] }
+        const completionMessage = selectNotificationMessage('completion', {
+          previousMessageId: user.notificationMessageHistory.completion,
+          variables,
+        })
+        const announcementMessage = selectNotificationMessage('announcements', {
+          previousMessageId: user.notificationMessageHistory.announcements,
+          variables,
+        })
+        const html = buildAnnounceEmail(
+          user,
+          completionMessage,
+          announcementMessage,
+        )
 
         await sendEmail({
           to: user.email,
-          toName: user.name,
-          subject: SUBJECT,
+          toName: user.name || 'Aluno',
+          subject: `${completionMessage.title} — ${announcementMessage.title}`,
           htmlContent: html,
         })
+
+        if (!testMode) {
+          try {
+            await db.collection('users').doc(user.uid).update({
+              notificationMessageHistory: {
+                ...user.notificationMessageHistory,
+                completion: completionMessage.id,
+                announcements: announcementMessage.id,
+              },
+            })
+          } catch (historyError) {
+            console.warn(
+              `Não foi possível guardar o histórico de mensagens de ${user.uid}:`,
+              historyError.message,
+            )
+          }
+        }
 
         sentCount++
       } catch (error) {

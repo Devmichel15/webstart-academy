@@ -35,13 +35,14 @@ async function findReactivationUsers() {
     eligible.push({
       uid,
       email: user.email,
-      name: user.name || 'Aluno',
+      name: user.name || '',
       xp: user.xp || 0,
       streak: user.streak || 0,
       completedLessons: completed.length,
       currentCourse: user.currentCourse || null,
       currentLesson: user.currentLesson || completed[completed.length - 1] || null,
       daysInactive: days,
+      notificationMessageHistory: user.notificationMessageHistory || {},
     })
   }
 
